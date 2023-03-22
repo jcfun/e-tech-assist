@@ -1,3 +1,11 @@
+/*
+ * @Author: jcfun jcfunstar@gmail.com
+ * @Date: 2023-03-22 19:14:55
+ * @LastEditors: jcfun jcfunstar@gmail.com
+ * @LastEditTime: 2023-03-23 01:08:09
+ * @FilePath: /e-tech-assist/web-client/src/lib.rs
+ * @Description: 
+ */
 mod utils;
 
 use wasm_bindgen::prelude::*;
@@ -9,11 +17,12 @@ use wasm_bindgen::prelude::*;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
-extern {
+extern "C" {
     fn alert(s: &str);
 }
 
 #[wasm_bindgen]
 pub fn greet() {
-    alert("Hello, web-client!");
+    // alert(format!("Hello, {}!", s).as_str());
+    alert("666666")
 }

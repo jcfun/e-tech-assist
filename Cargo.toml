@@ -1,2 +1,2 @@
 [workspace]
-members = ["web-client"]
+members = ["web-client", "web-server"]

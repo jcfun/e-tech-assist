@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import * as wasm from "wasm"
-
-wasm.greet()
+import * as wasm from "rust-wasm"
+wasm.greet("wasm")
 </script>
 
 <template>
