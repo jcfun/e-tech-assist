@@ -1,9 +1,9 @@
 /*
  * @Author: jcfun jcfunstar@gmail.com
- * @Date: 2023-03-22 19:14:55
+ * @Date: 2023-03-23 11:17:06
  * @LastEditors: jcfun jcfunstar@gmail.com
- * @LastEditTime: 2023-03-23 01:08:09
- * @FilePath: /e-tech-assist/web-client/src/lib.rs
+ * @LastEditTime: 2023-03-23 12:08:32
+ * @FilePath: /e-tech-assist/web-client/webassembly/src/lib.rs
  * @Description: 
  */
 mod utils;
@@ -17,12 +17,11 @@ use wasm_bindgen::prelude::*;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
-extern "C" {
+extern {
     fn alert(s: &str);
 }
 
 #[wasm_bindgen]
-pub fn greet() {
-    // alert(format!("Hello, {}!", s).as_str());
-    alert("666666")
+pub fn greet(s: &str) {
+    alert(format!("Hello {}", s).as_str());
 }

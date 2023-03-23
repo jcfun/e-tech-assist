@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "pinia": "^2.0.33",
-    "rust-wasm": "file:../pkg",
+    "webassembly": "file:../webassembly/pkg",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },

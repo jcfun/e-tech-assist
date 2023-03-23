@@ -15,7 +15,7 @@
     "pinia": "^2.0.32",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
-    "rust-wasm": "file:../pkg"
+    "webassembly": "file:../webassembly/pkg"
   },
   "devDependencies": {
     "@jridgewell/sourcemap-codec": "^1.4.14",
