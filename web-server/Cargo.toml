@@ -51,8 +51,8 @@ colored = "2.0.0"
 # jwt
 jsonwebtoken = "8.3.0"
 
-# # 雪花id
-# snowflake = { version = "1.3.0", features = ["serde_support"] }
+# 雪花id
+snowflake = { version = "1.3.0", features = ["serde_support"] }
 
-# # 加密模块
-# ring = "0.16.20"
+# 加密模块
+ring = "0.16.20"

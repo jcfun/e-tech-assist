@@ -1,8 +1,8 @@
 /*
  * @Author: jcfun jcfunstar@gmail.com
  * @Date: 2023-03-23 13:22:50
- * @LastEditors: jcfun jcfunstar@gmail.com
- * @LastEditTime: 2023-03-25 20:10:14
+ * @LastEditors: jc-fun urainstar@gmail.com
+ * @LastEditTime: 2023-03-25 21:20:25
  * @FilePath: /e-tech-assist/web-server/src/models/user.rs
  * @Description:
  */
@@ -16,14 +16,15 @@ use rbatis::rbdc::datetime::DateTime;
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct TUser {
     pub id: Option<i64>,
-    pub name: Option<String>,
-    pub phone: Option<String>,
+    pub username: Option<String>,
     pub delete_flag: Option<String>,
     pub disable_flag: Option<String>,
-    pub resource: Option<String>,
-    pub create_time: Option<DateTime>,
     pub update_time: Option<DateTime>,
     pub operator: Option<String>,
+    pub operator_id: Option<String>,
+    pub create_time: Option<DateTime>,
+    pub creator: Option<String>,
+    pub creator_id: Option<String>,
 }
 crud!(TUser{});
 
@@ -43,23 +44,30 @@ impl IntoResponse for CreateUser {
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct CreateUser {
-    name: String,
-    phone: String,
-    password: String,
-    delete_flag: String,
-    disable_flag: String,
-    resource: String,
-    operator: String,
+    pub id: Option<i64>,
+    pub username: Option<String>,
+    pub password: Option<String>,
+    pub delete_flag: Option<String>,
+    pub disable_flag: Option<String>,
+    pub update_time: Option<DateTime>,
+    pub operator: Option<String>,
+    pub operator_id: Option<String>,
+    pub create_time: Option<DateTime>,
+    pub creator: Option<String>,
+    pub creator_id: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct UpdateUser {
-    id: String,
-    name: String,
-    phone: String,
-    password: String,
-    delete_flag: String,
-    disable_flag: String,
-    resource: String,
-    operator: String,
+    pub id: Option<i64>,
+    pub username: Option<String>,
+    pub password: Option<String>,
+    pub delete_flag: Option<String>,
+    pub disable_flag: Option<String>,
+    pub update_time: Option<DateTime>,
+    pub operator: Option<String>,
+    pub operator_id: Option<String>,
+    pub create_time: Option<DateTime>,
+    pub creator: Option<String>,
+    pub creator_id: Option<String>,
 }
