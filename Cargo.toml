@@ -1,2 +1,5 @@
 [workspace]
 members = ["web-server", "web-client/webassembly"]
+
+[profile.release]
+opt-level = 2

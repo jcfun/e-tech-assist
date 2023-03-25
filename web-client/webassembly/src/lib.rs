@@ -2,7 +2,7 @@
  * @Author: jcfun jcfunstar@gmail.com
  * @Date: 2023-03-23 11:17:06
  * @LastEditors: jcfun jcfunstar@gmail.com
- * @LastEditTime: 2023-03-23 12:08:32
+ * @LastEditTime: 2023-03-23 13:18:32
  * @FilePath: /e-tech-assist/web-client/webassembly/src/lib.rs
  * @Description: 
  */
@@ -17,8 +17,11 @@ use wasm_bindgen::prelude::*;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
-extern {
+extern "C" {
     fn alert(s: &str);
+
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(value: &str);
 }
 
 #[wasm_bindgen]
