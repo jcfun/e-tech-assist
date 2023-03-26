@@ -7,17 +7,10 @@
  * @Description:
  */
 
-use std::{
-    env,
-    net::{IpAddr, Ipv6Addr, SocketAddr},
-};
-
-use crate::common::state::AppState;
+use std::net::{IpAddr, Ipv6Addr, SocketAddr};
 use dotenv::dotenv;
-use rbatis::Rbatis;
-use rbdc_pg::driver::PgDriver;
-use routers::user::user_routes;
 use colored::Colorize;
+use routers::get_routers;
 
 #[path = "./models/mod.rs"]
 mod models;
@@ -38,23 +31,11 @@ mod common;
 async fn main() {
     // 设置环境变量
     dotenv().ok();
-    // 获取环境变量
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL is not found");
-    // 启用sql日志打印
-    fast_log::init(fast_log::Config::new().console()).expect("rbatis init fail");
-    // 初始化数据库连接池
-    let rb = Rbatis::new();
-    rb.init(PgDriver {}, database_url.as_str()).unwrap();
-
-    // let db_pool = PgPoolOptions::new()
-    //     .max_connections(5)
-    //     .connect(&database_url)
-    //     .await
-    //     .unwrap();
-    // 设置共享状态
-    let shared_state = AppState { db: rb };
+    // 启用日志打印
+    fast_log::init(fast_log::Config::new().console()).expect("server init fail");
     // 设置监听地址
     let socket = SocketAddr::new(IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0)), 3000);
+    // banner
     let banner = r#"
                   __            __                          _      __ 
       ___        / /____  _____/ /_        ____ ___________(_)____/ /_
@@ -66,7 +47,7 @@ async fn main() {
     // 打印服务连接信息
     println!("listening on {} ...\n", socket);
     // 获取路由
-    let routers = user_routes().with_state(shared_state);
+    let routers = get_routers();
     // 启动服务
     axum::Server::bind(&socket)
         .serve(routers.into_make_service())

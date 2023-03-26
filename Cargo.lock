@@ -1441,9 +1441,9 @@ dependencies = [
 
 [[package]]
 name = "rbs"
-version = "4.3.1"
+version = "4.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "907f52789ad7802a191f0daebc75bcba0ff5aedcd4f80b65e67d5c47d72b5a4b"
+checksum = "f47cc9cb804ba1e843503918e5fd2356fff8ef8cb3e8e9d4729ad76c3d9e38c4"
 dependencies = [
  "byteorder",
  "num-traits",
@@ -2365,6 +2365,7 @@ dependencies = [
  "colored",
  "dotenv",
  "fast_log",
+ "headers",
  "jsonwebtoken",
  "log",
  "rbatis",

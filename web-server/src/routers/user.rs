@@ -7,20 +7,16 @@
  * @Description:
  */
 
-
-use crate::{handlers::user::*, common::state::AppState};
+use crate::{common::state::AppState, handlers::user::*};
 use axum::{
     routing::{get, post},
     Router,
 };
 pub fn user_routes() -> Router<AppState> {
-
-    let routes: Router<AppState> = Router::new()
+    Router::new()
         .route(
             "/:id",
-            get(get_user).delete(delete_user).put(update_user),
+            get(get_user_by_id).delete(delete_user).put(update_user),
         )
-        .route("/", post(create_user));
-
-    Router::new().nest("/user", routes)
+        .route("/", post(create_user))
 }

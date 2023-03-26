@@ -7,6 +7,6 @@
  * @Description: 
  */
 pub mod errors;
-pub mod base;
+pub mod res;
 pub mod state;
 pub mod jwt;
