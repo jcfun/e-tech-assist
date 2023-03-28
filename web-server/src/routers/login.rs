@@ -1,4 +1,7 @@
-use crate::{common::state::AppState, handlers::login::login};
+use crate::{
+    common::state::AppState,
+    handlers::login::login,
+};
 use axum::{
     routing::post,
     Router,

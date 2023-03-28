@@ -2,8 +2,8 @@
  * @Author: jcfun jcfunstar@gmail.com
  * @Date: 2023-03-23 19:24:59
  * @LastEditors: jcfun jcfunstar@gmail.com
- * @LastEditTime: 2023-03-26 15:58:51
- * @FilePath: /e-tech-assist/web-server/src/common/base.rs
+ * @LastEditTime: 2023-03-27 09:08:18
+ * @FilePath: /e-tech-assist/web-server/src/common/res.rs
  * @Description:
  */
 
@@ -99,7 +99,7 @@ where
         }
     }
 
-    pub fn from_vec_not_found(data: T) -> Self {
+    pub fn _from_vec_not_found(data: T) -> Self {
         Self {
             code: Some(StatusCode::NOT_FOUND.as_u16()),
             msg: Some("没有符合条件的结果".into()),

@@ -27,6 +27,12 @@ mod dbaccess;
 #[path = "./common/mod.rs"]
 mod common;
 
+#[path = "middleware/mod.rs"]
+mod middleware;
+
+#[path = "utils/mod.rs"]
+mod utils;
+
 #[tokio::main]
 async fn main() {
     // 设置环境变量

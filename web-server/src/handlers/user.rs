@@ -1,5 +1,5 @@
 use crate::{
-    common::{errors::MyError, res::Res, state::AppState, jwt::Claims},
+    common::{errors::MyError, res::Res, state::AppState},
     dbaccess::user::select_user_by_id,
     models::dto::user::CreateUserDTO,
 };
@@ -15,7 +15,6 @@ use serde_json::json;
 pub async fn get_user_by_id(
     State(mut state): State<AppState>,
     Path(id): Path<String>,
-    _claims: Claims,
 ) -> impl IntoResponse {
     let data = select_user_by_id(&mut state.db, id).await;
     println!("select_by_id = {}", json!(data));
