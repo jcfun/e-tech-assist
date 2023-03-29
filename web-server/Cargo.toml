@@ -6,20 +6,23 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-axum = { version = "0.6.12", features = ["headers"] }
-tower = { version = "0.4.0", features = ["full"]}
+axum = { version = "0.6.12", features = ["headers", "http2"] }
+tower = { version = "0.4.13", features = ["full"] }
 tower-http = { version = "0.4.0", features = ["full"] }
+# 异步运行时
+tokio = { version = "1.26.0", features = ["full"] }
+hyper = "0.14.25"
+
 # 获取request header
 headers = "0.3.8"
+
+anyhow = "1.0.70"
 
 # 序列化
 serde = { version = "1.0.158", features = ["derive"] }
 serde_json = "1.0.94"
 # 时间格式化
 # chrono = { version = "0.4.24", features = ["serde"] }
-
-# 异步运行时
-tokio = { version = "1.26.0", features = ["full"] }
 
 # 链路追踪
 tracing = "0.1.37"
@@ -57,3 +60,12 @@ jsonwebtoken = "8.3.0"
 # 加解密/编解码模块
 ring = "0.16.20"
 hex = "0.4.3"
+
+# 异步
+futures = "0.3.27"
+
+# 参数校验
+validator = { version = "0.16.0", features = ["derive"] }
+validator_derive = "0.16.0"
+regex = "1.7.3"
+lazy_static = "1.4.0"

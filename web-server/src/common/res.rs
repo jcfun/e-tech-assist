@@ -1,12 +1,3 @@
-/*
- * @Author: jcfun jcfunstar@gmail.com
- * @Date: 2023-03-23 19:24:59
- * @LastEditors: jcfun jcfunstar@gmail.com
- * @LastEditTime: 2023-03-27 09:08:18
- * @FilePath: /e-tech-assist/web-server/src/common/res.rs
- * @Description:
- */
-
 use axum::{
     body::{self, Full},
     http::{header, StatusCode},
@@ -64,9 +55,8 @@ where
 
 impl<T> Res<T>
 where
-    T: Serialize + DeserializeOwned + Clone,
+    T: Serialize + Clone,
 {
-
     pub fn from_msg(code: StatusCode, msg: &str) -> Self {
         Self {
             code: Some(code.as_u16()),
@@ -75,7 +65,7 @@ where
         }
     }
 
-    pub fn from_success_msg(data: T, msg: &str) -> Self {
+    pub fn from_success_msg(msg: &str, data: T) -> Self {
         Self {
             code: Some(StatusCode::OK.as_u16()),
             msg: Some(msg.into()),

@@ -20,7 +20,7 @@ pub async fn get_user_by_id(
     println!("select_by_id = {}", json!(data));
 
     data.map(|op| {
-        op.map(|user| (StatusCode::OK, Res::from_success_msg(user, "查询成功")))
+        op.map(|user| (StatusCode::OK, Res::from_success_msg("查询成功", user)))
             .unwrap_or_else(|| (StatusCode::OK, Res::from_not_found()))
     })
     .unwrap_or_else(|err| {

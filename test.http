@@ -1,0 +1,8 @@
+get http://ddns.urainstar.top:33000/user/1 HTTP/1.1
+Content-Type: application/json
+
+# {
+#     "user_name":"admin",
+#     "user_password":"e10adc3949ba59abbe56e057f20f883e",
+#     "code":"xsyu","uuid":"9c540874ed66568a68e67c73c0c23559"
+# }

@@ -7,10 +7,12 @@
  * @Description:
  */
 
-use std::net::{IpAddr, Ipv6Addr, SocketAddr};
-use dotenv::dotenv;
 use colored::Colorize;
+use dotenv::dotenv;
 use routers::get_routers;
+use std::net::{IpAddr, Ipv6Addr, SocketAddr};
+#[macro_use]
+extern crate lazy_static;
 
 #[path = "./models/mod.rs"]
 mod models;
