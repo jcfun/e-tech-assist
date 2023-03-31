@@ -1,12 +1,5 @@
-/*
- * @Author: jcfun jcfunstar@gmail.com
- * @Date: 2023-03-22 20:41:36
- * @LastEditors: jcfun jcfunstar@gmail.com
- * @LastEditTime: 2023-03-25 20:03:57
- * @FilePath: /e-tech-assist/web-server/src/main.rs
- * @Description:
- */
-
+#![feature(async_closure)]
+#![feature(unboxed_closures)]
 use colored::Colorize;
 use dotenv::dotenv;
 use routers::get_routers;

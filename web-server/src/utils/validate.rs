@@ -1,19 +1,13 @@
-use crate::common::res::Res;
-use axum::http::StatusCode;
-use serde::Serialize;
+use crate::common::errors::MyError;
 use validator::Validate;
 
 /// 参数校验
-pub fn param_validate<T, U>(payload: T) -> Result<String, (StatusCode, Res<U>)>
+pub fn param_validate<T>(payload: &T) -> Result<(), MyError>
 where
     T: Validate + Clone,
-    U: Serialize + Clone,
 {
     match payload.validate() {
-        Ok(_) => Ok("OK".into()),
-        Err(error) => Err((
-            StatusCode::OK,
-            Res::from_msg(StatusCode::UNAUTHORIZED, error.to_string().as_str()),
-        )),
+        Ok(_) => Ok(()),
+        Err(error) => Err(MyError::InvalidInput(error.to_string())),
     }
 }

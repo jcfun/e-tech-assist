@@ -25,7 +25,7 @@ pub fn get_routers() -> Router {
         .nest("/user", user_routes())
         // token校验(上面都是需要校验的路由)
         .layer(middleware::from_extractor::<Claims>())
-        // 登录
+        // 登录注册
         .merge(login_routes())
         // test
         .merge(test_routes())

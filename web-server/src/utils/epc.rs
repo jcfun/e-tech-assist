@@ -4,9 +4,9 @@ use rbatis::snowflake;
 use ring::digest;
 
 /// sha256加密
-pub fn encrypt_sha256(raw: String, salt: String) -> String {
+pub fn encrypt_sha256(raw: &String) -> String {
     let raw_bytes = raw.as_bytes();
-    let salt_bytes = salt.as_bytes();
+    let salt_bytes = "salt".as_bytes();
     let salted = vec![raw_bytes, salt_bytes].concat();
     let mut digest_ctx = digest::Context::new(&digest::SHA256);
     digest_ctx.update(&salted);

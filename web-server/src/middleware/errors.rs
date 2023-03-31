@@ -1,10 +1,7 @@
 use crate::common::res::Res;
-use axum::{
-    http::StatusCode,
-    response::IntoResponse,
-    BoxError,
-};
+use axum::{http::StatusCode, response::IntoResponse, BoxError};
 
+/// 请求超时
 pub async fn handle_timeout_error(err: BoxError) -> impl IntoResponse {
     if err.is::<tower::timeout::error::Elapsed>() {
         (
@@ -19,6 +16,7 @@ pub async fn handle_timeout_error(err: BoxError) -> impl IntoResponse {
     }
 }
 
+/// 404
 pub async fn fallback() -> impl IntoResponse {
     (
         StatusCode::NOT_FOUND,

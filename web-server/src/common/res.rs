@@ -3,9 +3,16 @@ use axum::{
     http::{header, StatusCode},
     response::{IntoResponse, Response},
 };
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
-
+use serde::{Deserialize, Serialize};
 use super::errors::MyError;
+
+// 分页查询结构体
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct PageRes<T> {
+    pub data: Option<Vec<T>>,
+    pub total: Option<u64>,
+    pub total_page: Option<u64>,
+}
 
 /// 公共返回结构体
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -15,41 +22,27 @@ pub struct Res<T> {
     pub data: Option<T>,
 }
 
-// 分页查询返回结构体
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct PageRes<T> {
-    pub data: Option<Vec<T>>,
-    pub total: Option<u64>,
-    pub total_page: Option<u64>,
+impl<T> ToString for Res<T>
+where
+    T: Serialize + Clone,
+{
+    fn to_string(&self) -> String {
+        serde_json::to_string(&self)
+            .map(|value| value)
+            .unwrap_or_else(|err| err.to_string())
+    }
 }
-
-#[derive(Debug)]
-pub struct ResJsonString(pub String);
 
 impl<T> IntoResponse for Res<T>
 where
-    T: Serialize + DeserializeOwned + Send + Sync + 'static,
+    T: Serialize + Clone,
 {
     fn into_response(self) -> Response {
-        let data = Self {
-            code: self.code,
-            msg: self.msg,
-            data: self.data,
-        };
-        let json_string = match serde_json::to_string(&data) {
-            Ok(v) => v,
-            Err(e) => {
-                return Response::builder()
-                    .status(StatusCode::INTERNAL_SERVER_ERROR)
-                    .header(header::CONTENT_TYPE, "application/json")
-                    .body(body::boxed(Full::from(e.to_string())))
-                    .unwrap();
-            }
-        };
-        let res_json_string = ResJsonString(json_string.clone());
-        let mut response = json_string.into_response();
-        response.extensions_mut().insert(res_json_string);
-        response
+        Response::builder()
+            .status(StatusCode::OK)
+            .header(header::CONTENT_TYPE, "application/json")
+            .body(body::boxed(Full::from(self.to_string())))
+            .unwrap()
     }
 }
 
@@ -73,10 +66,10 @@ where
         }
     }
 
-    pub fn from_error_msg(err: MyError) -> Self {
+    pub fn _from_error_msg(err: MyError) -> Self {
         Self {
             code: Some(StatusCode::INTERNAL_SERVER_ERROR.as_u16()),
-            msg: Some(err.error_msg()),
+            msg: Some(err._error_msg()),
             data: None,
         }
     }
@@ -106,13 +99,4 @@ where
     //         .body(Body::from(self.to_string()))
     //         .unwrap()
     // }
-}
-
-impl<T> ToString for Res<T>
-where
-    T: Serialize + DeserializeOwned + Clone,
-{
-    fn to_string(&self) -> String {
-        serde_json::to_string(self).unwrap()
-    }
 }

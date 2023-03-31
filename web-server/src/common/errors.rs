@@ -1,16 +1,8 @@
-/*
- * @Author: jcfun jcfunstar@gmail.com
- * @Date: 2023-03-23 17:31:41
- * @LastEditors: jcfun jcfunstar@gmail.com
- * @LastEditTime: 2023-03-24 23:40:50
- * @FilePath: /e-tech-assist/web-server/src/common/errors.rs
- * @Description:
- */
-
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
 };
+use log::info;
 use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum MyError {
@@ -22,27 +14,27 @@ pub enum MyError {
 }
 
 impl MyError {
-    pub fn error_msg(&self) -> String {
+    pub fn _error_msg(&self) -> String {
         match self {
             MyError::DBError(msg) => {
-                println!("Database error occurred: {:?}", msg);
-                format!("Database error occurred: {:?}", msg)
+                info!("数据库错误: {:?}", msg);
+                format!("数据库错误: {:?}", msg)
             }
             MyError::AxumError(msg) => {
-                println!("Server error occurred: {:?}", msg);
-                format!("Server error occurred: {:?}", msg)
+                info!("服务器内部错误: {:?}", msg);
+                format!("服务器内部错误: {:?}", msg)
             }
             MyError::NotFound(msg) => {
-                println!("Not found error occurred: {:?}", msg);
-                format!("Not found error occurred: {:?}", msg)
+                info!("404: {:?}", msg);
+                format!("404: {:?}", msg)
             }
             MyError::InvalidInput(msg) => {
-                println!("Invalid parameters received: {:?}", msg);
-                format!("Invalid parameters received: {:?}", msg)
+                info!("非法输入: {:?}", msg);
+                format!("非法输入: {:?}", msg)
             }
             MyError::HandlersError(msg) => {
-                println!("Handler error occurred: {:?}", msg);
-                format!("Handler error occurred: {:?}", msg)
+                println!("程序处理错误: {:?}", msg);
+                format!("程序处理错误: {:?}", msg)
             }
         }
     }
@@ -52,23 +44,23 @@ impl IntoResponse for MyError {
     fn into_response(self) -> Response {
         let (code, msg) = match self {
             MyError::DBError(msg) => {
-                println!("Database error occurred: {:?}", msg);
+                println!("数据库错误: {:?}", msg);
                 (StatusCode::INTERNAL_SERVER_ERROR, msg)
             }
             MyError::AxumError(msg) => {
-                println!("Server error occurred: {:?}", msg);
+                println!("服务器内部错误: {:?}", msg);
                 (StatusCode::INTERNAL_SERVER_ERROR, msg)
             }
             MyError::NotFound(msg) => {
-                println!("Not found error occurred: {:?}", msg);
+                println!("404: {:?}", msg);
                 (StatusCode::NOT_FOUND, msg)
             }
             MyError::InvalidInput(msg) => {
-                println!("Invalid parameters received: {:?}", msg);
+                println!("非法输入: {:?}", msg);
                 (StatusCode::BAD_REQUEST, msg)
             }
             MyError::HandlersError(msg) => {
-                println!("Handler error occurred: {:?}", msg);
+                println!("程序处理错误: {:?}", msg);
                 (StatusCode::INTERNAL_SERVER_ERROR, msg)
             }
         };
@@ -77,7 +69,6 @@ impl IntoResponse for MyError {
 }
 
 impl From<rbatis::rbdc::Error> for MyError {
-
     fn from(value: rbatis::rbdc::Error) -> Self {
         MyError::DBError(value.to_string())
     }

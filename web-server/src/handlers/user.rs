@@ -1,35 +1,26 @@
 use crate::{
     common::{errors::MyError, res::Res, state::AppState},
     dbaccess::user::select_user_by_id,
-    models::dto::user::CreateUserDTO,
+    models::{dto::user::CreateUserDTO, vo::user::UserVO},
 };
 use axum::{
     extract::{Path, State},
-    http::StatusCode,
     response::IntoResponse,
     Json,
 };
+use log::info;
 use serde_json::json;
 
 /// 根据id查询用户信息
 pub async fn get_user_by_id(
     State(mut state): State<AppState>,
     Path(id): Path<String>,
-) -> impl IntoResponse {
-    let data = select_user_by_id(&mut state.db, id).await;
-    println!("select_by_id = {}", json!(data));
-
-    data.map(|op| {
-        op.map(|user| (StatusCode::OK, Res::from_success_msg("查询成功", user)))
-            .unwrap_or_else(|| (StatusCode::OK, Res::from_not_found()))
-    })
-    .unwrap_or_else(|err| {
-        println!("error = {}", err);
-        (
-            StatusCode::OK,
-            Res::from_error_msg(MyError::AxumError("查询失败".into())),
-        )
-    })
+) -> Result<Res<UserVO>, MyError> {
+    let result = select_user_by_id(&mut state.db, id).await;
+    info!("select_by_id = {}", json!(result));
+    result?
+        .map(|user| Ok(Res::from_success_msg("查询成功", user)))
+        .unwrap_or_else(|| Ok(Res::from_not_found()))
 }
 pub async fn create_user(Json(_data): Json<CreateUserDTO>) -> impl IntoResponse {
     // let body = BaseResult {

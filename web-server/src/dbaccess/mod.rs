@@ -12,6 +12,7 @@ use rbdc_pg::driver::PgDriver;
  */
 pub mod login;
 pub mod user;
+pub mod sql;
 
 pub fn get_db_conn() -> Rbatis {
     // 获取数据库链接
