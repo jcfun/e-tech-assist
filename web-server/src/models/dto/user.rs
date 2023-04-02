@@ -6,12 +6,14 @@ use super::base::BaseDTO;
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "snake_case")]
 pub struct CreateUserDTO {
+    #[serde(flatten)]
+    pub base_entity: Option<BaseDTO>,
     pub account: String,
     pub password: String,
     pub disable_flag: Option<String>,
-    #[serde(flatten)]
-    pub base_entity: Option<BaseDTO>,
     pub detail_id: Option<String>,
+    pub role_id: String,
+    pub description: String,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]

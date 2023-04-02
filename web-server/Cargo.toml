@@ -22,20 +22,9 @@ anyhow = "1.0.70"
 # 序列化
 serde = { version = "1.0.158", features = ["derive"] }
 serde_json = "1.0.94"
+json = "0.12.4"
 # 时间格式化
 # chrono = { version = "0.4.24", features = ["serde"] }
-
-# 链路追踪
-tracing = "0.1.37"
-tracing-subscriber = "0.3.16"
-
-# 数据库
-# sqlx = { version = "0.6.3", features = [
-#     "postgres",
-#     "runtime-tokio-rustls",
-#     "macros",
-#     "chrono",
-# ] }
 
 # 权限校验
 cassie = "0.1.2"
@@ -49,8 +38,9 @@ rbatis = { version = "4.3.0" }
 rbdc-pg = { version = "4.3.0" }
 
 # 日志
-log = "0.4.17"
-fast_log = "1.5.54"
+log = { version = "*", features = ["std", "serde"] }
+tracing = "0.1.37"
+tracing-subscriber = "0.3.16"
 
 # 彩色文字
 colored = "2.0.0"
@@ -64,9 +54,12 @@ hex = "0.4.3"
 
 # 异步
 futures = "0.3.27"
+http-body = "0.4.5"
+http = "0.2.9"
+bytes = "1.4.0"
 
 # 参数校验
-validator = { version = "0.16.0", features = ["derive"] }
+validator = { version = "0.16.0", features = ["derive", "phone"] }
 validator_derive = "0.16.0"
 regex = "1.7.3"
 lazy_static = "1.4.0"

@@ -33,7 +33,7 @@ impl MyError {
                 format!("非法输入: {:?}", msg)
             }
             MyError::HandlersError(msg) => {
-                println!("程序处理错误: {:?}", msg);
+                info!("程序处理错误: {:?}", msg);
                 format!("程序处理错误: {:?}", msg)
             }
         }
@@ -44,23 +44,23 @@ impl IntoResponse for MyError {
     fn into_response(self) -> Response {
         let (code, msg) = match self {
             MyError::DBError(msg) => {
-                println!("数据库错误: {:?}", msg);
+                info!("数据库错误: {:?}", msg);
                 (StatusCode::INTERNAL_SERVER_ERROR, msg)
             }
             MyError::AxumError(msg) => {
-                println!("服务器内部错误: {:?}", msg);
+                info!("服务器内部错误: {:?}", msg);
                 (StatusCode::INTERNAL_SERVER_ERROR, msg)
             }
             MyError::NotFound(msg) => {
-                println!("404: {:?}", msg);
+                info!("404: {:?}", msg);
                 (StatusCode::NOT_FOUND, msg)
             }
             MyError::InvalidInput(msg) => {
-                println!("非法输入: {:?}", msg);
+                info!("非法输入: {:?}", msg);
                 (StatusCode::BAD_REQUEST, msg)
             }
             MyError::HandlersError(msg) => {
-                println!("程序处理错误: {:?}", msg);
+                info!("程序处理错误: {:?}", msg);
                 (StatusCode::INTERNAL_SERVER_ERROR, msg)
             }
         };

@@ -4,20 +4,20 @@ use self::user::user_routes;
 use crate::common::state::{get_state, AppState};
 use crate::middleware::{
     errors::{fallback, handle_timeout_error},
-    filter::mid_handler,
+    filter::filter,
 };
 use crate::utils::jwt::Claims;
 use axum::error_handling::HandleErrorLayer;
 use axum::{middleware, Router};
+use tower_http::trace::TraceLayer;
 use std::time::Duration;
 use tower::ServiceBuilder;
-use tower_http::trace::TraceLayer;
 
 pub mod login;
 pub mod test;
 pub mod user;
 
-pub fn get_routers() -> Router {
+pub fn get_sys_routers() -> Router {
     // 获取共享状态
     let state = get_state();
     Router::<AppState>::new()
@@ -33,11 +33,15 @@ pub fn get_routers() -> Router {
         .layer(
             ServiceBuilder::new()
                 .layer(HandleErrorLayer::new(handle_timeout_error))
-                .timeout(Duration::from_secs(30)),
+                .timeout(Duration::from_secs(60)),
         )
+        // .layer(TraceLayer::on_request())
         // http info
-        .layer(TraceLayer::new_for_http())
-        .layer(middleware::from_fn(mid_handler))
+        .layer(
+            TraceLayer::new_for_http()
+        )
+        // filter
+        .layer(middleware::from_fn(filter))
         // 404
         .fallback(fallback)
         // 注入全局共享状态

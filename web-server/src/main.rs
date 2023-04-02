@@ -1,9 +1,11 @@
 #![feature(async_closure)]
 #![feature(unboxed_closures)]
+use axum::Router;
 use colored::Colorize;
 use dotenv::dotenv;
-use routers::get_routers;
+use routers::get_sys_routers;
 use std::net::{IpAddr, Ipv6Addr, SocketAddr};
+use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt};
 #[macro_use]
 extern crate lazy_static;
 
@@ -33,7 +35,7 @@ async fn main() {
     // 设置环境变量
     dotenv().ok();
     // 启用日志打印
-    fast_log::init(fast_log::Config::new().console()).expect("server init fail");
+    tracing_subscriber::registry().with(fmt::layer()).init();
     // 设置监听地址
     let socket = SocketAddr::new(IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0)), 3000);
     // banner
@@ -48,7 +50,7 @@ async fn main() {
     // 打印服务连接信息
     println!("listening on {} ...\n", socket);
     // 获取路由
-    let routers = get_routers();
+    let routers = Router::new().nest("/api", get_sys_routers());
     // 启动服务
     axum::Server::bind(&socket)
         .serve(routers.into_make_service())

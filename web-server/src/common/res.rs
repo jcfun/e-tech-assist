@@ -1,10 +1,15 @@
+use std::fmt::Debug;
+
+use super::errors::MyError;
 use axum::{
-    body::{self, Full},
-    http::{header, StatusCode},
+    body,
+    http::StatusCode,
     response::{IntoResponse, Response},
 };
+use http_body::Full;
+use hyper::header;
+use log::info;
 use serde::{Deserialize, Serialize};
-use super::errors::MyError;
 
 // 分页查询结构体
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -35,9 +40,19 @@ where
 
 impl<T> IntoResponse for Res<T>
 where
-    T: Serialize + Clone,
+    T: Serialize + Clone + Debug,
 {
     fn into_response(self) -> Response {
+        // let resp = Response::builder()
+        //     // .extension(|| {})
+        //     // .header("Access-Control-Allow-Origin", "*")
+        //     // .header("Cache-Control", "no-cache")
+        //     .status(StatusCode::OK)
+        //     .header(header::CONTENT_TYPE, "application/json")
+        //     .body(Body::from(self.to_string()))
+        //     .unwrap();
+        info!("响应体 ==============> {:?}", self);
+
         Response::builder()
             .status(StatusCode::OK)
             .header(header::CONTENT_TYPE, "application/json")
@@ -91,12 +106,15 @@ where
     }
 
     // pub fn resp_json(&self) -> Response<Body> {
-    //     Response::builder()
-    //         .extension(|| {})
-    //         .header("Access-Control-Allow-Origin", "*")
-    //         .header("Cache-Control", "no-cache")
-    //         .header("Content-Type", "text/json;charset=UTF-8")
+    //     let resp = Response::builder()
+    //         // .extension(|| {})
+    //         // .header("Access-Control-Allow-Origin", "*")
+    //         // .header("Cache-Control", "no-cache")
+    //         .header(header::CONTENT_TYPE, "application/json")
     //         .body(Body::from(self.to_string()))
-    //         .unwrap()
+    //         .unwrap();
+
+    //     info!("响应体 ==============> {:#?}", resp);
+    //     resp
     // }
 }

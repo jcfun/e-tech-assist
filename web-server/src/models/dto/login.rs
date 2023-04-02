@@ -19,6 +19,12 @@ pub struct RegisterDTO {
     pub account: Option<String>,
     #[validate(required(message  = "密码不可为空"), length(min = 6, max = 18, message = "密码格式错误"))]
     pub password: Option<String>,
+    #[validate(required(message  = "电话号不可为空"))]
+    pub phone: Option<String>,
+    #[validate(length(min = 1, max = 18, message = "昵称格式错误"))]
+    pub nickname: Option<String>,
+    #[validate(length(equal = 18, message = "用户详情id格式错误"))]
+    pub detail_id: Option<String>,
     #[serde(flatten)]
     pub base_dto: BaseDTO,
 }

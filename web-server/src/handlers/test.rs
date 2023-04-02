@@ -1,6 +1,12 @@
-use crate::utils::epc::get_snowflake;
+use std::time::SystemTime;
 
-pub async fn test() {
-    let id = get_snowflake();
-    println!("id ====> {}", id)
+use axum::response::IntoResponse;
+use log::info;
+
+use crate::common::res::Res;
+
+pub async fn test() -> impl IntoResponse {
+    let now = SystemTime::now();
+    info!("now =======> {:?}", now);
+    Res::<SystemTime>::from_success_msg("Test success", now)
 }
