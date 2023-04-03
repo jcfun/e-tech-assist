@@ -1,9 +1,13 @@
+use std::net::AddrParseError;
+
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
 };
 use log::info;
+use maxminddb::MaxMindDBError;
 use serde::{Deserialize, Serialize};
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum MyError {
     DBError(String),
@@ -11,6 +15,10 @@ pub enum MyError {
     NotFound(String),
     InvalidInput(String),
     HandlersError(String),
+    RedisError(String),
+    AddrParseError(String),
+    MaxMindDBError(String),
+    UnwrapError(String),
 }
 
 impl MyError {
@@ -35,6 +43,22 @@ impl MyError {
             MyError::HandlersError(msg) => {
                 info!("程序处理错误: {:?}", msg);
                 format!("程序处理错误: {:?}", msg)
+            }
+            MyError::RedisError(msg) => {
+                info!("Redis错误: {:?}", msg);
+                format!("Redis错误: {:?}", msg)
+            }
+            MyError::AddrParseError(msg) => {
+                info!("ip地址格式错误: {:?}", msg);
+                format!("ip地址格式错误: {:?}", msg)
+            }
+            MyError::MaxMindDBError(msg) => {
+                info!("ip数据库解析错误: {:?}", msg);
+                format!("ip数据库解析错误: {:?}", msg)
+            }
+            MyError::UnwrapError(msg) => {
+                info!("拆箱错误: {:?}", msg);
+                format!("拆箱错误: {:?}", msg)
             }
         }
     }
@@ -63,6 +87,22 @@ impl IntoResponse for MyError {
                 info!("程序处理错误: {:?}", msg);
                 (StatusCode::INTERNAL_SERVER_ERROR, msg)
             }
+            MyError::RedisError(msg) => {
+                info!("Redis连接错误: {:?}", msg);
+                (StatusCode::INTERNAL_SERVER_ERROR, msg)
+            }
+            MyError::AddrParseError(msg) => {
+                info!("ip地址格式错误: {:?}", msg);
+                (StatusCode::BAD_REQUEST, msg)
+            }
+            MyError::MaxMindDBError(msg) => {
+                info!("ip数据库解析错误: {:?}", msg);
+                (StatusCode::INTERNAL_SERVER_ERROR, msg)
+            }
+            MyError::UnwrapError(msg) => {
+                info!("拆箱错误: {:?}", msg);
+                (StatusCode::INTERNAL_SERVER_ERROR, msg)
+            }
         };
         (code, msg).into_response()
     }
@@ -71,5 +111,24 @@ impl IntoResponse for MyError {
 impl From<rbatis::rbdc::Error> for MyError {
     fn from(value: rbatis::rbdc::Error) -> Self {
         MyError::DBError(value.to_string())
+    }
+}
+
+
+impl From<redis::RedisError> for MyError {
+    fn from(value: redis::RedisError) -> Self {
+        MyError::RedisError(value.to_string())
+    }
+}
+
+impl From<MaxMindDBError> for MyError {
+    fn from(value: MaxMindDBError) -> Self {
+        MyError::RedisError(value.to_string())
+    }
+}
+
+impl From<AddrParseError> for MyError {
+    fn from(value: AddrParseError) -> Self {
+        MyError::RedisError(value.to_string())
     }
 }

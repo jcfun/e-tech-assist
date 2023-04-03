@@ -1,13 +1,14 @@
 use crate::{
     common::state::AppState,
-    handlers::login::{login, register},
+    handlers::login::{captcha, login, register},
 };
 use axum::{
-    routing::post,
+    routing::{get, post},
     Router,
 };
 pub fn login_routes() -> Router<AppState> {
     Router::new()
-        .route("/login", post(login))
+        .route("/", post(login))
         .route("/register", post(register))
+        .route("/captcha", get(captcha))
 }

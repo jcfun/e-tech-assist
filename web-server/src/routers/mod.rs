@@ -26,14 +26,14 @@ pub fn get_sys_routers() -> Router {
         // token校验(上面都是需要校验的路由)
         .layer(middleware::from_extractor::<Claims>())
         // 登录注册
-        .merge(login_routes())
+        .nest("/login", login_routes())
         // test
         .merge(test_routes())
         // 超时响应
         .layer(
             ServiceBuilder::new()
                 .layer(HandleErrorLayer::new(handle_timeout_error))
-                .timeout(Duration::from_secs(60)),
+                .timeout(Duration::from_secs(600)),
         )
         // .layer(TraceLayer::on_request())
         // http info

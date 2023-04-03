@@ -10,7 +10,7 @@ pub async fn select_user_by_id(rb: &mut Rbatis, id: String) -> Result<Option<Use
 }
 
 /// 根据用户账号查询用户数量
-pub async fn select_user_count_by_id(rb: &Rbatis, account: &String) -> Result<u64, Error> {
+pub async fn select_user_count_by_account(rb: &Rbatis, account: &String) -> Result<u64, Error> {
     rb.query_decode("select count(*) from t_user where account = ?", vec![to_value!(account)])
         .await
 }

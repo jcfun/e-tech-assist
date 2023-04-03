@@ -6,8 +6,9 @@ use dotenv::dotenv;
 use routers::get_sys_routers;
 use std::net::{IpAddr, Ipv6Addr, SocketAddr};
 use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt};
-#[macro_use]
-extern crate lazy_static;
+// #[macro_use]
+// extern crate lazy_static;
+extern crate maxminddb;
 
 #[path = "./models/mod.rs"]
 mod models;
