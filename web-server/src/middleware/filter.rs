@@ -31,7 +31,7 @@ pub async fn filter(req: Request<Body>, next: Next<Body>) -> Result<Response, Re
         body_string = "请求发生错误".to_string()
     }
     let resp = Res::<()>::from_msg(status, &body_string);
-    info!("响应体 ===========> {:#?}", resp);
+    info!("响应体 ===========> {:?}", resp);
     Err(resp)
 }
 
