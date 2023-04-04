@@ -1,8 +1,3 @@
-use std::{
-    env,
-    time::{SystemTime, UNIX_EPOCH},
-};
-
 use axum::{
     async_trait,
     extract::FromRequestParts,
@@ -15,8 +10,10 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     common::{errors::MyError, res::Res},
-    models::vo::login::LoginVO,
+    models::vo::login::LoginVO, config::init::APP_CFG,
 };
+
+use super::time::get_epoch;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Claims {
@@ -34,24 +31,7 @@ impl Claims {
             account,
             nickname,
             iat: get_epoch(),
-            exp: get_epoch() + 30 * 24 * 60 * 60,
-        }
-    }
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct Key {
-    encode_key: String,
-    decode_key: String,
-}
-
-impl Key {
-    pub fn new() -> Key {
-        let encode_key = env::var("JWT_ENCODE_KEY").expect("JWT_ENCODE_KEY is not found");
-        let decode_key = env::var("JWT_DECODE_KEY").expect("JWT_DECODE_KEY is not found");
-        Key {
-            encode_key,
-            decode_key,
+            exp: APP_CFG.jwt.exp,
         }
     }
 }
@@ -73,7 +53,7 @@ pub async fn encode_jwt(login_info: LoginVO) -> Token {
     let token = encode(
         &Header::default(),
         &claims,
-        &EncodingKey::from_secret(Key::new().encode_key.as_ref()),
+        &EncodingKey::from_secret(&APP_CFG.jwt.secret.as_bytes()),
     )
     .unwrap();
     Token {
@@ -85,7 +65,7 @@ pub async fn encode_jwt(login_info: LoginVO) -> Token {
 pub async fn decode_jwt(token: String) -> Result<Claims, MyError> {
     let token_info = decode::<Claims>(
         &token,
-        &DecodingKey::from_secret(Key::new().decode_key.as_ref()),
+        &DecodingKey::from_secret(&APP_CFG.jwt.secret.as_bytes()),
         &Validation::new(Algorithm::HS256),
     );
     token_info
@@ -155,10 +135,4 @@ impl IntoResponse for AuthError {
                 .into_response(),
         }
     }
-}
-
-pub fn get_epoch() -> usize {
-    let now = SystemTime::now();
-    let since_the_epoch = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
-    since_the_epoch.as_millis() as usize
 }

@@ -5,3 +5,5 @@ pub mod fill;
 pub mod captcha;
 pub mod redis;
 pub mod ip;
+pub mod time;
+pub mod log;

@@ -50,6 +50,6 @@ pub async fn create_user_detail(
 #[py_sql(
     "insert into t_login_log(id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, account, status, description, user_agent, ip, ip_addr, mac ) values(#{login_log_dto.id}, #{login_log_dto.operate_time}, #{login_log_dto.operator}, #{login_log_dto.operator_id}, #{login_log_dto.create_time}, #{login_log_dto.creator}, #{login_log_dto.creator_id}, #{login_log_dto.delete_flag}, #{login_log_dto.account}, #{login_log_dto.status}, #{login_log_dto.description}, #{login_log_dto.user_agent}, #{login_log_dto.ip}, #{login_log_dto.ip_addr}, #{login_log_dto.mac})"
 )]
-pub async fn create_login_log(tx: &Rbatis, login_log_dto: &LoginLogDTO) -> Result<ExecResult, Error> {
+pub async fn create_login_log(rb: &Rbatis, login_log_dto: &LoginLogDTO) -> Result<ExecResult, Error> {
     impled!();
 }

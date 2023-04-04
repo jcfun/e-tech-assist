@@ -1,0 +1,15 @@
+database:
+  pg_url: postgres://postgres:123456@192.168.31.243:3308/e_tech_assist
+  redis_url: redis://:123456@192.168.31.243:3310
+
+jwt:
+  secret: secret
+  exp: 2592000 # 30*24*60*60 30天
+
+server: 
+  ip: '::'
+  port: 3000
+
+api:
+  prefix: "api"
+  version: "v1"

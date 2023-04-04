@@ -1,22 +1,16 @@
 use crate::{
-    common::{errors::MyError, res::Res, state::AppState},
+    common::{errors::MyError, res::Res},
     dbaccess::user::select_user_by_id,
-    models::{dto::user::CreateUserDTO, vo::user::UserVO},
+    models::{dto::user::CreateUserDTO, vo::user::UserVO}, config::init::APP_CONTEXT,
 };
-use axum::{
-    extract::{Path, State},
-    response::IntoResponse,
-    Json,
-};
+use axum::{extract::Path, response::IntoResponse, Json};
 use log::info;
 use serde_json::json;
 
 /// 根据id查询用户信息
-pub async fn get_user_by_id(
-    State(mut state): State<AppState>,
-    Path(id): Path<String>,
-) -> Result<Res<UserVO>, MyError> {
-    let result = select_user_by_id(&mut state.db, id).await;
+pub async fn get_user_by_id(Path(id): Path<String>) -> Result<Res<UserVO>, MyError> {
+    let db = &APP_CONTEXT.db;
+    let result = select_user_by_id(db, id).await;
     info!("select_by_id = {}", json!(result));
     result?
         .map(|user| Ok(Res::from_success_msg("查询成功", user)))

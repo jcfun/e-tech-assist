@@ -5,7 +5,7 @@
             "type": "cargo",
             "command": "build",
             "args": [
-                "--bin=web-server"
+                "--bin=web-server",
             ],
             "problemMatcher": [
                 "$rustc"

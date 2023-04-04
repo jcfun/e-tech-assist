@@ -1,55 +1,33 @@
-use crate::common::errors::MyError;
+use crate::{common::errors::MyError, config::init::APP_CONTEXT};
 use maxminddb::{geoip2::City, Reader};
-use once_cell::sync::Lazy;
-use std::{fs, net::IpAddr};
+use std::{collections::BTreeMap, fs, net::IpAddr, sync::Mutex};
 use tracing::info;
 
-pub static READER: Lazy<Reader<Vec<u8>>> = Lazy::new(get_reader);
+pub fn get_reader() -> Mutex<Reader<Vec<u8>>> {
+    let buf = fs::read("GeoLite2-City.mmdb").expect("读取数据文件失败");
+    Mutex::new(maxminddb::Reader::from_source(buf).expect("数据流创建失败"))
+}
 
-pub fn get_reader() -> Reader<Vec<u8>> {
-    let buf = fs::read("GeoLite2-City.mmdb").unwrap();
-    maxminddb::Reader::from_source(buf).unwrap()
+fn get_name(names: Option<BTreeMap<&str, &str>>) -> String {
+    names
+        .and_then(|m| m.get("zh-CN").map(|v| v.to_string()))
+        .unwrap_or_default()
 }
 
 pub async fn get_ip_addr(ip: &str) -> Result<String, MyError> {
+    let reader = APP_CONTEXT.reader.lock().unwrap();
     let addr: IpAddr = ip.parse()?;
-    let res: City = READER.lookup(addr)?;
+    let res: City = reader.lookup(addr)?;
     info!("Test result =========> {:?}", res);
-    let (continent, country, city) = (
-        res.continent
-            .map(|v1| {
-                v1.names
-                    .map(|v2| {
-                        v2.get("zh-CN")
-                            .map(|v3| v3.to_string())
-                            .unwrap_or("".to_string())
-                    })
-                    .unwrap_or("".to_string())
-            })
-            .unwrap_or("".to_string()),
-        res.country
-            .map(|v1| {
-                v1.names
-                    .map(|v2| {
-                        v2.get("zh-CN")
-                            .map(|v3| v3.to_string())
-                            .unwrap_or("".to_string())
-                    })
-                    .unwrap_or("".to_string())
-            })
-            .unwrap_or("".to_string()),
-        res.city
-            .map(|v1| {
-                v1.names
-                    .map(|v2| {
-                        v2.get("zh-CN")
-                            .map(|v3| v3.to_string())
-                            .unwrap_or("".to_string())
-                    })
-                    .unwrap_or("".to_string())
-            })
-            .unwrap_or("".to_string()),
-    );
-    let addr = continent + &country + &city;
-    Ok(addr)
+
+    let continent = res
+        .continent
+        .map(|v| get_name(v.names))
+        .unwrap_or("".into());
+
+    let country = res.country.map(|v| get_name(v.names)).unwrap_or("".into());
+
+    let city = res.city.map(|v| get_name(v.names)).unwrap_or("".into());
+
+    Ok(format!("{}{}{}", continent, country, city))
 }

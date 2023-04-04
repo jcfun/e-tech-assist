@@ -1,9 +1,9 @@
-use crate::{common::state::AppState, handlers::user::*};
+use crate::handlers::user::*;
 use axum::{
     routing::{get, post},
     Router,
 };
-pub fn user_routes() -> Router<AppState> {
+pub fn user_routes() -> Router{
     Router::new()
         .route(
             "/:id",

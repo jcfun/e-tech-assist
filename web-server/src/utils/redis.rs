@@ -2,13 +2,14 @@ use log::error;
 use redis::aio::Connection;
 use redis::AsyncCommands;
 extern crate redis;
-
 use crate::common::errors::MyError;
+use crate::config::init::APP_CFG;
 
 pub async fn get_redis_conn() -> Result<Connection, MyError> {
     // 获取redis链接
     // let redis_url = env::var("REDIS_URL").expect("REDIS_URL is not found");
-    let client = redis::Client::open("redis://:123456@192.168.31.243:3310").unwrap();
+    let redis_url = APP_CFG.database.redis_url.as_str();
+    let client = redis::Client::open(redis_url)?;
     let conn = client.get_async_connection().await;
     if conn.is_err() {
         let err = format!("{}", conn.err().unwrap());
@@ -24,7 +25,6 @@ pub async fn _set_string(key: &str, value: &str) -> Result<bool, MyError> {
     let mut conn = get_redis_conn().await?;
     let res: bool = conn.set(key, value).await?;
     Ok(res)
-
 }
 
 /// 设置有过期时间的str
