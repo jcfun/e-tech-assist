@@ -4,6 +4,7 @@ pub struct Config {
     pub jwt: Jwt,
     pub server: Server,
     pub api: Api,
+    pub captcha: Captcha,
 }
 use log::info;
 use serde::Deserialize;
@@ -43,6 +44,25 @@ pub struct Api {
     pub version: String,
 }
 
+/// 验证码
+#[derive(Debug, Deserialize)]
+pub struct Captcha {
+    // 长度
+    pub length: usize,
+    // 宽度
+    pub width: u32,
+    // 高度
+    pub height: u32,
+    // 深色模式
+    pub dark_mode: bool,
+    // 复杂度
+    pub complexity: u32,
+    // 压缩
+    pub compression: u8,
+    // 过期时间
+    pub exp: usize,
+}
+
 impl Config {
     pub fn new() -> Self {
         let cfg_path = env::var("CFG_PATH").expect("配置文件路径读取失败");
@@ -60,7 +80,7 @@ impl Config {
         let config = serde_yaml::from_str(&cfg_string)
             .map(|data| data)
             .unwrap_or_else(|err| panic!("配置文件解析失败: {}", err));
-        info!("配置文件加载完毕");
+        info!("配置文件初始化完毕");
         config
     }
 }

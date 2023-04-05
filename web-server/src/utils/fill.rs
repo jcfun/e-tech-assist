@@ -2,8 +2,8 @@ use super::{epc::get_snowflake, jwt::Claims};
 use crate::models::dto::base::BaseDTO;
 use rbatis::rbdc::datetime::DateTime;
 
-/// 填充公共字段
-pub fn fill_create_fields(model: &mut BaseDTO, claim: &Claims, create_flag: bool) {
+/// 填充创建和更新数据时的公共字段
+pub fn _fill_fields(model: &mut BaseDTO, claim: &Claims, create_flag: bool) {
     let datetime = DateTime::now();
     let claim = claim.clone();
     if create_flag {
@@ -16,7 +16,9 @@ pub fn fill_create_fields(model: &mut BaseDTO, claim: &Claims, create_flag: bool
     (model.operator, model.operator_id) = (claim.nickname, claim.id);
 }
 
-pub fn fill_fields(model: &mut BaseDTO) {
+
+/// 填充非登录状态下操作时的公共字段(注册、登录日志、修改密码等)
+pub fn fill_fields_system(model: &mut BaseDTO) {
     let datetime = DateTime::now();
     model.id = Some(get_snowflake());
     model.create_time = Some(datetime.clone());

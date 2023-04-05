@@ -2,6 +2,8 @@ use captcha_rs::CaptchaBuilder;
 use serde::Serialize;
 use uuid::Uuid;
 
+use crate::config::init::APP_CFG;
+
 #[derive(Debug, Serialize, Clone)]
 pub struct Captcha {
     #[serde(skip)]
@@ -13,12 +15,12 @@ pub struct Captcha {
 /// 获取验证码
 pub fn get_captcha() -> Captcha {
     let captcha = CaptchaBuilder::new()
-        .length(5)
-        .width(130)
-        .height(40)
-        .dark_mode(false)
-        .complexity(1) // min: 1, max: 10
-        .compression(40) // min: 1, max: 99
+        .length(APP_CFG.captcha.length)
+        .width(APP_CFG.captcha.width)
+        .height(APP_CFG.captcha.height)
+        .dark_mode(APP_CFG.captcha.dark_mode)
+        .complexity(APP_CFG.captcha.complexity) // min: 1, max: 10
+        .compression(APP_CFG.captcha.compression) // min: 1, max: 99
         .build();
     let img = captcha.to_base64();
     let uuid = Uuid::new_v4().to_string();

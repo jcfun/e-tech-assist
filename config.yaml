@@ -1,15 +1,24 @@
 database:
-  pg_url: postgres://postgres:123456@192.168.31.243:3308/e_tech_assist
-  redis_url: redis://:123456@192.168.31.243:3310
+  pg_url: postgres://postgres:123456@192.168.31.243:3308/e_tech_assist # postgresql连接地址
+  redis_url: redis://:123456@192.168.31.243:3310 # redis连接地址
 
 jwt:
-  secret: secret
+  secret: secret # jwt密钥
   exp: 2592000 # 30*24*60*60 30天
 
-server: 
-  ip: '::'
-  port: 3000
+server:
+  ip: "::" # 监听地址
+  port: 3000 # 监听端口
 
 api:
-  prefix: "api"
-  version: "v1"
+  prefix: api # api前缀
+  version: v1 # api版本
+
+captcha:
+  length: 4 # 验证码长度
+  width: 150 # 验证码宽度
+  height: 50 # 验证码高度
+  dark_mode: false # 深色模式
+  complexity: 3 # 复杂度
+  compression: 30 # 压缩率
+  exp: 600 # 过期时间

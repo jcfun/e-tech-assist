@@ -32,7 +32,7 @@ pub fn log_init() {
     // 获取环境变量
     let log_dir = env::var("LOG_DIR").expect("日志输出文件夹路径获取失败");
     let log_file = env::var("LOG_FILE").expect("日志输出文件夹路径获取失败");
-    let file_appender = rolling::hourly(log_dir, log_file);
+    let file_appender = rolling::daily(log_dir, log_file);
     let (non_blocking_appender, _guard) = non_blocking(file_appender);
     let file_layer = fmt::layer()
         .with_thread_ids(true)

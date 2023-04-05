@@ -1,8 +1,6 @@
-use crate::{
-    handlers::login::{captcha, login, register},
-};
+use crate::handlers::login::{captcha, login, register, reset_pwd};
 use axum::{
-    routing::{get, post},
+    routing::{get, patch, post},
     Router,
 };
 pub fn login_routes() -> Router {
@@ -10,4 +8,5 @@ pub fn login_routes() -> Router {
         .route("/", post(login))
         .route("/register", post(register))
         .route("/captcha", get(captcha))
+        .route("/reset", patch(reset_pwd))
 }

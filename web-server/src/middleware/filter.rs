@@ -28,7 +28,7 @@ pub async fn filter(req: Request<Body>, next: Next<Body>) -> Result<Response, Re
     // 如果为错误响应，则构造Res返回
     let mut body_string = get_body_string(resp.into_body()).await;
     if body_string == "" {
-        body_string = "请求发生错误".to_string()
+        body_string = "操作失败".to_string()
     }
     let resp = Res::<()>::from_msg(status, &body_string);
     info!("响应体 ===========> {:?}", resp);
