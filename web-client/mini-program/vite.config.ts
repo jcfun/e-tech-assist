@@ -20,6 +20,6 @@ export default defineConfig({
   }
 })
 
-module.exports = {
-  transpileDependencies: ['uview-plus']
-}
+// module.exports = {
+//   transpileDependencies: ['uview-plus']
+// }
