@@ -10,4 +10,7 @@ onHide(() => {
   console.log('App Hide')
 })
 </script>
-<style></style>
+<style lang="scss">
+// uview-plus基础样式
+@import "uview-plus/index.scss";
+</style>
