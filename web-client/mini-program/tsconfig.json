@@ -6,13 +6,13 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-        "@/*": ["./src/*"]
+      "@/*": ["./src/*"]
     },
     "lib": ["esnext", "dom"],
     "types": [
-            "@dcloudio/types",
-            "@ttou/uview-typings/v3.d.ts",
-            "@ttou/uview-typings/refs"
+      "@dcloudio/types",
+      "@ttou/uview-typings/v3.d.ts",
+      "@ttou/uview-typings/refs"
     ]
   },
   "include": [
