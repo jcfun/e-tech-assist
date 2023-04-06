@@ -2,17 +2,17 @@
   "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
     "verbatimModuleSyntax": true,
-    // "ignoreDeprecations": "5.0",
+    "ignoreDeprecations": "5.0",
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+        "@/*": ["./src/*"]
     },
     "lib": ["esnext", "dom"],
     "types": [
-      "@dcloudio/types",
-      "@ttou/uview-typings/v3.d.ts",
-      "@ttou/uview-typings/refs"
+            "@dcloudio/types",
+            "@ttou/uview-typings/v3.d.ts",
+            "@ttou/uview-typings/refs"
     ]
   },
   "include": [
