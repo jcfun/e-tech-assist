@@ -1,6 +1,6 @@
 <template>
   <view>
-    <mine-login v-if="User.token"></mine-login>
+    <mine-login v-if="user.token"></mine-login>
     <mine-userinfo v-else></mine-userinfo>
   </view>
 </template>
@@ -8,7 +8,7 @@
 <script setup lang='ts'>
 import { useUserStore } from '../../store/user'
 
-const User = useUserStore()
+const user = useUserStore()
 
 </script>
 
