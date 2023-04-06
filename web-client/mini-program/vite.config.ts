@@ -17,5 +17,9 @@ export default defineConfig({
   server: {
     host: "::",
     port: 8003
-  },
+  }
 })
+
+module.exports = {
+  transpileDependencies: ['uview-plus']
+}
