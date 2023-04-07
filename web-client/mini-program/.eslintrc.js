@@ -1,22 +1,32 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true
+    es2021: true,
+    node: true,
   },
   extends: [
-    'plugin:vue/vue3-essential',
-    'standard-with-typescript'
+    // 'eslint:recommended',
+    'prettier/@typescript-eslint',
+    // 'plugin:vue/vue3-essential',
+    // 'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
   ],
-  overrides: [
-  ],
+  overrides: [],
+  parser: 'vue-eslint-parser',
   parserOptions: {
     ecmaVersion: 'latest',
-    sourceType: 'module'
+    sourceType: 'module',
+    parser: '@typescript-eslint/parser',
   },
-  plugins: [
-    'vue'
-  ],
+  plugins: ['vue', '@typescript-eslint'],
   rules: {
-    'vue/multi-word-component-names': 'off' // 关闭大驼峰命名检查
-  }
-}
+    quotes: ['error', 'single'], //必须为单引号
+    semi: ['error', 'always'], //必须有分号
+    'vue/multi-word-component-names': 'off',
+    'prettier/prettier': 'error',
+  },
+  globals: {
+    uni: true,
+    wx: true,
+  },
+};

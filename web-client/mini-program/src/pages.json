@@ -17,6 +17,9 @@
       "style": {
         "navigationBarTitleText": "我的"
       }
+    },
+    {
+      "path": "pages/auth/auth"
     }
   ],
   "tabBar": {
@@ -27,26 +30,26 @@
       {
         "text": "首页",
         "pagePath": "pages/index/index",
-        "iconPath": "static/tabBar/index.png",
+        "iconPath": "static/images/tabBar/index.png",
         "selectedIconPath": "static/tabBar/index_sel.png"
       },
       {
         "text": "消息",
         "pagePath": "pages/msg/msg",
-        "iconPath": "static/tabBar/msg.png",
+        "iconPath": "static/images/tabBar/msg.png",
         "selectedIconPath": "static/tabBar/msg_sel.png"
       },
       {
         "text": "我的",
         "pagePath": "pages/mine/mine",
-        "iconPath": "static/tabBar/mine.png",
+        "iconPath": "static/images/tabBar/mine.png",
         "selectedIconPath": "static/tabBar/mine_sel.png"
       }
     ]
   },
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
+    "navigationBarTitleText": "鄂助教",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },

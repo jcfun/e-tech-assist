@@ -11,6 +11,8 @@ onHide(() => {
 })
 </script>
 <style lang="scss">
-// uview-plus基础样式
 @import "uview-plus/index.scss";
+page {
+  background-color: #F8F8F8;
+}
 </style>

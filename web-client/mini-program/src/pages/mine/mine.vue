@@ -1,14 +1,16 @@
 <template>
   <view>
-    <mine-login v-if="user.token"></mine-login>
-    <mine-userinfo v-else></mine-userinfo>
+    <mine-login></mine-login>
+    <mine-func></mine-func>
+    <u-empty mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" textSize="30" width="500" height="500">
+    </u-empty>
   </view>
 </template>
 
 <script setup lang='ts'>
-import { useUserStore } from '../../store/user'
+// import { useUserStore } from '../../store/user'
 
-const user = useUserStore()
+// const user = useUserStore()
 
 </script>
 
