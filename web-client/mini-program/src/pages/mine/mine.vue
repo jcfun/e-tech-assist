@@ -7,11 +7,10 @@
   </view>
 </template>
 
-<script setup lang='ts'>
-// import { useUserStore } from '../../store/user'
+<script setup lang="ts">
+  // import { useUserStore } from '../../store/user'
 
-// const user = useUserStore()
-
+  // const user = useUserStore()
 </script>
 
-<style scoped lang='scss'></style>
+<style scoped lang="scss"></style>

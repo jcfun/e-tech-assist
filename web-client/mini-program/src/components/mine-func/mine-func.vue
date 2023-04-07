@@ -15,28 +15,26 @@
   </view>
 </template>
 
-<script setup lang='ts'>
+<script setup lang="ts"></script>
 
-</script>
-
-<style scoped lang='scss'>
-.func-card {
-  display: flex;
-  flex-direction: row;
-  margin: 0 25rpx;
-  margin-top: 25rpx;
-  border-radius: 15rpx;
-  background-color: #ffffff;
-  overflow: hidden;
-
-  .card-item {
-    flex: 1;
-    height: 150rpx;
-    background-color: #ffffff;
+<style scoped lang="scss">
+  .func-card {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 30rpx;
+    flex-direction: row;
+    margin: 0 25rpx;
+    margin-top: 25rpx;
+    border-radius: 15rpx;
+    background-color: #ffffff;
+    overflow: hidden;
+
+    .card-item {
+      flex: 1;
+      height: 150rpx;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 30rpx;
+    }
   }
-}
 </style>

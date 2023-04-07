@@ -1,16 +1,12 @@
-import { defineStore } from 'pinia'
-import { Names } from './store-name'
+import { defineStore } from 'pinia';
+import { Names } from './store-name';
 
 export const useUserStore = defineStore(Names.USER, {
   state: () => {
     return {
-      token: 'token'
-    }
+      token: 'token',
+    };
   },
-  getters: {
-
-  },
-  actions: {
-
-  }
-})
+  getters: {},
+  actions: {},
+});

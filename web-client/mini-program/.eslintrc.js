@@ -5,11 +5,10 @@ module.exports = {
     node: true,
   },
   extends: [
-    // 'eslint:recommended',
-    'prettier/@typescript-eslint',
-    // 'plugin:vue/vue3-essential',
-    // 'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
+    'eslint:recommended', // 使用eslint的检查
+    'plugin:vue/vue3-essential', // vue3
+    'plugin:@typescript-eslint/recommended', // typescript
+    'plugin:prettier/recommended', // 快捷配置，详情：https://github.com/prettier/eslint-plugin-prettier
   ],
   overrides: [],
   parser: 'vue-eslint-parser',
@@ -22,8 +21,8 @@ module.exports = {
   rules: {
     quotes: ['error', 'single'], //必须为单引号
     semi: ['error', 'always'], //必须有分号
-    'vue/multi-word-component-names': 'off',
-    'prettier/prettier': 'error',
+    'vue/multi-word-component-names': 'off', // 取消组件大驼峰命名限制
+    'max-len': ['error', { code: 120 }], // 每行最大字符数
   },
   globals: {
     uni: true,
