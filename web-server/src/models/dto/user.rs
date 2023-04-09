@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use super::base::BaseDTO;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all(deserialize = "camelCase"))]
 pub struct CreateUserDTO {
     #[serde(flatten)]
     pub base_entity: Option<BaseDTO>,

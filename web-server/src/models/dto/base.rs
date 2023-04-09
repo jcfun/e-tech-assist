@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use validator::Validate;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Validate, Default)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all(deserialize = "camelCase"))]
 pub struct BaseDTO {
     /// 主键id
     #[validate(

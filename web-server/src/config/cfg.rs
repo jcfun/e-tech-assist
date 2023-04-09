@@ -5,6 +5,7 @@ pub struct Config {
     pub server: Server,
     pub api: Api,
     pub captcha: Captcha,
+    pub wxapp: Wxapp,
 }
 use log::info;
 use serde::Deserialize;
@@ -61,6 +62,22 @@ pub struct Captcha {
     pub compression: u8,
     // 过期时间
     pub exp: usize,
+}
+
+/// 微信小程序
+#[derive(Debug, Deserialize)]
+pub struct Wxapp {
+    // appid
+    pub appid: String,
+    // secret
+    pub secret: String,
+    // 微信api地址
+    pub api_domain: String,
+    // 微信开放平台地址
+    pub wechat_open_uri: String,
+    // 默认agent
+    pub default_user_agent: String,
+
 }
 
 impl Config {

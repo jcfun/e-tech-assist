@@ -22,3 +22,10 @@ captcha:
   complexity: 3 # 复杂度
   compression: 30 # 压缩率
   exp: 600 # 过期时间
+
+wxapp:
+  appid: wxd9a698e4a2ce155a # 小程序appid
+  secret: b5d2277361b537680f7617a7f625c4ae # 小程序secret
+  api_domain: https://api.weixin.qq.com # 微信api地址
+  wechat_open_uri: https://open.weixin.qq.com/connect/qrconnect # 微信开放平台地址
+  default_user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36 # 默认user-agent

@@ -73,6 +73,14 @@ where
         }
     }
 
+    pub fn from(code: StatusCode, msg: &str, data: T) -> Self {
+        Self {
+            code: Some(code.as_u16()),
+            msg: Some(msg.into()),
+            data: Some(data),
+        }
+    }
+
     pub fn from_success_msg(msg: &str, data: T) -> Self {
         Self {
             code: Some(StatusCode::OK.as_u16()),

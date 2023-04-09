@@ -7,3 +7,4 @@ pub mod redis;
 pub mod ip;
 pub mod time;
 pub mod log;
+pub mod wxapp;

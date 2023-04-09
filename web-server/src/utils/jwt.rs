@@ -10,7 +10,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     common::{errors::MyError, res::Res},
-    models::vo::login::LoginVO, config::init::APP_CFG,
+    config::init::APP_CFG,
+    models::vo::login::UserInfoVO,
 };
 
 use super::time::get_epoch;
@@ -36,7 +37,7 @@ impl Claims {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub struct Token {
     token: String,
     #[serde(rename = "tokenType")]
@@ -48,8 +49,8 @@ pub enum AuthError {
     MissingCredentials,
 }
 
-pub async fn encode_jwt(login_info: LoginVO) -> Token {
-    let claims = Claims::new(login_info.id, login_info.account, login_info.nickname);
+pub async fn encode_jwt(login_info: &UserInfoVO) -> Token {
+    let claims = Claims::new(login_info.id.clone(), login_info.account.clone(), login_info.nickname.clone());
     let token = encode(
         &Header::default(),
         &claims,
