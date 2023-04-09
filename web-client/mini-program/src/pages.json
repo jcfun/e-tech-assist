@@ -31,19 +31,19 @@
         "text": "首页",
         "pagePath": "pages/index/index",
         "iconPath": "static/images/tabBar/index.png",
-        "selectedIconPath": "static/tabBar/index_sel.png"
+        "selectedIconPath": "static/images/tabBar/index_sel.png"
       },
       {
         "text": "消息",
         "pagePath": "pages/msg/msg",
         "iconPath": "static/images/tabBar/msg.png",
-        "selectedIconPath": "static/tabBar/msg_sel.png"
+        "selectedIconPath": "static/images/tabBar/msg_sel.png"
       },
       {
         "text": "我的",
         "pagePath": "pages/mine/mine",
         "iconPath": "static/images/tabBar/mine.png",
-        "selectedIconPath": "static/tabBar/mine_sel.png"
+        "selectedIconPath": "static/images/tabBar/mine_sel.png"
       }
     ]
   },

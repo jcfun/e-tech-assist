@@ -1,14 +1,13 @@
 import { createSSRApp } from 'vue';
 import uviewPlus from 'uview-plus';
-import { createPinia } from 'pinia';
+import store from './store/common';
 import App from './App.vue';
-
-const store = createPinia();
 
 export function createApp() {
   const app = createSSRApp(App);
   app.use(uviewPlus);
-  uni.$u.config.unit = 'rpx';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (uni as any).$u.config.unit = 'rpx';
   app.use(store);
   return {
     app,

@@ -1,8 +1,9 @@
 module.exports = {
-  printWidth: 120, // 一行最多120个字符
+  printWidth: 150, // 一行最多150个字符
   semi: true, // 行尾需要有分号
   tabWidth: 2, // 2个空格缩进
   singleQuote: true, // 使用单引号
+  jsxSingleQuote: false, // 在JSX中使用单引号而不是双引号
   trailingComma: 'all', // 末尾需要逗号
   bracketSpacing: true, // 大括号的首尾需要空格
   arrowParens: 'avoid', // 箭头函数只有一个参数时不需要括号

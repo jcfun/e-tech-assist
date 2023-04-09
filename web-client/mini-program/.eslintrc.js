@@ -19,10 +19,11 @@ module.exports = {
   },
   plugins: ['vue', '@typescript-eslint'],
   rules: {
-    quotes: ['error', 'single'], //必须为单引号
-    semi: ['error', 'always'], //必须有分号
+    // quotes: ['error', 'single'], //必须为单引号
+    // semi: ['error', 'always'], //必须有分号
     'vue/multi-word-component-names': 'off', // 取消组件大驼峰命名限制
-    'max-len': ['error', { code: 120 }], // 每行最大字符数
+    // 'max-len': ['error', { code: 120 }], // 每行最大字符数
+    '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }], // 忽略以_开头的变量
   },
   globals: {
     uni: true,
