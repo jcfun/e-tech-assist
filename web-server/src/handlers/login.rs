@@ -1,7 +1,10 @@
 use crate::{
     common::{errors::MyError, res::Res},
     config::init::{APP_CFG, APP_CONTEXT},
-    dbaccess::login::{self, create_user_detail_wxapp, get_user_count, get_user_info_by_openid},
+    dbaccess::login::{
+        self, create_user_detail_wxapp, get_user_count, get_user_info_by_openid,
+        update_user_by_phone1, update_user_by_phone2,
+    },
     models::{
         dto::login::{AuthDTO, AuthRegisterDTO, LoginDTO, LoginLogDTO, RegisterDTO, ResetPwdDTO},
         entity::user_detail::TUserDetail,
@@ -83,6 +86,10 @@ pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, 
     } else {
         return Ok(Res::from_msg(StatusCode::BAD_REQUEST, "验证码已失效"));
     }
+    // 填充公共属性
+    fill_fields_system(&mut payload.base_dto);
+    // 参数校验
+    param_validate(&payload)?;
     let db = &APP_CONTEXT.db;
     let count = get_user_count(&db, &payload.phone_number.clone().unwrap()).await?;
     if count != 0 {
@@ -98,10 +105,6 @@ pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, 
             "注册失败，账号已存在",
         ));
     }
-    // 填充公共属性
-    fill_fields_system(&mut payload.base_dto);
-    // 参数校验
-    param_validate(&payload)?;
     // 密码sha256加密
     payload.password = Some(encrypt_sha256(payload.password.as_ref().unwrap()));
     // 开启事务
@@ -277,14 +280,6 @@ pub async fn wxapp_register(
     headers: HeaderMap,
     Json(payload): Json<AuthRegisterDTO>,
 ) -> Result<Res<LoginVO>, MyError> {
-    let db = &APP_CONTEXT.db;
-    let count = get_user_count(&db, &payload.phone_number.clone().unwrap()).await?;
-    if count != 0 {
-        return Ok(Res::from_msg(
-            StatusCode::BAD_REQUEST,
-            "注册失败，手机号已存在",
-        ));
-    }
     // 参数校验
     param_validate(&payload)?;
     // 解密用户数据
@@ -312,6 +307,47 @@ pub async fn wxapp_register(
     user_detail.country = res.country;
     user_detail.province = res.province;
     user_detail.city = res.city;
+
+    // 如果是系统用户，但未授权过微信登录
+    // 构建用户信息所需的数据
+    let mut register_dto = RegisterDTO::default();
+    register_dto.openid = payload.openid.clone();
+    let db = &APP_CONTEXT.db;
+    // 开启事务
+    let tx = db.acquire_begin().await.unwrap();
+    // 异步回滚回调
+    let mut tx = tx.defer_async(|mut tx| async move {
+        if !tx.done {
+            tx.rollback().await.unwrap();
+            info!("An error occurred, rollback!");
+        }
+    });
+    let count = update_user_by_phone1(&mut tx, &user_detail, &register_dto).await?;
+    if count.rows_affected != 0 {
+        let count = update_user_by_phone2(&mut tx, &user_detail).await?;
+        tx.commit().await.unwrap();
+        // 如果更新成功，说明是系统用户，直接返回登录信息
+        if count.rows_affected != 0 {
+            // 通过用户openid获取用户数据
+            let res = get_user_info_by_openid(&APP_CONTEXT.db, &payload.openid.unwrap()).await?;
+            let mut user_info = res.unwrap();
+            user_info.openid = Some(register_dto.openid.unwrap());
+
+            // 构建登录日志所需的数据
+            let mut login_dto = LoginDTO::default();
+            login_dto.identity = Some(user_info.openid.clone().unwrap());
+            login_dto.method = Some("微信授权登录".into());
+            login_log(&headers, &login_dto, "登录成功", "登录成功").await?;
+
+            let token = encode_jwt(&user_info).await;
+            return Ok(Res::from_success_msg(
+                "登录成功",
+                LoginVO { user_info, token },
+            ));
+        }
+    }
+
+    // 如果不是系统用户
     // 开启事务
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
@@ -324,11 +360,9 @@ pub async fn wxapp_register(
     // 添加用户详情信息
     let detail_id = create_user_detail_wxapp(&mut tx, &user_detail).await?;
 
-    // 构建用户信息所需的数据
-    let mut register_dto = RegisterDTO::default();
+    // 补充需要的用户信息
     register_dto.account = payload.phone_number;
     register_dto.detail_id = Some(detail_id);
-    register_dto.openid = payload.openid.clone();
     // 填充公共属性
     fill_fields_system(&mut register_dto.base_dto);
     // 添加用户信息

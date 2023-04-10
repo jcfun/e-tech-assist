@@ -41,7 +41,7 @@ pub async fn create_user_info(
 
 /// 新增用户详情信息
 #[py_sql(
-    "`insert into t_user_detail(id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, phone, nickname) `
+    "`insert into t_user_detail(id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, phone_number, nickname) `
     values
         (
             #{register_dto.id}, #{register_dto.operate_time}, #{register_dto.operator}, #{register_dto.operator_id}, #{register_dto.create_time}, #{register_dto.creator}, #{register_dto.creator_id}, #{register_dto.delete_flag}, #{register_dto.phone_number}, #{register_dto.nickname}
@@ -125,5 +125,27 @@ pub async fn create_user_detail_wxapp(
     tx: &mut RBatisTxExecutorGuard,
     detail: &TUserDetail,
 ) -> Result<String, Error> {
+    impled!();
+}
+
+// 通过手机号更新用户信息第一步(微信小程序授权登录更新openid)
+#[py_sql(
+    "update t_user a set openid = #{info.openid} from t_user_detail b where a.detail_id = b.id and b.phone_number = #{detail.phone_number}"
+)]
+pub async fn update_user_by_phone1(
+    tx: &mut RBatisTxExecutorGuard,
+    detail: &TUserDetail,
+    info: &RegisterDTO,
+) -> Result<ExecResult, Error> {
+    impled!();
+}
+// 通过手机号更新用户信息第二步(微信小程序授权登录更新openid)
+#[py_sql(
+    "update t_user_detail set avatar_url = #{detail.avatar_url}, gender = #{detail.gender}, language = #{detail.language}  where phone_number = #{detail.phone_number}"
+)]
+pub async fn update_user_by_phone2(
+    tx: &mut RBatisTxExecutorGuard,
+    detail: &TUserDetail,
+) -> Result<ExecResult, Error> {
     impled!();
 }
