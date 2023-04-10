@@ -2,15 +2,15 @@
   <view class="func-card">
     <view class="card-item">
       <u-icon name="order" color="#2979ff" size="55"></u-icon>
-      浏览历史
+      我的帖子
     </view>
     <view class="card-item">
       <u-icon name="star" color="#ff9900" size="55"></u-icon>
       我的收藏
     </view>
     <view class="card-item">
-      <u-icon name="email" color="#fa3534" size="55"></u-icon>
-      联系我们
+      <u-icon name="eye" color="#51dc8b" size="55"></u-icon>
+      浏览历史
     </view>
   </view>
 </template>

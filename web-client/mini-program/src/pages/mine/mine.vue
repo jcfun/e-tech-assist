@@ -6,10 +6,6 @@
   </view>
 </template>
 
-<script setup lang="ts">
-  // import { useUserStore } from '../../store/user'
-
-  // const user = useUserStore()
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="scss"></style>

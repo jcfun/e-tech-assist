@@ -7,7 +7,7 @@
       </span>
       <span class="nickname">{{ nickname }}</span>
     </view>
-    <button class="account-btn" plain>账户信息</button>
+    <button class="account-btn" plain @click="toMore">更多信息</button>
   </view>
 </template>
 
@@ -29,6 +29,12 @@
     if (token.token) return;
     uni.navigateTo({
       url: '/pages/auth/auth',
+    });
+  };
+
+  const toMore = () => {
+    uni.navigateTo({
+      url: '/pages/more/more',
     });
   };
 </script>

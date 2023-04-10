@@ -16,7 +16,7 @@ class Request {
       //   this.baseUrl = this.baseUrlLinux;
       // }
       uni.request({
-        url: `${this.baseUrlLinux}${comReqParams.url}`,
+        url: `${this.baseUrlWindows}${comReqParams.url}`,
         data: comReqParams.data,
         method: comReqParams.method,
         header: {
