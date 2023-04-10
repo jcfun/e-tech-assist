@@ -2,16 +2,31 @@
   <view class="user-login">
     <view class="login-area" @click="toAuth">
       <span class="avatar">
-        <u-icon name="account" color="#FFFFF8" size="100"></u-icon>
+        <u-icon v-if="!token.token" name="account-fill" color="#FFFFF8" size="100"></u-icon>
+        <u-avatar v-else :src="imgSrc" :size="120" mode="aspectFill"></u-avatar>
       </span>
-      <span class="login-btn">立即登录</span>
+      <span class="nickname">{{ nickname }}</span>
     </view>
     <button class="account-btn" plain>账户信息</button>
   </view>
 </template>
 
 <script setup lang="ts">
+  import { useUserStore } from '@/store/user';
+  import { ref } from 'vue';
+  const user = useUserStore();
+  const token = user.token;
+  const userInfo = user.userInfo;
+  // 昵称
+  const nickname = ref('立即登录');
+  if (userInfo.nickname) {
+    nickname.value = userInfo.nickname;
+  }
+  // 头像
+  const imgSrc = ref(userInfo.avatarUrl);
+
   const toAuth = () => {
+    if (token.token) return;
     uni.navigateTo({
       url: '/pages/auth/auth',
     });
@@ -43,7 +58,7 @@
       margin: 25rpx;
     }
 
-    .login-btn {
+    .nickname {
       font-size: 40rpx;
       margin-left: 20rpx;
     }

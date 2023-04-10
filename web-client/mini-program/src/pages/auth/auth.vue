@@ -42,57 +42,28 @@
     needPhone.value = false;
     registerDTO.value.phoneNumber = phoneNumber.value;
     console.log('registerDTOvalue====>', registerDTO.value);
-    register(registerDTO.value)
-      .then(res => {
-        if (res.code != '200') {
-          authMsg.value?.show({
-            type: 'error',
-            message: res.msg,
-            duration: 2000,
-            fontSize: 25,
-          });
-          return;
-        } else {
-          user.setToken(res.data.token);
-          user.setUserInfo(res.data.userInfo);
-        }
-        authMsg.value?.show({
-          type: 'success',
-          message: '授权成功',
-          duration: 2000,
-          fontSize: 25,
-        });
-        setTimeout(() => {
-          uni.switchTab({
-            url: '/pages/mine/mine',
-          });
-        }, 1000);
-      })
-      .catch(err => {
-        needPhone.value = false;
-        console.log(err);
+    register(registerDTO.value).then(res => {
+      if (res.code == '200') {
+        user.setToken(res.data.token);
+        user.setUserInfo(res.data.userInfo);
+      }
+      uni.reLaunch({
+        url: '/pages/mine/mine',
       });
+    });
   };
   // 取消输入手机号后的处理事件
   const cancelPhone = () => {
     needPhone.value = false;
-    authMsg.value?.show({
-      type: 'error',
-      message: '取消授权',
-      duration: 2000,
-      fontSize: 25,
+    uni.reLaunch({
+      url: '/pages/mine/mine',
     });
-    setTimeout(() => {
-      uni.switchTab({
-        url: '/pages/mine/mine',
-      });
-    }, 1000);
   };
 
   const toAuth = () => {
     let code = ref('');
     if (user.token.token) {
-      uni.switchTab({
+      uni.reLaunch({
         url: '/pages/mine/mine',
       });
       return;
@@ -104,9 +75,6 @@
         console.log('login成功', loginRes);
         code.value = loginRes.code;
       },
-      fail: err => {
-        console.log(err);
-      },
     });
     uni.getUserProfile({
       desc: '获取你的昵称、头像、地区及性别',
@@ -115,51 +83,30 @@
         const loginDTO: LoginDTO = {
           code: code.value,
         };
-        login(loginDTO)
-          .then(res => {
-            console.log('loginRes====>', res);
-            if (res.code != '200') {
-              registerDTO.value = {
-                sessionKey: res.data.userInfo.sessionKey,
-                encryptedData: getUserProfileRes.encryptedData,
-                iv: getUserProfileRes.iv,
-                openid: res.data.userInfo.openid,
-                phoneNumber: phoneNumber.value,
-              };
-              needPhone.value = true;
-            } else {
-              user.setToken(res.data.token);
-              user.setUserInfo(res.data.userInfo);
-              authMsg.value?.show({
-                type: 'success',
-                message: '授权成功',
-                duration: 2000,
-                fontSize: 25,
-              });
-              setTimeout(() => {
-                uni.switchTab({
-                  url: '/pages/mine/mine',
-                });
-              }, 1000);
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        login(loginDTO).then(res => {
+          console.log('loginRes====>', res);
+          if (res.code != '200') {
+            registerDTO.value = {
+              sessionKey: res.data.userInfo.sessionKey,
+              encryptedData: getUserProfileRes.encryptedData,
+              iv: getUserProfileRes.iv,
+              openid: res.data.userInfo.openid,
+              phoneNumber: phoneNumber.value,
+            };
+            needPhone.value = true;
+          } else {
+            user.setToken(res.data.token);
+            user.setUserInfo(res.data.userInfo);
+            uni.reLaunch({
+              url: '/pages/mine/mine',
+            });
+          }
+        });
       },
       fail: _fail => {
-        console.log('fail');
-        authMsg.value?.show({
-          type: 'error',
-          message: '取消授权',
-          duration: 2000,
-          fontSize: 25,
+        uni.reLaunch({
+          url: '/pages/mine/mine',
         });
-        setTimeout(() => {
-          uni.switchTab({
-            url: '/pages/mine/mine',
-          });
-        }, 1000);
       },
     });
   };
@@ -192,6 +139,7 @@
       display: flex;
       align-items: center;
       margin-top: 20rpx;
+
       .dot {
         width: 5rpx;
         height: 5rpx;
