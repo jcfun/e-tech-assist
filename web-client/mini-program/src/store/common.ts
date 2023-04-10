@@ -1,34 +1,57 @@
 import { createPinia, type PiniaPluginContext } from 'pinia';
 import { toRaw } from 'vue';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setStorage = (key: string, value: any) => {
-  uni.setStorageSync(key, value);
+
+interface Options {
+  prefix: string;
+  expire: number;
+}
+
+interface Storage {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
+  expire: number;
+}
+
+const setStorage = (key: string, value: Storage) => {
+  uni.setStorageSync(key, JSON.stringify(value));
 };
 
 const getStorage = (key: string) => {
-  console.log('store =====> ', uni.getStorageSync(key));
-  return uni.getStorageSync(key) ? JSON.parse(uni.getStorageSync(key)) : {};
+  // console.log('store =====> ', uni.getStorageSync(key));
+  const value = uni.getStorageSync(key);
+  if (value) {
+    if (value.expire < Date.now()) {
+      console.log('storage已过期, removed');
+      uni.removeStorageSync(key);
+      return {};
+    } else {
+      if (typeof value === 'string') {
+        return <Storage>JSON.parse(value).data;
+      }
+    }
+  } else {
+    return {};
+  }
 };
-
-interface Options {
-  key: string;
-}
 
 const piniaPlugin = (options: Options) => {
   return (context: PiniaPluginContext) => {
     const { store } = context;
-    const data = getStorage(`${options.key}-${store.$id}`);
     store.$subscribe(() => {
-      setStorage(`${options.key}-${store.$id}`, toRaw(store.$state));
+      setStorage(`${options.prefix}-${store.$id}`, <Storage>{
+        data: toRaw(store.$state),
+        expire: options.expire,
+      });
     });
-    return data;
+    return getStorage(`${options.prefix}-${store.$id}`);
   };
 };
 
 const store = createPinia();
 store.use(
   piniaPlugin({
-    key: 'pinia',
+    prefix: 'pinia',
+    expire: Date.now() + 1000 * 60 * 60 * 24 * 7,
   }),
 );
 
