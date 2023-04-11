@@ -1,6 +1,6 @@
 <template>
   <view class="more-page">
-    <view class="list-item">
+    <view class="list-item" @click="toAccount">
       <span class="title">账户设置</span>
       <span class="arrow"><u-icon name="arrow-right" color="#c4c4c4" size="25"></u-icon></span>
     </view>
@@ -36,6 +36,12 @@
           });
         }
       },
+    });
+  };
+
+  const toAccount = () => {
+    uni.navigateTo({
+      url: '/pages/account/account',
     });
   };
 </script>

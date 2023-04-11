@@ -2,7 +2,7 @@ import type { ComReqParams } from './../models/common';
 class Request {
   private baseUrl = 'http://192.168.31.201:3000/api/v1';
   private baseUrlWindows = 'http://192.168.31.201:3000/api/v1';
-  private baseUrlLinux = 'http://10.7.7.5:33000/api/v1';
+  private baseUrlLinux = 'http://10.7.7.2:33000/api/v1';
 
   // private isWindows = navigator.platform.indexOf('Win') !== -1;
   // private isLinux = navigator.platform.indexOf('Linux') !== -1;
@@ -16,7 +16,7 @@ class Request {
       //   this.baseUrl = this.baseUrlLinux;
       // }
       uni.request({
-        url: `${this.baseUrlWindows}${comReqParams.url}`,
+        url: `${this.baseUrlLinux}${comReqParams.url}`,
         data: comReqParams.data,
         method: comReqParams.method,
         header: {

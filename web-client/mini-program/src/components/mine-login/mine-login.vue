@@ -33,9 +33,15 @@
   };
 
   const toMore = () => {
-    uni.navigateTo({
-      url: '/pages/more/more',
-    });
+    if (token.token) {
+      uni.navigateTo({
+        url: '/pages/more/more',
+      });
+    } else {
+      uni.navigateTo({
+        url: '/pages/auth/auth',
+      });
+    }
   };
 </script>
 

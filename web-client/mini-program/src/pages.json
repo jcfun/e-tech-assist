@@ -26,6 +26,12 @@
       "style": {
         "navigationBarTitleText": "更多信息"
       }
+    },
+    {
+      "path": "pages/account/account",
+      "style": {
+        "navigationBarTitleText": "账户设置"
+      }
     }
   ],
   "tabBar": {

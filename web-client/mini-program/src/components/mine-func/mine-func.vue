@@ -23,7 +23,7 @@
     flex-direction: row;
     margin: 0 25rpx;
     margin-top: 25rpx;
-    border-radius: 15rpx;
+    border-radius: 20rpx;
     background-color: #ffffff;
     overflow: hidden;
 
