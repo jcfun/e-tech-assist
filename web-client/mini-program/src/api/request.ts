@@ -1,8 +1,12 @@
-import type { ComReqParams } from './../models/common';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { ComReqParams, Res } from './../models/common';
+import { useUserStore } from '@/store/user';
 class Request {
   private baseUrl = 'http://192.168.31.201:3000/api/v1';
   private baseUrlWindows = 'http://192.168.31.201:3000/api/v1';
   private baseUrlLinux = 'http://10.7.7.2:33000/api/v1';
+
+  private user = useUserStore();
 
   // private isWindows = navigator.platform.indexOf('Win') !== -1;
   // private isLinux = navigator.platform.indexOf('Linux') !== -1;
@@ -16,18 +20,33 @@ class Request {
       //   this.baseUrl = this.baseUrlLinux;
       // }
       uni.request({
-        url: `${this.baseUrlLinux}${comReqParams.url}`,
+        url: `${this.baseUrlWindows}${comReqParams.url}`,
         data: comReqParams.data,
         method: comReqParams.method,
         header: {
           'content-type': 'application/json',
+          Authorization: `${this.user.token.tokenType} ${this.user.token.token}`,
         },
         success: res => {
           console.log('res ===> ', res);
+          if ((res.data as Res<any>).code !== '200') {
+            uni.showToast({
+              title: (res.data as Res<any>).msg,
+              error: 'error',
+              mask: true,
+              duration: 2000,
+            });
+          }
           return resolve(res.data as T);
         },
         fail: err => {
           console.log('err ===>', err);
+          uni.showToast({
+            title: err.errMsg,
+            error: 'error',
+            mask: true,
+            duration: 2000,
+          });
           return reject(err.errMsg);
         },
       });

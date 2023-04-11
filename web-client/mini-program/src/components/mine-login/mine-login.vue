@@ -13,15 +13,14 @@
 
 <script setup lang="ts">
   import { useUserStore } from '@/store/user';
+  import { onShow } from '@dcloudio/uni-app';
   import { ref } from 'vue';
   const user = useUserStore();
-  const token = user.token;
-  const userInfo = user.userInfo;
+  let token = user.token;
+  let userInfo = user.userInfo;
   // 昵称
-  const nickname = ref('立即登录');
-  if (userInfo.nickname) {
-    nickname.value = userInfo.nickname;
-  }
+  let nickname = ref('立即登录');
+  nickname.value = userInfo?.nickname ?? '立即登录';
   // 头像
   const imgSrc = ref(userInfo.avatarUrl);
 
@@ -43,6 +42,12 @@
       });
     }
   };
+
+  onShow(() => {
+    token = user.token;
+    userInfo = user.userInfo;
+    nickname.value = userInfo?.nickname ?? '立即登录';
+  });
 </script>
 
 <style scoped lang="scss">

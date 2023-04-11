@@ -33,15 +33,16 @@
     </u-form>
   </view>
   <view class="save-btn">
-    <u-button text="保存修改" size="large"></u-button>
+    <u-button text="保存修改" size="large" @click="save"></u-button>
   </view>
 </template>
 
 <script setup lang="ts">
+  import { saveAccount } from '@/api/account';
   import type { Account } from '@/models/account';
+  import type { UserInfo } from '@/models/login';
   import { useUserStore } from '@/store/user';
   import { ref } from 'vue';
-
   const user = useUserStore();
   const account = ref(<Account>{ ...user.userInfo });
   const showPickerPanel = ref(false);
@@ -56,6 +57,15 @@
   };
   const cancelGender = () => {
     showPickerPanel.value = false;
+  };
+
+  const save = () => {
+    saveAccount(account.value).then(res => {
+      if (res.code == '200') {
+        user.userInfo = <UserInfo>{ ...account.value };
+      }
+      uni.navigateBack();
+    });
   };
 </script>
 
