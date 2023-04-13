@@ -7,21 +7,20 @@
       </span>
       <span class="nickname">{{ nickname }}</span>
     </view>
-    <button class="account-btn" plain>账户信息</button>
+    <button class="account-btn" plain @click="toMore">更多信息</button>
   </view>
 </template>
 
 <script setup lang="ts">
   import { useUserStore } from '@/store/user';
+  import { onShow } from '@dcloudio/uni-app';
   import { ref } from 'vue';
   const user = useUserStore();
-  const token = user.token;
-  const userInfo = user.userInfo;
+  let token = user.token;
+  let userInfo = user.userInfo;
   // 昵称
-  const nickname = ref('立即登录');
-  if (userInfo.nickname) {
-    nickname.value = userInfo.nickname;
-  }
+  let nickname = ref('立即登录');
+  nickname.value = userInfo?.nickname ?? '立即登录';
   // 头像
   const imgSrc = ref(userInfo.avatarUrl);
 
@@ -31,6 +30,24 @@
       url: '/pages/auth/auth',
     });
   };
+
+  const toMore = () => {
+    if (token.token) {
+      uni.navigateTo({
+        url: '/pages/more/more',
+      });
+    } else {
+      uni.navigateTo({
+        url: '/pages/auth/auth',
+      });
+    }
+  };
+
+  onShow(() => {
+    token = user.token;
+    userInfo = user.userInfo;
+    nickname.value = userInfo?.nickname ?? '立即登录';
+  });
 </script>
 
 <style scoped lang="scss">

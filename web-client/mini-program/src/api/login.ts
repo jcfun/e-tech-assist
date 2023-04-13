@@ -1,6 +1,6 @@
 import request from './request';
-import type { LoginDTO, LoginVO, RegisterDTO } from '@/models/login';
 import { Method, type Res } from '@/models/common';
+import type { LoginDTO, LoginVO, RegisterDTO } from '@/models/login';
 
 export const login = (data: LoginDTO): Promise<Res<LoginVO>> => {
   return request.request({
