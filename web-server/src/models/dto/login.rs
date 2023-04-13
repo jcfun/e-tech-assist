@@ -115,7 +115,7 @@ pub struct ResetPwdDTO {
         required(message = "用户标识不可为空"),
         length(min = 6, max = 18, message = "用户标识格式错误")
     )]
-    pub user_id: Option<String>,
+    pub identity: Option<String>,
 
     #[validate(
         required(message = "新密码不可为空"),
@@ -139,7 +139,6 @@ pub struct ResetPwdDTO {
     pub uuid: Option<String>,
 }
 
-
 /// 微信授权登录dto
 #[derive(Debug, Deserialize, Serialize, Validate, Clone)]
 #[serde(rename_all(deserialize = "camelCase"))]
@@ -148,7 +147,6 @@ pub struct AuthDTO {
     #[validate(required(message = "code不可为空"))]
     pub code: Option<String>,
 }
-
 
 /// 微信授权注册dto
 #[derive(Debug, Deserialize, Serialize, Validate, Clone)]

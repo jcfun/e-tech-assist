@@ -1,4 +1,15 @@
 {
-    "dotenv.enableAutocloaking": false,
-    "rust-analyzer.showUnlinkedFileNotification": false
+  "dotenv.enableAutocloaking": false,
+  "rust-analyzer.showUnlinkedFileNotification": false,
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "192.168.31.243",
+      "port": 3308,
+      "driver": "PostgreSQL",
+      "name": "192.168.31.243",
+      "database": "e_tech_assist",
+      "username": "postgres"
+    }
+  ]
 }

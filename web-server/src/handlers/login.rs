@@ -14,7 +14,7 @@ use crate::{
         self,
         captcha::Captcha,
         epc::encrypt_sha256,
-        fill::{fill_fields_system, fill_fields_system_entity},
+        fields::{fill_fields_system, fill_fields_system_entity},
         ip::get_ip_addr,
         jwt::{encode_jwt, Token},
         redis::{del_string, get_string, set_string_ex},
@@ -25,7 +25,6 @@ use crate::{
 };
 use axum::{http::StatusCode, Json};
 use headers::HeaderMap;
-use log::info;
 use rbatis::rbdc::db::ExecResult;
 
 /// 用户登录
@@ -44,11 +43,11 @@ pub async fn login(
     if let Ok(value) = res {
         if value != payload.captcha.clone().unwrap().to_lowercase() {
             login_log(&headers, &payload, "登录失败", "验证码错误").await?;
-            return Ok(Res::from_msg(StatusCode::BAD_REQUEST, "验证码错误"));
+            return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "验证码错误"));
         }
     } else {
         login_log(&headers, &payload, "登录失败", "验证码已失效").await?;
-        return Ok(Res::from_msg(StatusCode::BAD_REQUEST, "验证码已失效"));
+        return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "验证码已失效"));
     }
     // 账号密码校验
     payload.password = Some(encrypt_sha256(&payload.password.unwrap()));
@@ -57,14 +56,11 @@ pub async fn login(
         Some(user_info) => {
             let token = encode_jwt(&user_info).await;
             login_log(&headers, &payload, "登录成功", "登录成功").await?;
-            Ok(Res::from_success_msg(
-                "登录成功",
-                LoginVO { user_info, token },
-            ))
+            Ok(Res::from_success("登录成功", LoginVO { user_info, token }))
         }
         None => {
             login_log(&headers, &payload, "登录失败", "账号或密码错误").await?;
-            Ok(Res::from_msg(
+            Ok(Res::from_fail(
                 StatusCode::UNAUTHORIZED,
                 "登录失败，账号或密码错误",
             ))
@@ -81,10 +77,10 @@ pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, 
     let _del_res = del_string(uuid).await;
     if let Ok(value) = res {
         if value != payload.captcha.clone().unwrap().to_lowercase() {
-            return Ok(Res::from_msg(StatusCode::BAD_REQUEST, "验证码错误"));
+            return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "验证码错误"));
         }
     } else {
-        return Ok(Res::from_msg(StatusCode::BAD_REQUEST, "验证码已失效"));
+        return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "验证码已失效"));
     }
     // 填充公共属性
     fill_fields_system(&mut payload.base_dto);
@@ -93,14 +89,14 @@ pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, 
     let db = &APP_CONTEXT.db;
     let count = get_user_count(&db, &payload.phone_number.clone().unwrap()).await?;
     if count != 0 {
-        return Ok(Res::from_msg(
+        return Ok(Res::from_fail(
             StatusCode::BAD_REQUEST,
             "注册失败，手机号已存在",
         ));
     }
     let count = get_user_count(&db, &payload.account.clone().unwrap()).await?;
     if count != 0 {
-        return Ok(Res::from_msg(
+        return Ok(Res::from_fail(
             StatusCode::BAD_REQUEST,
             "注册失败，账号已存在",
         ));
@@ -113,20 +109,25 @@ pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, 
     let mut tx = tx.defer_async(|mut tx| async move {
         if !tx.done {
             tx.rollback().await.unwrap();
-            info!("An error occurred, rollback!");
+            tracing::error!("An error occurred, rollback!");
         }
     });
     payload.nickname = Some(format!("{}{}", "用户", get_epoch().to_string()));
     // 添加用户详情
     let detail_res = login::create_user_detail(&mut tx, &payload).await;
     payload.detail_id = Some(detail_res?);
+    // 填充公共属性
+    fill_fields_system(&mut payload.base_dto);
     // 添加用户信息
     let info_res = login::create_user_info(&mut tx, &payload).await;
     if let Ok(value) = info_res {
         tx.commit().await.unwrap();
-        Ok(Res::from_success_msg("注册成功", value.rows_affected))
+        Ok(Res::from_success("注册成功", value.rows_affected))
     } else {
-        Ok(Res::from_msg(StatusCode::INTERNAL_SERVER_ERROR, "注册失败"))
+        Ok(Res::from_fail(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "注册失败",
+        ))
     }
 }
 
@@ -134,7 +135,7 @@ pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, 
 pub async fn captcha() -> Result<Res<Captcha>, MyError> {
     let captcha = utils::captcha::get_captcha();
     set_string_ex(&captcha.uuid, &captcha.captcha, APP_CFG.captcha.exp).await?;
-    Ok(Res::from_success_msg("获取成功", captcha))
+    Ok(Res::from_success("获取成功", captcha))
 }
 
 /// 登录日志
@@ -194,10 +195,10 @@ pub async fn reset_pwd(Json(mut payload): Json<ResetPwdDTO>) -> Result<Res<u64>,
     // let _del_res = del_string(uuid).await;
     if let Ok(value) = res {
         if value != payload.captcha.clone().unwrap().to_lowercase() {
-            return Ok(Res::from_msg(StatusCode::BAD_REQUEST, "验证码错误"));
+            return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "验证码错误"));
         }
     } else {
-        return Ok(Res::from_msg(StatusCode::BAD_REQUEST, "验证码已失效"));
+        return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "验证码已失效"));
     }
     // 填充公共属性
     fill_fields_system(&mut payload.base_dto);
@@ -207,7 +208,7 @@ pub async fn reset_pwd(Json(mut payload): Json<ResetPwdDTO>) -> Result<Res<u64>,
     payload.new_password = Some(encrypt_sha256(payload.new_password.as_ref().unwrap()));
     let db = &APP_CONTEXT.db;
     let res = login::reset_pwd(db, &payload).await?;
-    Ok(Res::from_success_msg("重置成功", res.rows_affected))
+    Ok(Res::from_success("重置成功", res.rows_affected))
 }
 
 /// 微信小程序授权登录
@@ -230,7 +231,7 @@ pub async fn login_wxapp(
     login_dto.method = Some("微信授权登录".into());
     if res.as_object().is_none() {
         login_log(&headers, &login_dto, "登录失败", "用户授权失败").await?;
-        return Ok(Res::from_msg(StatusCode::BAD_REQUEST, "用户授权失败"));
+        return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "用户授权失败"));
     }
     let openid = res
         .as_object()
@@ -268,10 +269,7 @@ pub async fn login_wxapp(
         login_dto.identity = Some(user_info.account.clone().unwrap());
         let token = encode_jwt(&user_info).await;
         login_log(&headers, &login_dto, "登录成功", "登录成功").await?;
-        Ok(Res::from_success_msg(
-            "登录成功",
-            LoginVO { user_info, token },
-        ))
+        Ok(Res::from_success("登录成功", LoginVO { user_info, token }))
     }
 }
 
@@ -319,7 +317,7 @@ pub async fn wxapp_register(
     let mut tx = tx.defer_async(|mut tx| async move {
         if !tx.done {
             tx.rollback().await.unwrap();
-            info!("An error occurred, rollback!");
+            tracing::error!("An error occurred, rollback!");
         }
     });
     let count = update_user_by_phone1(&mut tx, &user_detail, &register_dto).await?;
@@ -340,10 +338,7 @@ pub async fn wxapp_register(
             login_log(&headers, &login_dto, "登录成功", "登录成功").await?;
 
             let token = encode_jwt(&user_info).await;
-            return Ok(Res::from_success_msg(
-                "登录成功",
-                LoginVO { user_info, token },
-            ));
+            return Ok(Res::from_success("登录成功", LoginVO { user_info, token }));
         }
     }
 
@@ -354,7 +349,7 @@ pub async fn wxapp_register(
     let mut tx = tx.defer_async(|mut tx| async move {
         if !tx.done {
             tx.rollback().await.unwrap();
-            info!("An error occurred, rollback!");
+            tracing::error!("An error occurred, rollback!");
         }
     });
     // 添加用户详情信息
@@ -383,8 +378,5 @@ pub async fn wxapp_register(
     login_log(&headers, &login_dto, "登录成功", "登录成功").await?;
 
     let token = encode_jwt(&user_info).await;
-    Ok(Res::from_success_msg(
-        "登录成功",
-        LoginVO { user_info, token },
-    ))
+    Ok(Res::from_success("登录成功", LoginVO { user_info, token }))
 }

@@ -8,15 +8,27 @@ use axum::{
 };
 use http_body::Full;
 use hyper::header;
-use log::info;
 use serde::{Deserialize, Serialize};
+use tracing::info;
 
-// 分页查询结构体
+// 分页查询返回结构体
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct PageRes<T> {
     pub data: Option<Vec<T>>,
     pub total: Option<u64>,
     pub total_page: Option<u64>,
+    pub current_page: Option<u64>,
+}
+
+impl<T> Default for PageRes<T> {
+    fn default() -> PageRes<T> {
+        PageRes {
+            data: Some(Vec::new()),
+            total: None,
+            total_page: None,
+            current_page: None,
+        }
+    }
 }
 
 /// 公共返回结构体
@@ -65,14 +77,6 @@ impl<T> Res<T>
 where
     T: Serialize + Clone,
 {
-    pub fn from_msg(code: StatusCode, msg: &str) -> Self {
-        Self {
-            code: Some(code.as_u16()),
-            msg: Some(msg.into()),
-            data: None,
-        }
-    }
-
     pub fn from(code: StatusCode, msg: &str, data: T) -> Self {
         Self {
             code: Some(code.as_u16()),
@@ -81,11 +85,35 @@ where
         }
     }
 
-    pub fn from_success_msg(msg: &str, data: T) -> Self {
+    pub fn from_success(msg: &str, data: T) -> Self {
         Self {
             code: Some(StatusCode::OK.as_u16()),
             msg: Some(msg.into()),
             data: Some(data),
+        }
+    }
+
+    pub fn from_success_msg(msg: &str) -> Self {
+        Self {
+            code: Some(StatusCode::OK.as_u16()),
+            msg: Some(msg.into()),
+            data: None,
+        }
+    }
+
+    pub fn from_fail(code: StatusCode, msg: &str) -> Self {
+        Self {
+            code: Some(code.as_u16()),
+            msg: Some(msg.into()),
+            data: None,
+        }
+    }
+
+    pub fn from_fail_msg(msg: &str) -> Self {
+        Self {
+            code: Some(StatusCode::INTERNAL_SERVER_ERROR.as_u16()),
+            msg: Some(msg.into()),
+            data: None,
         }
     }
 
@@ -97,7 +125,7 @@ where
         }
     }
 
-    pub fn from_not_found() -> Self {
+    pub fn _from_not_found() -> Self {
         Self {
             code: Some(StatusCode::NOT_FOUND.as_u16()),
             msg: Some("没有符合条件的结果".into()),
@@ -105,7 +133,7 @@ where
         }
     }
 
-    pub fn _from_vec_not_found(data: T) -> Self {
+    pub fn from_vec_not_found(data: T) -> Self {
         Self {
             code: Some(StatusCode::NOT_FOUND.as_u16()),
             msg: Some("没有符合条件的结果".into()),

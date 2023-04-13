@@ -1,13 +1,13 @@
 use crate::handlers::user::*;
 use axum::{
-    routing::{get, post},
+    routing::{delete, post, put},
     Router,
 };
-pub fn user_routes() -> Router{
+pub fn user_routes() -> Router {
     Router::new()
-        .route(
-            "/:id",
-            get(get_user_by_id).delete(delete_user).put(update_user),
-        )
+        .route("/wxapp", put(update_user_wx))
         .route("/", post(create_user))
+        .route("/:id", delete(delete_user))
+        .route("/", put(update_user))
+        .route("/fq", post(query_user))
 }

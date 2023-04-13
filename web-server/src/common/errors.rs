@@ -114,7 +114,6 @@ impl From<rbatis::rbdc::Error> for MyError {
     }
 }
 
-
 impl From<redis::RedisError> for MyError {
     fn from(value: redis::RedisError) -> Self {
         MyError::RedisError(value.to_string())
@@ -129,6 +128,11 @@ impl From<MaxMindDBError> for MyError {
 
 impl From<AddrParseError> for MyError {
     fn from(value: AddrParseError) -> Self {
+        MyError::RedisError(value.to_string())
+    }
+}
+impl From<Box<dyn std::error::Error>> for MyError {
+    fn from(value: Box<dyn std::error::Error>) -> Self {
         MyError::RedisError(value.to_string())
     }
 }

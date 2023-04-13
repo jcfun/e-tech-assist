@@ -6,7 +6,7 @@ use axum::{
     middleware::Next,
     response::Response,
 };
-use log::info;
+use tracing::info;
 
 /// 过滤器
 pub async fn filter(req: Request<Body>, next: Next<Body>) -> Result<Response, Res<()>> {
@@ -23,16 +23,17 @@ pub async fn filter(req: Request<Body>, next: Next<Body>) -> Result<Response, Re
     // 如果为成功响应，则直接返回
     let status = resp.status();
     if status.is_success() {
-        return Ok(resp);
+        Ok(resp)
+    } else {
+        // 如果为错误响应，则构造Res返回
+        let mut body_string = get_body_string(resp.into_body()).await;
+        if body_string == "" {
+            body_string = "操作失败".to_string()
+        }
+        let resp = Res::<()>::from_fail(status, &body_string);
+        // warn!("响应体 ===========> {:?}", resp);
+        Err(resp)
     }
-    // 如果为错误响应，则构造Res返回
-    let mut body_string = get_body_string(resp.into_body()).await;
-    if body_string == "" {
-        body_string = "操作失败".to_string()
-    }
-    let resp = Res::<()>::from_msg(status, &body_string);
-    info!("响应体 ===========> {:?}", resp);
-    Err(resp)
 }
 
 async fn get_body_string<B>(body: B) -> String
@@ -52,7 +53,7 @@ where
     let bytes = match hyper::body::to_bytes(body).await {
         Ok(bytes) => bytes,
         Err(err) => {
-            return Err(Res::from_msg(
+            return Err(Res::from_fail(
                 StatusCode::OK,
                 &format!("failed to read body: {}", err),
             ));

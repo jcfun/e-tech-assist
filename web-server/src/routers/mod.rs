@@ -10,7 +10,7 @@ use axum::error_handling::HandleErrorLayer;
 use axum::{middleware, Router};
 use std::time::Duration;
 use tower::ServiceBuilder;
-use tower_http::trace::TraceLayer;
+use tower_http::{catch_panic::CatchPanicLayer, trace::TraceLayer};
 
 pub mod login;
 pub mod test;
@@ -37,6 +37,8 @@ pub fn get_sys_routers() -> Router {
         .layer(TraceLayer::new_for_http())
         // filter
         .layer(middleware::from_fn(filter))
+        // panic捕获
+        .layer(CatchPanicLayer::new())
         // 404
         .fallback(fallback)
 }

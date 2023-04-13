@@ -7,6 +7,7 @@ use axum::{
 
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
+use tracing::info;
 
 use crate::{
     common::{errors::MyError, res::Res},
@@ -27,12 +28,13 @@ pub struct Claims {
 
 impl Claims {
     pub fn new(id: Option<String>, account: Option<String>, nickname: Option<String>) -> Claims {
+        let epoch = get_epoch();
         Claims {
             id,
             account,
             nickname,
-            iat: get_epoch(),
-            exp: APP_CFG.jwt.exp,
+            iat: epoch,
+            exp: epoch + APP_CFG.jwt.exp,
         }
     }
 }
@@ -50,7 +52,11 @@ pub enum AuthError {
 }
 
 pub async fn encode_jwt(login_info: &UserInfoVO) -> Token {
-    let claims = Claims::new(login_info.id.clone(), login_info.account.clone(), login_info.nickname.clone());
+    let claims = Claims::new(
+        login_info.id.clone(),
+        login_info.account.clone(),
+        login_info.nickname.clone(),
+    );
     let token = encode(
         &Header::default(),
         &claims,
@@ -72,7 +78,7 @@ pub async fn decode_jwt(token: String) -> Result<Claims, MyError> {
     token_info
         .map(|token_data| Ok(token_data.claims))
         .unwrap_or_else(|err| {
-            println!("token error: {:?}", err);
+            info!("token error: {:?}", err);
             Err(MyError::AxumError("token error".into()))
         })
 }
@@ -126,12 +132,12 @@ impl IntoResponse for AuthError {
         match self {
             AuthError::InvalidToken => (
                 StatusCode::OK,
-                Res::<()>::from_msg(StatusCode::UNAUTHORIZED, "Invalid Token"),
+                Res::<()>::from_fail(StatusCode::UNAUTHORIZED, "Invalid Token"),
             )
                 .into_response(),
             AuthError::MissingCredentials => (
                 StatusCode::OK,
-                Res::<()>::from_msg(StatusCode::UNAUTHORIZED, "Missing Credentials"),
+                Res::<()>::from_fail(StatusCode::UNAUTHORIZED, "Missing Credentials"),
             )
                 .into_response(),
         }
