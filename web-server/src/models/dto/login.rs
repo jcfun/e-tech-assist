@@ -8,8 +8,8 @@ use super::base::BaseDTO;
 #[serde(rename_all(deserialize = "camelCase"))]
 pub struct LoginDTO {
     #[validate(
-        required(message = "账号不可为空"),
-        length(min = 6, max = 18, message = "账号格式错误")
+        required(message = "用户标识不可为空"),
+        length(min = 5, max = 18, message = "用户标识格式错误")
     )]
     pub identity: Option<String>,
     #[validate(
@@ -42,8 +42,8 @@ pub struct RegisterDTO {
     pub base_dto: BaseDTO,
 
     #[validate(
-        required(message = "账号不可为空"),
-        length(min = 6, max = 18, message = "账号格式错误")
+        required(message = "用户标识不可为空"),
+        length(min = 5, max = 18, message = "用户标识格式错误")
     )]
     pub account: Option<String>,
 
@@ -113,7 +113,7 @@ pub struct ResetPwdDTO {
     /// 用户标识(账号、手机号、邮箱)
     #[validate(
         required(message = "用户标识不可为空"),
-        length(min = 6, max = 18, message = "用户标识格式错误")
+        length(min = 5, max = 18, message = "用户标识格式错误")
     )]
     pub identity: Option<String>,
 

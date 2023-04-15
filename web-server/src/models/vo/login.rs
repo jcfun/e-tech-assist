@@ -1,5 +1,5 @@
 use rbatis::rbdc::datetime::DateTime;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::utils::jwt::Token;
 
@@ -17,7 +17,6 @@ pub struct UserInfoVO {
     pub account: Option<String>,
     pub disable_flag: Option<String>,
     pub detail_id: Option<String>,
-    pub role_id: Option<String>,
     pub description: Option<String>,
     pub phone_number: Option<String>,
     pub email: Option<String>,
@@ -33,7 +32,6 @@ pub struct UserInfoVO {
     pub openid: Option<String>,
     pub session_key: Option<String>,
 }
-
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]

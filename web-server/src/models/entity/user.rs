@@ -11,6 +11,5 @@ pub struct TUser {
     pub password: String,
     pub disable_flag: String,
     pub detail_id: String,
-    pub role_id: String,
     pub description: String,
 }

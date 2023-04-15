@@ -12,7 +12,7 @@ pub struct CreateUserDTO {
 
     #[validate(
         required(message = "账号不可为空"),
-        length(min = 6, max = 18, message = "账号格式错误")
+        length(min = 5, max = 18, message = "账号格式错误")
     )]
     pub account: Option<String>,
 

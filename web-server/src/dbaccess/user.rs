@@ -2,6 +2,7 @@ use rbatis::{
     executor::RBatisTxExecutorGuard,
     py_sql,
     rbdc::{db::ExecResult, Error},
+    Rbatis,
 };
 
 use crate::{
@@ -232,5 +233,28 @@ pub async fn query_user_count(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryUserDTO,
 ) -> Result<u64, Error> {
+    impled!();
+}
+
+/// 更新用户状态(是否禁用)
+#[py_sql(
+    r#"`update t_user`
+    ` set`
+    if dto.operate_time != '':
+        ` operate_time = #{dto.operate_time}`
+    if dto.operator != '':
+        `, operator = #{dto.operator}`
+    if dto.operator_id != '':
+        `, operator_id = #{dto.operator_id}`
+    if disable_flag != '':
+        `, disable_flag = #{disable_flag}`
+    ` where delete_flag = '0'` 
+    ` and id = #{dto.id}`"#
+)]
+pub async fn update_disable_flag(
+    db: &Rbatis,
+    dto: &BaseDTO,
+    disable_flag: &String,
+) -> Result<ExecResult, Error> {
     impled!();
 }

@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use super::errors::MyError;
 use axum::{
     body,
@@ -9,6 +7,7 @@ use axum::{
 use http_body::Full;
 use hyper::header;
 use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
 use tracing::info;
 
 // 分页查询返回结构体
@@ -28,6 +27,33 @@ impl<T> Default for PageRes<T> {
             total_page: None,
             current_page: None,
         }
+    }
+}
+
+impl<T> PageRes<T>
+where
+    T: Clone + Serialize,
+{
+    pub fn new(data: Vec<T>, total: u64, total_page: u64, current_page: u64) -> PageRes<T> {
+        PageRes {
+            data: Some(data),
+            total: Some(total),
+            total_page: Some(total_page),
+            current_page: Some(current_page),
+        }
+    }
+}
+impl PageRes<()> {
+    pub fn total_page(count: u64, page_size: u64) -> u64 {
+        if count % page_size == 0 {
+            count / page_size
+        } else {
+            count / page_size + 1
+        }
+    }
+
+    pub fn offset(page_no: u64, page_size: u64) -> u64 {
+        (page_no - 1) * page_size
     }
 }
 
@@ -141,6 +167,13 @@ where
         }
     }
 
+    pub fn from_panic_msg(msg: &str) -> Self {
+        Self {
+            code: Some(StatusCode::INTERNAL_SERVER_ERROR.as_u16()),
+            msg: Some(msg.into()),
+            data: None,
+        }
+    }
     // pub fn resp_json(&self) -> Response<Body> {
     //     let resp = Response::builder()
     //         // .extension(|| {})

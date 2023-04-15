@@ -1,6 +1,6 @@
 use crate::handlers::user::*;
 use axum::{
-    routing::{delete, post, put},
+    routing::{delete, patch, post, put},
     Router,
 };
 pub fn user_routes() -> Router {
@@ -10,4 +10,5 @@ pub fn user_routes() -> Router {
         .route("/:id", delete(delete_user))
         .route("/", put(update_user))
         .route("/fq", post(query_user))
+        .route("/:id/:disable_flag", patch(update_disable_flag))
 }

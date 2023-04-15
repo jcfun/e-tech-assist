@@ -70,6 +70,8 @@ pub async fn login(
 
 /// 用户注册
 pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, MyError> {
+    // 参数校验
+    param_validate(&payload)?;
     // 验证码校验
     let uuid = &payload.uuid.clone().unwrap().to_lowercase();
     let res = get_string(uuid).await;
@@ -84,8 +86,6 @@ pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, 
     }
     // 填充公共属性
     fill_fields_system(&mut payload.base_dto);
-    // 参数校验
-    param_validate(&payload)?;
     let db = &APP_CONTEXT.db;
     let count = get_user_count(&db, &payload.phone_number.clone().unwrap()).await?;
     if count != 0 {

@@ -208,20 +208,36 @@ pub async fn query_user(
         }
     });
     let page_no = payload.page_no.map(|v| v).unwrap_or(1);
-    let page_size = payload.page_size.map(|v| v - 1).unwrap_or(10);
-    let offset = (page_no - 1) * page_size;
+    let page_size = payload.page_size.map(|v| v).unwrap_or(10);
+    let offset = PageRes::offset(page_no, page_size);
     let res = user::query_user(&mut tx, &payload, &page_size, &offset).await?;
     let count = user::query_user_count(&mut tx, &payload).await?;
     if let Some(vo) = res {
-        let page_res = PageRes {
-            data: Some(vo),
-            total_page: Some(if count == 0 { 0 } else { count / page_size + 1 }),
-            total: Some(count),
-            current_page: Some(page_no),
-        };
+        let page_res = PageRes::new(vo, count, PageRes::total_page(count, page_size), page_no);
         tx.commit().await.unwrap();
         return Ok(Res::from_success("查询成功", page_res));
     } else {
         Ok(Res::from_vec_not_found(PageRes::default()))
     }
+}
+
+/// 更新用户状态(是否禁用)
+pub async fn update_disable_flag(
+    claims: Claims,
+    Path((id, disable_flag)): Path<(String, String)>,
+) -> Result<Res<u64>, MyError> {
+    let db = &APP_CONTEXT.db;
+    let mut dto = BaseDTO::default();
+    fill_fields(&mut dto, &claims, false);
+    dto.id = Some(id);
+    let count = user::update_disable_flag(db, &dto, &disable_flag)
+        .await?
+        .rows_affected;
+    if count == 0 {
+        return Ok(Res::from_fail(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "修改失败",
+        ));
+    }
+    Ok(Res::from_success("修改成功", count))
 }

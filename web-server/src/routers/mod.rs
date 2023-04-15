@@ -2,7 +2,8 @@ use self::login::login_routes;
 use self::test::test_routes;
 use self::user::user_routes;
 use crate::middleware::{
-    errors::{fallback, handle_timeout_error},
+    cors,
+    errors::{fallback, handle_panic, handle_timeout_error},
     filter::filter,
 };
 use crate::utils::jwt::Claims;
@@ -32,13 +33,14 @@ pub fn get_sys_routers() -> Router {
                 .layer(HandleErrorLayer::new(handle_timeout_error))
                 .timeout(Duration::from_secs(600)),
         )
-        // .layer(TraceLayer::on_request())
         // http info
         .layer(TraceLayer::new_for_http())
         // filter
         .layer(middleware::from_fn(filter))
         // panic捕获
-        .layer(CatchPanicLayer::new())
+        .layer(CatchPanicLayer::custom(handle_panic))
+        // 跨域
+        .layer(cors::cors())
         // 404
         .fallback(fallback)
 }
