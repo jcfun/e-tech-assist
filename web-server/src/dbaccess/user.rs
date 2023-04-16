@@ -11,7 +11,7 @@ use crate::{
             base::BaseDTO,
             user::{CreateUserDTO, QueryUserDTO, UpdateUserDTO, UpdateUserWxDTO},
         },
-        vo::user::QueryUserVO,
+        vo::{role::QueryRoleVO, user::QueryUserVO},
     },
     utils::epc,
 };
@@ -44,7 +44,6 @@ use crate::{
         ` from t_user b`
         ` where a.delete_flag = '0'` 
         ` and b.delete_flag = '0'`
-        ` and b.disable_flag = '0'`
         ` and b.detail_id = a.id`
         ` and b.id = #{dto.id}`"#
 )]
@@ -149,7 +148,6 @@ pub async fn delete_user(
     if dto.password != '':
         `, password = #{dto.password}`
     ` where delete_flag = '0'` 
-    ` and disable_flag = '0'`
     ` and id = #{dto.id}`"#
 )]
 pub async fn update_user(
@@ -176,7 +174,7 @@ pub async fn delete_user_role(
     impled!();
 }
 
-/// 分页查询用户信息
+/// 多条件分页查询用户信息
 #[py_sql(
     r#"`select a.id, a.operate_time, a.operator, a.operator_id, a.create_time, a.creator, a.creator_id, a.delete_flag, a.account, a.disable_flag, a.detail_id, a.description, a.openid, b.phone_number, b.email, b.nickname, b.avatar_url, b.last_login_time, b.last_login_ip, b.language, b.country, b.province, b.city`
     ` from t_user a join t_user_detail b on a.detail_id = b.id`
@@ -194,12 +192,12 @@ pub async fn delete_user_role(
         ` and b.phone_number like '%${dto.phone_number}%'`
     if dto.gender != '':
         ` and b.gender = #{dto.gender}`
-    if dto.id != '':
-        ` and a.id = #{dto.id}`
+    if dto.disable_flag != '':
+        ` and a.disable_flag = #{dto.disable_flag}`
     ` limit ${page_size}`
     ` offset ${offset}`"#
 )]
-pub async fn query_user(
+pub async fn query_users(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryUserDTO,
     page_size: &u64,
@@ -208,7 +206,7 @@ pub async fn query_user(
     impled!();
 }
 
-/// 分页查询用户信息
+/// 多条件分页查询用户信息数量
 #[py_sql(
     r#"`select count(*)`
     ` from t_user a join t_user_detail b on a.detail_id = b.id`
@@ -226,10 +224,10 @@ pub async fn query_user(
         ` and b.phone_number like '%${dto.phone_number}%'`
     if dto.gender != '':
         ` and b.gender = #{dto.gender}`
-    if dto.id != '':
-        ` and a.id = #{dto.id}`"#
+    if dto.disable_flag != '':
+        ` and a.disable_flag = #{dto.disable_flag}`"#
 )]
-pub async fn query_user_count(
+pub async fn query_users_count(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryUserDTO,
 ) -> Result<u64, Error> {
@@ -256,5 +254,21 @@ pub async fn update_disable_flag(
     dto: &BaseDTO,
     disable_flag: &String,
 ) -> Result<ExecResult, Error> {
+    impled!();
+}
+
+/// 根据用户id查询关联角色信息
+#[py_sql(
+    r#"`select r.id, r.operate_time, r.operator, r.operator_id, r.create_time, r.creator, r.creator_id, r.delete_flag, r.name, r.description, r.disable_flag, r.code`
+    ` from t_role r join t_user_role ur on r.id = ur.role_id`
+    ` where r.delete_flag = '0'` 
+    ` and ur.delete_flag = '0'`
+    ` and ur.user_id = #{user_id}`
+    "#
+)]
+pub async fn query_roles_by_user_id(
+    tx: &mut RBatisTxExecutorGuard,
+    user_id: &String,
+) -> Result<Option<Vec<QueryRoleVO>>, Error> {
     impled!();
 }

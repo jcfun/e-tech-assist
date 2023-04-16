@@ -128,6 +128,9 @@ pub struct QueryUserDTO {
     #[validate(length(equal = 1, message = "性别格式错误"))]
     pub gender: Option<String>,
 
+    #[validate(length(equal = 1, message = "禁用标识格式错误"))]
+    pub disable_flag: Option<String>,
+
     #[validate(range(min = 1, message = "页码最小为1"))]
     pub page_no: Option<u64>,
 

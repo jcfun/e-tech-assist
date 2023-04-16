@@ -1,6 +1,8 @@
 use rbatis::rbdc::datetime::DateTime;
 use serde::{Deserialize, Serialize};
 
+use super::role::QueryRoleVO;
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct QueryUserVO {
@@ -27,4 +29,5 @@ pub struct QueryUserVO {
     pub country: Option<String>,
     pub province: Option<String>,
     pub city: Option<String>,
+    pub roles: Option<Vec<QueryRoleVO>>,
 }

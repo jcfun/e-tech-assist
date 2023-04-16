@@ -90,6 +90,7 @@ pub async fn create_user(
     fill_fields(&mut payload.base_dto, &claims, true);
     // 添加用户信息
     user::create_user(&mut tx, &payload).await?;
+    // 添加用户角色关联信息
     if !payload.role_ids.is_none() && payload.role_ids.as_ref().unwrap().len() > 0 {
         let count = user::create_user_role(&mut tx, &payload)
             .await?
@@ -177,7 +178,7 @@ pub async fn update_user(
         if count == 0 {
             return Ok(Res::from_fail(
                 StatusCode::INTERNAL_SERVER_ERROR,
-                "添加失败",
+                "修改失败",
             ));
         }
     }
@@ -194,8 +195,8 @@ pub async fn update_user(
     }
 }
 
-/// 根据id查询用户信息
-pub async fn query_user(
+/// 多条件查询用户信息
+pub async fn query_users(
     Json(payload): Json<QueryUserDTO>,
 ) -> Result<Res<PageRes<QueryUserVO>>, MyError> {
     let db = &APP_CONTEXT.db;
@@ -210,10 +211,16 @@ pub async fn query_user(
     let page_no = payload.page_no.map(|v| v).unwrap_or(1);
     let page_size = payload.page_size.map(|v| v).unwrap_or(10);
     let offset = PageRes::offset(page_no, page_size);
-    let res = user::query_user(&mut tx, &payload, &page_size, &offset).await?;
-    let count = user::query_user_count(&mut tx, &payload).await?;
-    if let Some(vo) = res {
-        let page_res = PageRes::new(vo, count, PageRes::total_page(count, page_size), page_no);
+    let res = user::query_users(&mut tx, &payload, &page_size, &offset).await?;
+    let count = user::query_users_count(&mut tx, &payload).await?;
+    if let Some(mut vos) = res {
+        // 获取用户下关联的角色
+        for vo in vos.iter_mut() {
+            vo.roles = user::query_roles_by_user_id(&mut tx, &vo.id.as_ref().unwrap())
+                .await
+                .unwrap_or(Some(vec![]));
+        }
+        let page_res = PageRes::new(vos, count, PageRes::total_page(count, page_size), page_no);
         tx.commit().await.unwrap();
         return Ok(Res::from_success("查询成功", page_res));
     } else {
