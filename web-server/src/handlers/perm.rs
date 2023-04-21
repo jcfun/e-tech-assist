@@ -1,6 +1,3 @@
-use axum::{extract::Path, Json};
-use hyper::StatusCode;
-
 use crate::{
     common::{
         errors::MyError,
@@ -17,6 +14,8 @@ use crate::{
     },
     utils::{fields, jwt::Claims, validate},
 };
+use axum::{extract::Path, Json};
+use hyper::StatusCode;
 
 // 创建角色
 pub async fn create_perm(
@@ -115,8 +114,21 @@ pub async fn query_perms(
     let offset = PageRes::offset(page_no, page_size);
     let res = perm::query_perms(&mut tx, &payload, &page_size, &offset).await?;
     let count = perm::query_perms_count(&mut tx, &payload).await?;
-    if let Some(vo) = res {
-        let page_res = PageRes::new(vo, count, PageRes::total_page(count, page_size), page_no);
+    if let Some(vos) = res {
+        // 构建树形结构
+        let mut parents = vos
+            .iter()
+            .filter(|vo| vo.parent_id.is_none() || vo.parent_id.as_ref().unwrap() == "")
+            .map(|vo| vo.clone())
+            .collect();
+        get_children(&mut parents, &vos);
+        // 构建返回值
+        let page_res = PageRes::new(
+            parents,
+            count,
+            PageRes::total_page(count, page_size),
+            page_no,
+        );
         tx.commit().await.unwrap();
         return Ok(Res::from_success("查询成功", page_res));
     } else {
@@ -143,4 +155,17 @@ pub async fn update_disable_flag(
         ));
     }
     Ok(Res::from_success("修改成功", count))
+}
+
+/// 构建权限信息树状结构
+pub fn get_children(parents: &mut Vec<QueryPermVO>, vos: &Vec<QueryPermVO>) {
+    for parent in parents {
+        let children: Vec<QueryPermVO> = vos
+            .iter()
+            .filter(|vo| parent.id == vo.parent_id)
+            .map(|vo| vo.clone())
+            .collect();
+        parent.children = Some(children);
+        get_children(parent.children.as_mut().unwrap(), vos);
+    }
 }

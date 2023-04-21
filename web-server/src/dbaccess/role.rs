@@ -179,7 +179,7 @@ pub async fn update_disable_flag(
 
 /// 根据角色id查询关联权限信息
 #[py_sql(
-    r#"`select p.id, p.operate_time, p.operator, p.operator_id, p.create_time, p.creator, p.creator_id, p.delete_flag, p.name, p.parent_id, p.perm_type, p.disable_flag, p.api_path, p.fe_route, p.fe_code, p.resource, p.description`
+    r#"`select p.id, p.operate_time, p.operator, p.operator_id, p.create_time, p.creator, p.creator_id, p.delete_flag, p.name, p.parent_id, p.perm_type, p.disable_flag, p.api_path, p.fe_route, p.fe_name, p.fe_code, p.resource, p.description`
     ` from t_perm p join t_role_perm rp on p.id = rp.perm_id`
     ` where rp.delete_flag = '0'` 
     ` and p.delete_flag = '0'` 

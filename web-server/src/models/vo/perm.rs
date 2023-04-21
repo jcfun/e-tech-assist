@@ -18,7 +18,9 @@ pub struct QueryPermVO {
     pub disable_flag: Option<String>,
     pub api_path: Option<String>,
     pub fe_route: Option<String>,
+    pub fe_name: Option<String>,
     pub fe_code: Option<String>,
     pub description: Option<String>,
     pub resource: Option<String>,
+    pub children: Option<Vec<QueryPermVO>>,
 }

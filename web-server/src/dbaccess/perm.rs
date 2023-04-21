@@ -16,9 +16,9 @@ use crate::models::{
 /// 新增权限信息
 #[py_sql(
     r#"`insert into t_perm`
-    ` (id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, fe_route, fe_code, resource, description)`
+    ` (id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, fe_route, fe_name, fe_code, resource, description)`
     ` values`
-    ` (#{dto.id}, #{dto.operate_time}, #{dto.operator}, #{dto.operator_id}, #{dto.create_time}, #{dto.creator}, #{dto.creator_id}, #{dto.delete_flag}, #{dto.name}, #{dto.parent_id}, #{dto.perm_type}, #{dto.disable_flag}, #{dto.api_path}, #{dto.fe_route}, #{dto.fe_code}, #{dto.resource}, #{dto.description})`"#
+    ` (#{dto.id}, #{dto.operate_time}, #{dto.operator}, #{dto.operator_id}, #{dto.create_time}, #{dto.creator}, #{dto.creator_id}, #{dto.delete_flag}, #{dto.name}, #{dto.parent_id}, #{dto.perm_type}, #{dto.disable_flag}, #{dto.api_path}, #{dto.fe_route}, #{dto.fe_name}, #{dto.fe_code}, #{dto.resource}, #{dto.description})`"#
 )]
 pub async fn create_perm(
     tx: &mut RBatisTxExecutorGuard,
@@ -65,6 +65,8 @@ pub async fn delete_perm(
         `, api_path = #{dto.api_path}`
     if dto.fe_route != '':
         `, fe_route = #{dto.fe_route}`
+    if dto.fe_name != '':
+        `, fe_name = #{dto.fe_name}`
     if dto.fe_code != '':
         `, fe_code = #{dto.fe_code}`
     if dto.resource != '':
@@ -83,7 +85,7 @@ pub async fn update_perm(
 
 /// 多条件分页查询权限信息
 #[py_sql(
-    r#"`select id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, fe_route, fe_code, resource, description`
+    r#"`select id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, fe_route, fe_name, fe_code, resource, description`
     ` from t_perm`
     ` where delete_flag = '0'` 
     if dto.create_time_start != '':

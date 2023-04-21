@@ -41,6 +41,12 @@ pub struct CreatePermDTO {
         length(max = 100, message = "前端路由格式错误")
     )]
     pub fe_route: Option<String>,
+    
+    #[validate(
+        required(message = "前端路由名称不可为空"),
+        length(max = 100, message = "前端路由名称格式错误")
+    )]
+    pub fe_name: Option<String>,
 
     #[validate(
         required(message = "前端权限编号不可为空"),
@@ -93,6 +99,12 @@ pub struct UpdatePermDTO {
         length(max = 100, message = "前端路由格式错误")
     )]
     pub fe_route: Option<String>,
+
+    #[validate(
+        required(message = "前端路由名称不可为空"),
+        length(max = 100, message = "前端路由名称格式错误")
+    )]
+    pub fe_name: Option<String>,
 
     #[validate(
         required(message = "前端权限编号不可为空"),

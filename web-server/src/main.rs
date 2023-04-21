@@ -1,5 +1,6 @@
 #![feature(async_closure)]
 #![feature(unboxed_closures)]
+#![feature(drain_filter)]
 use std::{net::SocketAddr, str::FromStr};
 
 use axum::Router;

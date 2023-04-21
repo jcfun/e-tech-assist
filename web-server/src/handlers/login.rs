@@ -1,9 +1,12 @@
 use crate::{
     common::{errors::MyError, res::Res},
     config::init::{APP_CFG, APP_CONTEXT},
-    dbaccess::login::{
-        self, create_user_detail_wxapp, get_user_count, get_user_info_by_openid,
-        update_user_by_phone1, update_user_by_phone2,
+    dbaccess::{
+        login::{
+            self, create_user_detail_wxapp, get_user_count, get_user_info_by_openid,
+            update_user_by_phone1, update_user_by_phone2,
+        },
+        role, user,
     },
     models::{
         dto::login::{AuthDTO, AuthRegisterDTO, LoginDTO, LoginLogDTO, RegisterDTO, ResetPwdDTO},
@@ -27,13 +30,14 @@ use axum::{http::StatusCode, Json};
 use headers::HeaderMap;
 use rbatis::rbdc::db::ExecResult;
 
+use super::perm;
+
 /// 用户登录
 pub async fn login(
     headers: HeaderMap,
     Json(mut payload): Json<LoginDTO>,
 ) -> Result<Res<LoginVO>, MyError> {
     param_validate(&payload)?;
-    let db = &APP_CONTEXT.db;
     // 验证码校验
     let uuid = &payload.uuid.clone().unwrap();
     let res = get_string(uuid).await;
@@ -49,13 +53,48 @@ pub async fn login(
         login_log(&headers, &payload, "登录失败", "验证码已失效").await?;
         return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "验证码已失效"));
     }
+    let db = &APP_CONTEXT.db;
+    let tx = db.acquire_begin().await.unwrap();
+    // 异步回滚回调
+    let mut tx = tx.defer_async(|mut tx| async move {
+        if !tx.done {
+            tx.rollback().await.unwrap();
+            tracing::error!("An error occurred, rollback!");
+        }
+    });
     // 账号密码校验
     payload.password = Some(encrypt_sha256(&payload.password.unwrap()));
-    let result = login::get_user_info(db, payload.identity.clone(), payload.password.clone()).await;
+    let result =
+        login::get_user_info(&mut tx, payload.identity.clone(), payload.password.clone()).await;
     match result? {
-        Some(user_info) => {
+        Some(mut user_info) => {
+            // 获取用户下关联的角色
+            user_info.roles =
+                user::query_roles_by_user_id(&mut tx, &user_info.id.as_ref().unwrap())
+                    .await
+                    .unwrap_or(Some(vec![]));
+            // 获取角色下关联的权限
+            let roles = user_info.roles.as_mut().unwrap();
+            for role in roles.iter_mut() {
+                let perms = role::query_perms_by_role_id(&mut tx, &role.id.as_ref().unwrap())
+                    .await
+                    .unwrap_or(Some(vec![]));
+                // 构建树形结构
+                let mut parents = perms
+                    .as_ref()
+                    .unwrap()
+                    .iter()
+                    .filter(|perm| {
+                        perm.parent_id.is_none() || perm.parent_id.as_ref().unwrap() == ""
+                    })
+                    .map(|perm| perm.clone())
+                    .collect();
+                perm::get_children(&mut parents, perms.as_ref().unwrap());
+                role.perms = Some(parents);
+            }
             let token = encode_jwt(&user_info).await;
             login_log(&headers, &payload, "登录成功", "登录成功").await?;
+            tx.commit().await.unwrap();
             Ok(Res::from_success("登录成功", LoginVO { user_info, token }))
         }
         None => {
@@ -167,7 +206,7 @@ pub async fn login_log(
     // 获取ip归属地
     let ip_addr = get_ip_addr(ip)
         .await
-        .map(|v1| v1)
+        .map(|v| v)
         .unwrap_or("unknown".into());
     let identity = login_dto
         .identity
