@@ -1,36 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router';
-
-export const defaultRoutes = [
-  {
-    path: '/',
-    name: 'Login',
-    component: () => import('@/views/login/index.vue'),
-    meta: {
-      title: '登录',
-    },
-  },
-  {
-    path: '/index',
-    name: 'Index',
-    component: () => import('@/layout/Layout.vue'),
-    meta: {
-      title: '仪表盘',
-    },
-    children: [
-      {
-        path: 'home',
-        name: 'Home',
-        component: () => import('@/views/index/index.vue'),
-        meta: {
-          title: '首页',
-        },
-      },
-    ],
-  },
-];
+import { createRouter, createWebHashHistory } from 'vue-router';
+import { commonRoutes, perLoadPathRoute } from './common';
+import type { App } from 'vue';
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes: [...defaultRoutes],
+  history: createWebHashHistory(),
+  routes: [...commonRoutes, perLoadPathRoute],
 });
+
 export default router;
+
+export function initRouter(app: App) {
+  app.use(router);
+}

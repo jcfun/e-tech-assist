@@ -41,25 +41,16 @@ pub struct UpdateRoleDTO {
     #[serde(flatten)]
     pub base_dto: BaseDTO,
 
-    #[validate(
-        required(message = "角色名称不可为空"),
-        length(min = 2, max = 10, message = "角色名称格式错误")
-    )]
+    #[validate(length(min = 2, max = 10, message = "角色名称格式错误"))]
     pub name: Option<String>,
 
-    #[validate(
-        required(message = "是否禁用不可为空"),
-        length(equal = 1, message = "是否禁用格式错误")
-    )]
+    #[validate(length(equal = 1, message = "是否禁用格式错误"))]
     pub disable_flag: Option<String>,
 
     #[validate(length(max = 100, message = "角色描述格式错误"))]
     pub description: Option<String>,
 
-    #[validate(
-        required(message = "角色编号不可为空"),
-        length(min = 5, max = 20, message = "角色编号格式错误")
-    )]
+    #[validate(length(min = 5, max = 20, message = "角色编号格式错误"))]
     pub code: Option<String>,
 
     #[validate(custom(function = "id_vector", message = "权限id格式错误"))]

@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use crate::{
     common::{errors::MyError, res::Res},
     config::init::{APP_CFG, APP_CONTEXT},
@@ -30,7 +32,7 @@ use axum::{http::StatusCode, Json};
 use headers::HeaderMap;
 use rbatis::rbdc::db::ExecResult;
 
-use super::perm;
+use super::perm::get_children;
 
 /// 用户登录
 pub async fn login(
@@ -69,29 +71,38 @@ pub async fn login(
     match result? {
         Some(mut user_info) => {
             // 获取用户下关联的角色
-            user_info.roles =
-                user::query_roles_by_user_id(&mut tx, &user_info.id.as_ref().unwrap())
-                    .await
-                    .unwrap_or(Some(vec![]));
+            let roles = user::query_roles_by_user_id(&mut tx, &user_info.id.as_ref().unwrap())
+                .await
+                .unwrap_or(Some(vec![]));
+
             // 获取角色下关联的权限
-            let roles = user_info.roles.as_mut().unwrap();
-            for role in roles.iter_mut() {
-                let perms = role::query_perms_by_role_id(&mut tx, &role.id.as_ref().unwrap())
+            let roles = roles.as_ref().unwrap();
+            let mut perms = vec![];
+            for role in roles.iter() {
+                let role_perms = role::query_perms_by_role_id(&mut tx, &role.id.as_ref().unwrap())
                     .await
                     .unwrap_or(Some(vec![]));
-                // 构建树形结构
-                let mut parents = perms
-                    .as_ref()
-                    .unwrap()
-                    .iter()
-                    .filter(|perm| {
-                        perm.parent_id.is_none() || perm.parent_id.as_ref().unwrap() == ""
-                    })
-                    .map(|perm| perm.clone())
-                    .collect();
-                perm::get_children(&mut parents, perms.as_ref().unwrap());
-                role.perms = Some(parents);
+                perms.append(&mut role_perms.unwrap());
             }
+            // 去重
+            let unique_perms = {
+                let mut perms_set = HashSet::new();
+                let mut result = vec![];
+                for perm in perms {
+                    if perms_set.insert(perm.clone()) {
+                        result.push(perm);
+                    }
+                }
+                result
+            };
+            // 构建树形结构
+            let mut parents = unique_perms
+                .iter()
+                .filter(|vo| vo.parent_id.is_none() || vo.parent_id.as_ref().unwrap() == "")
+                .map(|vo| vo.clone())
+                .collect();
+            get_children(&mut parents, &unique_perms);
+            user_info.perms = Some(parents);
             let token = encode_jwt(&user_info).await;
             login_log(&headers, &payload, "登录成功", "登录成功").await?;
             tx.commit().await.unwrap();
@@ -204,10 +215,7 @@ pub async fn login_log(
                 .unwrap_or("unknown")
         });
     // 获取ip归属地
-    let ip_addr = get_ip_addr(ip)
-        .await
-        .map(|v| v)
-        .unwrap_or("unknown".into());
+    let ip_addr = get_ip_addr(ip).await.map(|v| v).unwrap_or("unknown".into());
     let identity = login_dto
         .identity
         .clone()

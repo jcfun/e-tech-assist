@@ -3,7 +3,7 @@ import { reactive, type Ref, ref, shallowReactive } from 'vue';
 import type { TableFooterType, TableHeaderType } from '@/components/types';
 import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
 
-type TableColumnPops = TableColumnData & { key: string | number };
+type TableColumnPops = TableColumnData & { key: string | number } & { show?: boolean };
 
 interface Table {
   dataList: Array<any>;
@@ -20,6 +20,7 @@ interface Table {
     key: string;
     width: number;
     dataIndex: string;
+    show: boolean;
   };
 }
 
@@ -52,7 +53,7 @@ export const useTable = function (): Table {
   const bordered = ref(false);
   const striped = ref(false);
   const tableLoading = ref(true);
-  const handleSuccess = ({ data = [] }): Promise<any> => {
+  const handleSuccess = (data: any): Promise<any> => {
     tableLoading.value = false;
     dataList.length = 0;
     dataList.push(...data);
@@ -106,6 +107,7 @@ export const useTableIndexColumn = function () {
     key: 'index',
     width: 80,
     dataIndex: 'index',
+    show: true,
   };
 };
 

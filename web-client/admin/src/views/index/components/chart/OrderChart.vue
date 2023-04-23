@@ -39,18 +39,14 @@
             },
             axisLabel: {
               interval: 0,
-              axisLabel: {
-                fontSize: 10,
-              },
+              fontSize: 10,
             },
           },
           yAxis: [
             {
               type: 'value',
               axisLabel: {
-                axisLabel: {
-                  fontSize: 10,
-                },
+                fontSize: 10,
               },
               splitLine: {
                 show: false,

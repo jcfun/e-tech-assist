@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia';
 import type { RouteLocationNormalized } from 'vue-router';
-import store from '../../';
+import store from '../..';
 import useCachedRouteStore from '@/store/modules/cache';
 import { findCachedRoutes } from '../perm/utils';
+import { Names } from '@/store/types/store-name';
 
-const visitedRoutes = JSON.parse(localStorage.getItem('visited-routes') || '[]');
+const visitedRoutes = JSON.parse(localStorage.getItem(Names.VISITED_ROUTES) || '[]');
 
-const useVisitedRouteStore = defineStore('visited-routes', {
+const useVisitedRouteStore = defineStore(Names.VISITED_ROUTES, {
   state: () => {
     return {
       visitedRoutes: visitedRoutes as RouteLocationNormalized[],

@@ -39,10 +39,8 @@
               show: false,
             },
             axisLabel: {
-              axisLabel: {
-                fontSize: 10,
-                color: '#98A3B2',
-              },
+              fontSize: 10,
+              color: '#98A3B2',
             },
           },
           xAxis: {

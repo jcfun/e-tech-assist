@@ -1,7 +1,7 @@
 use rbatis::rbdc::datetime::DateTime;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Eq)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct QueryPermVO {
     pub id: Option<String>,
@@ -22,5 +22,19 @@ pub struct QueryPermVO {
     pub fe_code: Option<String>,
     pub description: Option<String>,
     pub resource: Option<String>,
+    pub hidden_flag: Option<String>,
+    pub parent_route: Option<String>,
     pub children: Option<Vec<QueryPermVO>>,
+}
+
+impl std::cmp::PartialEq for QueryPermVO {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+    }
+}
+
+impl std::hash::Hash for QueryPermVO {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.id.hash(state);
+    }
 }

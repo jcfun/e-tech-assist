@@ -76,7 +76,7 @@
     IconToLeft as ArrowLeftOutlined,
     IconToRight as ArrowRightOutlined,
   } from '@arco-design/web-vue/es/icon';
-  import useVisitedRouteStore from '@/store/modules/visite';
+  import useVisitedRouteStore from '@/store/modules/visited-routes';
   import type { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
   export default defineComponent({
     name: 'TabBar',

@@ -1,4 +1,4 @@
-import type { RoleVO } from '../role';
+import type { PermVO } from '../perm';
 
 export interface Captcha {
   uuid: string;
@@ -47,5 +47,5 @@ export interface UserInfo {
   operatorId: string;
   phoneNumber: string;
   province: string;
-  roles: Array<RoleVO>;
+  perms: Array<PermVO>;
 }

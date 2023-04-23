@@ -32,7 +32,7 @@
   import { isExternal } from '@/utils';
   import useAppConfigStore from '@/store/modules/config';
   import { LayoutMode, SideTheme, ThemeMode } from '@/store/types/layout';
-  import { transfromMenu } from '@/store/modules/perm/utils';
+  import { transformMenu } from '@/store/modules/perm/utils';
 
   export default defineComponent({
     name: 'ScrollerMenu',
@@ -74,7 +74,7 @@
       handleExpandPath();
       function handleMenu(routes?: Array<RouteRecordRaw>) {
         menuOptions.length = 0;
-        const tempMenus = transfromMenu(routes || []);
+        const tempMenus = transformMenu(routes || []);
         menuOptions.push(...tempMenus);
       }
       function handleExpandPath() {

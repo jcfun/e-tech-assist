@@ -19,7 +19,7 @@
             <div class="date">{dateStr}</div>
             <div class="time">{timeStr.value}</div>
           </div>
-          <div class="center">ArcoWork 平台管理</div>
+          <div class="center">鄂助教 平台管理</div>
           <div class="right">
             <div>15020</div>
             <div style={{ color: '#333', fontSize: '12px' }}>当前在线人数</div>

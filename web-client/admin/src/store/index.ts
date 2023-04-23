@@ -1,5 +1,6 @@
 import { createPinia } from 'pinia';
 import persist from './plugin/persist';
+import type { App } from 'vue';
 
 // interface Options {
 //   prefix: string;
@@ -51,3 +52,7 @@ const store = createPinia();
 store.use(persist);
 
 export default store;
+
+export function initStore(app: App) {
+  app.use(store);
+}

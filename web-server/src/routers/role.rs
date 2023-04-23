@@ -1,6 +1,6 @@
 use crate::handlers::role::*;
 use axum::{
-    routing::{delete, patch, post, put},
+    routing::{delete, get, patch, post, put},
     Router,
 };
 pub fn role_routes() -> Router {
@@ -8,6 +8,7 @@ pub fn role_routes() -> Router {
         .route("/", post(create_role))
         .route("/:id", delete(delete_role))
         .route("/", put(update_role))
-        .route("/fq", post(query_roles))
+        .route("/fq", post(query_roles_fq))
         .route("/:id/:disable_flag", patch(update_disable_flag))
+        .route("/", get(query_roles))
 }

@@ -17,7 +17,7 @@ use crate::{
 use axum::{extract::Path, Json};
 use hyper::StatusCode;
 
-// 创建角色
+// 创建权限
 pub async fn create_perm(
     claims: Claims,
     Json(mut payload): Json<CreatePermDTO>,
@@ -47,7 +47,7 @@ pub async fn create_perm(
     Ok(Res::from_success_msg("添加成功"))
 }
 
-/// 删除用户
+/// 删除权限
 pub async fn delete_perm(claims: Claims, Path(id): Path<String>) -> Result<Res<()>, MyError> {
     let db = &APP_CONTEXT.db;
     // 开启事务
@@ -70,7 +70,7 @@ pub async fn delete_perm(claims: Claims, Path(id): Path<String>) -> Result<Res<(
     Ok(Res::from_success_msg("删除成功"))
 }
 
-/// 修改角色信息
+/// 修改权限信息
 pub async fn update_perm(
     claims: Claims,
     Json(mut payload): Json<UpdatePermDTO>,
@@ -96,8 +96,8 @@ pub async fn update_perm(
     }
 }
 
-/// 多条件查询角色信息
-pub async fn query_perms(
+/// 多条件查询权限信息
+pub async fn query_perms_fq(
     Json(payload): Json<QueryPermDTO>,
 ) -> Result<Res<PageRes<QueryPermVO>>, MyError> {
     let db = &APP_CONTEXT.db;
@@ -112,8 +112,8 @@ pub async fn query_perms(
     let page_no = payload.page_no.map(|v| v).unwrap_or(1);
     let page_size = payload.page_size.map(|v| v).unwrap_or(10);
     let offset = PageRes::offset(page_no, page_size);
-    let res = perm::query_perms(&mut tx, &payload, &page_size, &offset).await?;
-    let count = perm::query_perms_count(&mut tx, &payload).await?;
+    let res = perm::query_perms_fq(&mut tx, &payload, &page_size, &offset).await?;
+    let count = perm::query_perms_fq_count(&mut tx, &payload).await?;
     if let Some(vos) = res {
         // 构建树形结构
         let mut parents = vos
@@ -136,7 +136,7 @@ pub async fn query_perms(
     }
 }
 
-/// 更新角色状态(是否禁用)
+/// 更新权限状态(是否禁用)
 pub async fn update_disable_flag(
     claims: Claims,
     Path((id, disable_flag)): Path<(String, String)>,

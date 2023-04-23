@@ -123,7 +123,7 @@ pub async fn delete_role_perm(
     ` limit ${page_size}`
     ` offset ${offset}`"#
 )]
-pub async fn query_roles(
+pub async fn query_roles_fq(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryRoleDTO,
     page_size: &u64,
@@ -147,7 +147,7 @@ pub async fn query_roles(
         ` and disable_flag = #{dto.disable_flag}`
     "#
 )]
-pub async fn query_roles_count(
+pub async fn query_roles_fq_count(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryRoleDTO,
 ) -> Result<u64, Error> {
@@ -179,7 +179,7 @@ pub async fn update_disable_flag(
 
 /// 根据角色id查询关联权限信息
 #[py_sql(
-    r#"`select p.id, p.operate_time, p.operator, p.operator_id, p.create_time, p.creator, p.creator_id, p.delete_flag, p.name, p.parent_id, p.perm_type, p.disable_flag, p.api_path, p.fe_route, p.fe_name, p.fe_code, p.resource, p.description`
+    r#"`select p.id, p.operate_time, p.operator, p.operator_id, p.create_time, p.creator, p.creator_id, p.delete_flag, p.name, p.parent_id, p.perm_type, p.disable_flag, p.api_path, p.fe_route, p.fe_name, p.fe_code, p.resource, hidden_flag, parent_route, p.description`
     ` from t_perm p join t_role_perm rp on p.id = rp.perm_id`
     ` where rp.delete_flag = '0'` 
     ` and p.delete_flag = '0'` 
@@ -190,5 +190,14 @@ pub async fn query_perms_by_role_id(
     tx: &mut RBatisTxExecutorGuard,
     role_id: &String,
 ) -> Result<Option<Vec<QueryPermVO>>, Error> {
+    impled!();
+}
+
+/// 全量查询
+#[py_sql(
+    r#"`select id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, description, disable_flag, code`
+    ` from t_role`"#
+)]
+pub async fn query_roles(db: &Rbatis) -> Result<Option<Vec<QueryRoleVO>>, Error> {
     impled!();
 }

@@ -22,11 +22,12 @@ class Http {
       //   this.baseUrl = this.baseUrlLinux;
       // }
       service({
-        url: `${this.baseUrlLinux}${comReqParams.url}`,
+        url: `${this.baseUrl}${comReqParams.url}`,
         method: comReqParams.method,
         data: comReqParams.data,
       })
         .then(res => {
+          console.log('response ==================> ', res);
           if ((res.data as Res<any>).code != 200) {
             Message.error({
               content: (res.data as Res<any>).msg,

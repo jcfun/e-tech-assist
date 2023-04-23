@@ -19,11 +19,14 @@ const useUserStore = defineStore(Names.USER, {
       });
     },
     logout() {
-      return new Promise(resolve => {
+      return new Promise<void>(resolve => {
         this.$reset();
         localStorage.clear();
         sessionStorage.clear();
-        resolve({});
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 2000);
+        resolve();
       });
     },
     tokenExpireFlag() {

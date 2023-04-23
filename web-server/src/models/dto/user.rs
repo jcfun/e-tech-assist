@@ -16,10 +16,7 @@ pub struct CreateUserDTO {
     )]
     pub account: Option<String>,
 
-    #[validate(
-        required(message = "密码不可为空"),
-        length(min = 6, max = 18, message = "密码格式错误")
-    )]
+    #[validate(length(min = 6, max = 18, message = "密码格式错误"))]
     pub password: Option<String>,
 
     #[validate(
@@ -44,7 +41,6 @@ pub struct CreateUserDTO {
     )]
     pub phone_number: Option<String>,
 
-    #[serde(skip_deserializing)]
     #[validate(length(min = 1, max = 18, message = "昵称格式错误"))]
     pub nickname: Option<String>,
 }
@@ -55,25 +51,19 @@ pub struct UpdateUserDTO {
     #[serde(flatten)]
     pub base_dto: BaseDTO,
 
-    #[validate(
-        required(message = "密码不可为空"),
-        length(min = 6, max = 18, message = "密码格式错误")
-    )]
+    #[validate(length(min = 6, max = 18, message = "密码格式错误"))]
     pub password: Option<String>,
 
     #[validate(custom(function = "id_vector", message = "角色id格式错误"))]
     pub role_ids: Option<Vec<String>>,
 
-    #[validate(
-        required(message = "用户手机号不可为空"),
-        length(max = 11, message = "用户手机号格式错误")
-    )]
+    #[validate(length(max = 11, message = "用户手机号格式错误"))]
     pub phone_number: Option<String>,
 
     #[validate(email(message = "邮箱格式错误"))]
     pub email: Option<String>,
 
-    #[validate(required(message = "昵称不可为空"))]
+    #[validate(length(min = 1, max = 18, message = "昵称格式错误"))]
     pub nickname: Option<String>,
     pub gender: Option<String>,
     pub country: Option<String>,
@@ -88,18 +78,12 @@ pub struct UpdateUserWxDTO {
     #[serde(flatten)]
     pub base_dto: BaseDTO,
 
-    #[validate(
-        required(message = "昵称不可为空"),
-        length(min = 1, max = 18, message = "昵称格式错误")
-    )]
+    #[validate(length(min = 1, max = 18, message = "昵称格式错误"))]
     pub nickname: Option<String>,
 
     pub email: Option<String>,
 
-    #[validate(
-        required(message = "手机号不可为空"),
-        length(equal = 11, message = "手机号格式错误")
-    )]
+    #[validate(length(equal = 11, message = "手机号格式错误"))]
     pub phone_number: Option<String>,
     pub gender: Option<String>,
     pub country: Option<String>,

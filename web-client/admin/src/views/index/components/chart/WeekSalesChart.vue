@@ -40,9 +40,7 @@
             splitLine: { show: false },
             data: weeks,
             axisLabel: {
-              axisLabel: {
-                fontSize: 10,
-              },
+              fontSize: 10,
             },
             axisLine: {
               show: true,
@@ -61,9 +59,7 @@
             max: 300,
             splitLine: { show: false },
             axisLabel: {
-              axisLabel: {
-                fontSize: 10,
-              },
+              fontSize: 10,
             },
             axisLine: {
               show: true,

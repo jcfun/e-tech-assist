@@ -61,16 +61,18 @@
   import useUserStore from '@/store/modules/user';
   import router from '@/router';
   import useAppInfo from '@/hooks/useAppInfo';
+  import { useRoute } from 'vue-router';
   const autoLogin = ref(true);
   const loading = ref(false);
   const projectName = setting.projectName;
   const { version } = useAppInfo();
 
+  const route = useRoute();
   const identity = ref('admin');
   const password = ref('123456');
   const captchaValue = ref('');
   const captcha = ref({
-    uuid: 'http://img.urainstar.top/error.png',
+    uuid: 'http://file.urainstar.top/error.png',
     img: '',
   } as Captcha);
 
@@ -97,9 +99,9 @@
           .setUser(res.data)
           .then(_res => {
             router.replace({
-              path: '/index/home',
+              path: route.query.redirect ? (route.query.redirect as string) : '/',
             });
-            Message.success(`登录成功， 欢迎 ${identity.value}, 即将跳转到首页`);
+            Message.success(`登录成功，欢迎 ${identity.value}，即将跳转到首页`);
           });
       })
       .catch(err => {

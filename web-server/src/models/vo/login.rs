@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::jwt::Token;
 
-use super::role::QueryRoleVO;
+use super::perm::QueryPermVO;
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
 #[serde(rename_all(serialize = "camelCase"))]
@@ -33,7 +33,7 @@ pub struct UserInfoVO {
     pub city: Option<String>,
     pub openid: Option<String>,
     pub session_key: Option<String>,
-    pub roles: Option<Vec<QueryRoleVO>>
+    pub perms: Option<Vec<QueryPermVO>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

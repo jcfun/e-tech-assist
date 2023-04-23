@@ -1,15 +1,15 @@
 import { createApp } from 'vue';
-import store from './store';
-import router from './router';
 import App from './App.vue';
 import './styles';
 import initRouterGuard from './router/guard';
 import { initGlobalComponent } from './layout';
+import { initRouter } from './router';
+import { initStore } from './store';
 
 const app = createApp(App);
 
-app.use(store);
-app.use(router);
+initStore(app);
+initRouter(app);
 initRouterGuard();
 initGlobalComponent(app);
 

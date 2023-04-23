@@ -20,3 +20,15 @@ export interface Res<T> {
   msg: string;
   data: T;
 }
+
+export interface PageRes<T> {
+  data: Array<T>;
+  total: number;
+  total_page: number;
+  current_page: number;
+}
+
+export interface Label {
+  key: string;
+  value: string;
+}

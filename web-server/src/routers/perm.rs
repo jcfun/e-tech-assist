@@ -8,6 +8,6 @@ pub fn perm_routes() -> Router {
         .route("/", post(create_perm))
         .route("/:id", delete(delete_perm))
         .route("/", put(update_perm))
-        .route("/fq", post(query_perms))
+        .route("/fq", post(query_perms_fq))
         .route("/:id/:disable_flag", patch(update_disable_flag))
 }

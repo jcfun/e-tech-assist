@@ -11,7 +11,7 @@
         <MessageContent />
       </template>
     </a-popover>
-    <span v-if="appStore.actionBar.isShowRefresh" class="action-item" @click="onRefrehRoute">
+    <span v-if="appStore.actionBar.isShowRefresh" class="action-item" @click="onRefreshRoute">
       <RefreshIcon />
     </span>
     <span v-if="appStore.actionBar.isShowFullScreen && appStore.deviceType !== 'mobile'" class="action-item" @click="onScreenFull">
@@ -73,7 +73,7 @@
       const debouncedFn = useDebounceFn(() => {
         router.replace({ path: '/redirect' + route.path, query: route.query });
       }, 200);
-      function onRefrehRoute() {
+      function onRefreshRoute() {
         debouncedFn();
       }
       function onShowSetting() {
@@ -87,7 +87,7 @@
         appStore,
         onShowSearch,
         onScreenFull,
-        onRefrehRoute,
+        onRefreshRoute,
         onShowSetting,
       };
     },

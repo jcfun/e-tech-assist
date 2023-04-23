@@ -53,7 +53,7 @@ pub async fn create_role(
     Ok(Res::from_success_msg("添加成功"))
 }
 
-/// 删除用户
+/// 删除角色
 pub async fn delete_role(claims: Claims, Path(id): Path<String>) -> Result<Res<()>, MyError> {
     let db = &APP_CONTEXT.db;
     // 开启事务
@@ -123,7 +123,7 @@ pub async fn update_role(
 }
 
 /// 多条件查询角色信息
-pub async fn query_roles(
+pub async fn query_roles_fq(
     Json(payload): Json<QueryRoleDTO>,
 ) -> Result<Res<PageRes<QueryRoleVO>>, MyError> {
     let db = &APP_CONTEXT.db;
@@ -138,8 +138,8 @@ pub async fn query_roles(
     let page_no = payload.page_no.map(|v| v).unwrap_or(1);
     let page_size = payload.page_size.map(|v| v).unwrap_or(10);
     let offset = PageRes::offset(page_no, page_size);
-    let res = role::query_roles(&mut tx, &payload, &page_size, &offset).await?;
-    let count = role::query_roles_count(&mut tx, &payload).await?;
+    let res = role::query_roles_fq(&mut tx, &payload, &page_size, &offset).await?;
+    let count = role::query_roles_fq_count(&mut tx, &payload).await?;
     if let Some(mut vos) = res {
         // 获取角色下关联的权限
         for vo in vos.iter_mut() {
@@ -174,4 +174,19 @@ pub async fn update_disable_flag(
         ));
     }
     Ok(Res::from_success("修改成功", count))
+}
+
+/// 全量查询角色信息
+pub async fn query_roles() -> Result<Res<PageRes<QueryRoleVO>>, MyError> {
+    let db = &APP_CONTEXT.db;
+    let res = role::query_roles(&db).await?;
+    if let Some(vos) = res {
+        let total = vos.len() as u64;
+        Ok(Res::from_success(
+            "查询成功",
+            PageRes::new(vos, total, 0, 0),
+        ))
+    } else {
+        Ok(Res::from_vec_not_found(PageRes::default()))
+    }
 }

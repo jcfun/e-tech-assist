@@ -2,7 +2,7 @@ import useUserStore from '@/store/modules/user';
 import router from '..';
 import usePermStore from '@/store/modules/perm';
 
-const whiteRoutes: Array<string> = ['/', '/404', '403', '/500'];
+const whiteRoutes: Array<string> = ['/login', '/404', '403', '/500'];
 
 const usePermGuard = () => {
   router.beforeEach(async to => {
@@ -11,7 +11,7 @@ const usePermGuard = () => {
     }
     const userStore = useUserStore();
     if (userStore.tokenExpireFlag()) {
-      return { name: 'Login' };
+      return { path: '/login', query: { redirect: to.fullPath } };
     }
     const permStore = usePermStore();
     const emptyPermRoutesFlag = permStore.emptyPermRoutesFlag();

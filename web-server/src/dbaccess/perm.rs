@@ -1,16 +1,15 @@
-use rbatis::{
-    executor::RBatisTxExecutorGuard,
-    py_sql,
-    rbdc::{db::ExecResult, Error},
-    Rbatis,
-};
-
 use crate::models::{
     dto::{
         base::BaseDTO,
         perm::{CreatePermDTO, QueryPermDTO, UpdatePermDTO},
     },
     vo::perm::QueryPermVO,
+};
+use rbatis::{
+    executor::RBatisTxExecutorGuard,
+    py_sql,
+    rbdc::{db::ExecResult, Error},
+    Rbatis,
 };
 
 /// 新增权限信息
@@ -85,7 +84,7 @@ pub async fn update_perm(
 
 /// 多条件分页查询权限信息
 #[py_sql(
-    r#"`select id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, fe_route, fe_name, fe_code, resource, description`
+    r#"`select id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, fe_route, fe_name, fe_code, resource, hidden_flag, parent_route, description`
     ` from t_perm`
     ` where delete_flag = '0'` 
     if dto.create_time_start != '':
@@ -101,7 +100,7 @@ pub async fn update_perm(
     ` limit ${page_size}`
     ` offset ${offset}`"#
 )]
-pub async fn query_perms(
+pub async fn query_perms_fq(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryPermDTO,
     page_size: &u64,
@@ -127,7 +126,7 @@ pub async fn query_perms(
         ` and disable_flag = #{dto.disable_flag}`
     "#
 )]
-pub async fn query_perms_count(
+pub async fn query_perms_fq_count(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryPermDTO,
 ) -> Result<u64, Error> {

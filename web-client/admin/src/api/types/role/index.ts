@@ -1,7 +1,7 @@
 import type { PermVO } from '../perm';
 
 export interface RoleVO {
-  ode: string;
+  code: string;
   createTime: string;
   creator: string;
   creatorId: string;

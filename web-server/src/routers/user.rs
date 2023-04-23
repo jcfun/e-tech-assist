@@ -9,6 +9,6 @@ pub fn user_routes() -> Router {
         .route("/", post(create_user))
         .route("/:id", delete(delete_user))
         .route("/", put(update_user))
-        .route("/fq", post(query_users))
+        .route("/fq", post(query_users_fq))
         .route("/:id/:disable_flag", patch(update_disable_flag))
 }

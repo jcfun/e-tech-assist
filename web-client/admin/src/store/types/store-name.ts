@@ -3,4 +3,5 @@ export const enum Names {
   PERM = 'PERM',
   APP_CONFIG = 'APP_CONFIG',
   CACHE = 'CACHE',
+  VISITED_ROUTES = 'VISITED_ROUTES',
 }

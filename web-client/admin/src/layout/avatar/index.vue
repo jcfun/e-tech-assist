@@ -4,11 +4,11 @@
       <div class="action-wrapper">
         <div class="avatar">
           <a-avatar :size="30">
-            <img :src="userStore.user.userInfo.avatarUrl" />
+            <img :src="userStore?.user?.userInfo?.avatarUrl" />
           </a-avatar>
         </div>
         <span class="nick-name">
-          {{ userStore.user.userInfo.nickname }}
+          {{ userStore.user?.userInfo?.nickname }}
         </span>
         <icon-caret-down class="tip" />
       </div>

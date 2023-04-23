@@ -39,7 +39,7 @@
               var arr = ['{a|' + name + '}', '{b|' + ((target / total) * 100).toFixed(2) + '%}'];
               return arr.join('  ');
             },
-            axisLabel: {
+            textStyle: {
               // 添加
               rich: {
                 a: {
@@ -106,7 +106,7 @@
   });
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
   .chart-item-container {
     width: 100%;
     .chart-item {

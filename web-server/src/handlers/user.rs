@@ -71,6 +71,10 @@ pub async fn create_user(
             "添加失败，账号已存在",
         ));
     }
+    // 如果密码为空，则默认为手机号后6位
+    if let None = payload.password {
+        payload.password = Some(payload.phone_number.as_ref().unwrap()[5..].to_string());
+    }
     // 密码sha256加密
     payload.password = Some(encrypt_sha256(payload.password.as_ref().unwrap()));
     // 开启事务
@@ -82,7 +86,9 @@ pub async fn create_user(
             tracing::error!("An error occurred, rollback!");
         }
     });
-    payload.nickname = Some(format!("{}{}", "用户", get_epoch().to_string()));
+    if let None = payload.nickname {
+        payload.nickname = Some(format!("{}{}", "用户", get_epoch().to_string()));
+    }
     // 添加用户详情
     let detail_id = user::create_user_detail(&mut tx, &payload).await;
     payload.detail_id = Some(detail_id?);
@@ -184,6 +190,10 @@ pub async fn update_user(
     }
 
     // 更新用户信息
+    // 如果密码为空，则默认为手机号后6位
+    if let None = payload.password {
+        payload.password = Some(payload.phone_number.as_ref().unwrap()[5..].to_string());
+    }
     // 密码sha256加密
     payload.password = Some(encrypt_sha256(payload.password.as_ref().unwrap()));
     let count2 = user::update_user(&mut tx, &payload).await?.rows_affected;
@@ -196,7 +206,7 @@ pub async fn update_user(
 }
 
 /// 多条件查询用户信息
-pub async fn query_users(
+pub async fn query_users_fq(
     Json(payload): Json<QueryUserDTO>,
 ) -> Result<Res<PageRes<QueryUserVO>>, MyError> {
     let db = &APP_CONTEXT.db;
@@ -211,8 +221,8 @@ pub async fn query_users(
     let page_no = payload.page_no.map(|v| v).unwrap_or(1);
     let page_size = payload.page_size.map(|v| v).unwrap_or(10);
     let offset = PageRes::offset(page_no, page_size);
-    let res = user::query_users(&mut tx, &payload, &page_size, &offset).await?;
-    let count = user::query_users_count(&mut tx, &payload).await?;
+    let res = user::query_users_fq(&mut tx, &payload, &page_size, &offset).await?;
+    let count = user::query_users_fq_count(&mut tx, &payload).await?;
     if let Some(mut vos) = res {
         // 获取用户下关联的角色
         for vo in vos.iter_mut() {

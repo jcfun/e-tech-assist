@@ -17,5 +17,7 @@ export interface PermVO {
   parentId: string;
   permType: string;
   resource: string;
+  hiddenFlag: string;
+  parentRoute: string;
   children: Array<PermVO>;
 }
