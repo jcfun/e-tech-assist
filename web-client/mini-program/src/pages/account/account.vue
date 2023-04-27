@@ -45,6 +45,7 @@
   import { ref } from 'vue';
   const user = useUserStore();
   const account = ref(<Account>{ ...user.userInfo });
+  account.value.gender = account.value.gender == '1' ? '男' : account.value.gender == '2' ? '女' : '未知';
   const showPickerPanel = ref(false);
   const columns = ref([['男', '女']]);
   const showPicker = () => {
@@ -60,6 +61,7 @@
   };
 
   const save = () => {
+    account.value.gender = account.value.gender == '男' ? '1' : account.value.gender == '女' ? '2' : '0';
     saveAccount(account.value).then(res => {
       if (res.code == '200') {
         user.userInfo = <UserInfo>{ ...account.value };

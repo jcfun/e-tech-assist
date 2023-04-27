@@ -32,6 +32,12 @@
       "style": {
         "navigationBarTitleText": "账户设置"
       }
+    },
+    {
+      "path": "pages/quickMsg/quickMsg",
+      "style": {
+        "navigationBarTitleText": "快捷消息"
+      }
     }
   ],
   "tabBar": {

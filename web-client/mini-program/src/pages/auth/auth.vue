@@ -27,7 +27,7 @@
   import type { LoginDTO, RegisterDTO } from '@/models/login';
   import { useUserStore } from '@/store/user';
 
-  const src = '/static/images/icon/icon.png';
+  const src = '/static/images/logo/logo.png';
   const authMsg = ref<_NotifyRef>();
 
   let needPhone = ref(false);
