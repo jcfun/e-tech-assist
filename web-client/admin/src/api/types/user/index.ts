@@ -40,8 +40,7 @@ export interface UserVO {
   roles: Array<RoleVO>;
 }
 
-export interface UserDTO {
-  [key: string]: string | Array<string> | undefined;
+export interface CreateUserDTO {
   id: string;
   account: string;
   password: string;
@@ -50,4 +49,17 @@ export interface UserDTO {
   description?: string;
   phoneNumber: string;
   nickname: string;
+}
+
+export interface UpdateUserDTO {
+  id: string;
+  password: string;
+  roleIds: Array<string>;
+  phoneNumber: string;
+  email: string;
+  nickname: string;
+  gender: string;
+  country: string;
+  province: string;
+  city: string;
 }

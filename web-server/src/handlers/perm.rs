@@ -118,7 +118,15 @@ pub async fn query_perms_fq(
         // 构建树形结构
         let mut parents = vos
             .iter()
-            .filter(|vo| vo.parent_id.is_none() || vo.parent_id.as_ref().unwrap() == "")
+            .filter(|vo| {
+                vo.parent_id.is_none()
+                    || vo.parent_id.as_ref().unwrap() == ""
+                    || !vos
+                        .iter()
+                        .map(|vo1| vo1.id.as_ref().unwrap())
+                        .collect::<Vec<&String>>()
+                        .contains(&vo.parent_id.as_ref().unwrap())
+            })
             .map(|vo| vo.clone())
             .collect();
         get_children(&mut parents, &vos);
@@ -167,5 +175,27 @@ pub fn get_children(parents: &mut Vec<QueryPermVO>, vos: &Vec<QueryPermVO>) {
             .collect();
         parent.children = Some(children);
         get_children(parent.children.as_mut().unwrap(), vos);
+    }
+}
+
+/// 全量查询权限信息
+pub async fn query_perms() -> Result<Res<PageRes<QueryPermVO>>, MyError> {
+    let db = &APP_CONTEXT.db;
+    let res = perm::query_perms(&db).await?;
+    if let Some(vos) = res {
+        // 构建树形结构
+        let mut parents = vos
+            .iter()
+            .filter(|vo| vo.parent_id.is_none() || vo.parent_id.as_ref().unwrap() == "")
+            .map(|vo| vo.clone())
+            .collect();
+        get_children(&mut parents, &vos);
+        let total = vos.len() as u64;
+        Ok(Res::from_success(
+            "查询成功",
+            PageRes::new(parents, total, 0, 0),
+        ))
+    } else {
+        Ok(Res::from_vec_not_found(PageRes::default()))
     }
 }

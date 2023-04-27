@@ -1,5 +1,5 @@
 <template>
-  <a-button type="primary" status="success" size="mini" @click="onAdd">
+  <a-button type="primary" status="primary" size="medium" @click="onAdd">
     <template #icon>
       <IconPlus />
     </template>

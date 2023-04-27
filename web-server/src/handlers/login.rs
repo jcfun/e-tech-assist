@@ -98,7 +98,15 @@ pub async fn login(
             // 构建树形结构
             let mut parents = unique_perms
                 .iter()
-                .filter(|vo| vo.parent_id.is_none() || vo.parent_id.as_ref().unwrap() == "")
+                .filter(|vo| {
+                    vo.parent_id.is_none()
+                        || vo.parent_id.as_ref().unwrap() == ""
+                        || !unique_perms
+                            .iter()
+                            .map(|vo1| vo1.id.as_ref().unwrap())
+                            .collect::<Vec<&String>>()
+                            .contains(&vo.parent_id.as_ref().unwrap())
+                })
                 .map(|vo| vo.clone())
                 .collect();
             get_children(&mut parents, &unique_perms);
@@ -303,7 +311,7 @@ pub async fn login_wxapp(
         login_log(&headers, &login_dto, "登录失败", "未进行过微信授权").await?;
         return Ok(Res::from(
             StatusCode::NOT_FOUND,
-            "您未进行过微信授权",
+            "您未进行过授权",
             LoginVO {
                 user_info,
                 token: Token::default(),
@@ -342,11 +350,11 @@ pub async fn wxapp_register(
     user_detail.phone_number = payload.phone_number.clone();
     user_detail.avatar_url = res.avatar_url;
     if res.gender.unwrap() == 1 {
-        user_detail.gender = Some("男".into())
+        user_detail.gender = Some("1".into())
     } else if res.gender.unwrap() == 2 {
-        user_detail.gender = Some("女".into())
+        user_detail.gender = Some("2".into())
     } else {
-        user_detail.gender = Some("未知".into())
+        user_detail.gender = Some("0".into())
     }
     user_detail.language = res.language;
     user_detail.country = res.country;

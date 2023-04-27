@@ -20,7 +20,6 @@ interface Table {
     key: string;
     width: number;
     dataIndex: string;
-    show: boolean;
   };
 }
 
@@ -105,9 +104,8 @@ export const useTableIndexColumn = function () {
   return {
     title: '序号',
     key: 'index',
-    width: 80,
+    width: 60,
     dataIndex: 'index',
-    show: true,
   };
 };
 

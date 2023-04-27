@@ -109,7 +109,7 @@ pub async fn delete_role_perm(
 
 /// 多条件分页查询角色信息
 #[py_sql(
-    r#"`select id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, description, disable_flag, code`
+    r#"`select id, to_char(operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, operator, operator_id, to_char(create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, creator, creator_id, delete_flag, name, description, disable_flag, code`
     ` from t_role`
     ` where delete_flag = '0'` 
     if dto.create_time_start != '':
@@ -120,6 +120,7 @@ pub async fn delete_role_perm(
         ` and name like '%${dto.name}%'`
     if dto.disable_flag != '':
         ` and disable_flag = #{dto.disable_flag}`
+    ` order by create_time desc`
     ` limit ${page_size}`
     ` offset ${offset}`"#
 )]
@@ -179,11 +180,64 @@ pub async fn update_disable_flag(
 
 /// 根据角色id查询关联权限信息
 #[py_sql(
-    r#"`select p.id, p.operate_time, p.operator, p.operator_id, p.create_time, p.creator, p.creator_id, p.delete_flag, p.name, p.parent_id, p.perm_type, p.disable_flag, p.api_path, p.fe_route, p.fe_name, p.fe_code, p.resource, hidden_flag, parent_route, p.description`
-    ` from t_perm p join t_role_perm rp on p.id = rp.perm_id`
-    ` where rp.delete_flag = '0'` 
-    ` and p.delete_flag = '0'` 
-    ` and rp.role_id = #{role_id}`
+    r#" ` SELECT`
+            ` DISTINCT p.id,`
+            ` p.operate_time,`
+            ` p.operator,`
+            ` p.operator_id,`
+            ` p.create_time,`
+            ` p.creator,`
+            ` p.creator_id,`
+            ` p.delete_flag,`
+            ` p.name,`
+            ` p.parent_id,`
+            ` p.perm_type,`
+            ` p.disable_flag,`
+            ` p.api_path,`
+            ` p.fe_route,`
+            ` p.fe_name,`
+            ` p.fe_code,`
+            ` p.resource,`
+            ` hidden_flag,`
+            ` parent_route,`
+            ` p.description`
+        ` FROM`
+            ` t_perm p`
+        ` LEFT JOIN t_role_perm rp ON`
+            ` p.id = rp.perm_id`
+        ` WHERE`
+            ` (rp.delete_flag = '0'`
+                ` AND p.delete_flag = '0'`
+                ` AND rp.role_id = #{role_id})`
+            ` OR (p.id IN (`
+            ` SELECT`
+                ` parent_id`
+            ` FROM`
+                ` t_perm`
+            ` WHERE`
+                ` delete_flag = '0'`
+                ` AND id IN (`
+                ` SELECT`
+                    ` tp.id`
+                ` FROM`
+                    ` t_perm tp`
+                ` LEFT JOIN t_role_perm trp ON`
+                    ` tp.id = trp.perm_id`
+                ` WHERE`
+                    ` trp.delete_flag = '0'`
+                    ` AND tp.delete_flag = '0'`
+                    ` AND trp.role_id = #{role_id})`
+                ` )`
+            ` )`
+            ` OR (p.delete_flag = '0'`
+                ` AND p.parent_id IN (`
+                ` SELECT`
+                    ` perm_id`
+                ` FROM`
+                    ` t_role_perm`
+                ` WHERE`
+                    ` role_id = #{role_id}`
+                    ` AND delete_flag = '0'))`
     "#
 )]
 pub async fn query_perms_by_role_id(
@@ -196,7 +250,7 @@ pub async fn query_perms_by_role_id(
 /// 全量查询
 #[py_sql(
     r#"`select id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, description, disable_flag, code`
-    ` from t_role`"#
+    ` from t_role where delete_flag = '0'`"#
 )]
 pub async fn query_roles(db: &Rbatis) -> Result<Option<Vec<QueryRoleVO>>, Error> {
     impled!();

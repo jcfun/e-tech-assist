@@ -52,6 +52,13 @@ pub struct UpdateRoleDTO {
 
     #[validate(length(min = 5, max = 20, message = "角色编号格式错误"))]
     pub code: Option<String>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone, Validate, Default)]
+#[serde(rename_all(deserialize = "camelCase"))]
+pub struct UpdateRolePermDTO {
+    #[serde(flatten)]
+    pub base_dto: BaseDTO,
 
     #[validate(custom(function = "id_vector", message = "权限id格式错误"))]
     pub perm_ids: Option<Vec<String>>,

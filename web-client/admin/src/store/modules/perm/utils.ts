@@ -10,6 +10,10 @@ import { resolve } from 'path-browserify';
 // 生成路由结构
 export const generateRoutes = (loginVO: LoginVO) => {
   const perms = loginVO.userInfo.perms;
+  if (!perms) {
+    Message.error('获取用户权限失败');
+    return [];
+  }
   let routesArr = [] as Array<RouteRecordRaw>;
   const routesTreeArr = getRouteTree(perms);
   routesArr = [...routesTreeArr, ...routesArr];

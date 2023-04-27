@@ -140,7 +140,7 @@ pub async fn update_user_by_phone1(
 }
 // 通过手机号更新用户信息第二步(微信小程序授权时登录更新用户信息)
 #[py_sql(
-    r#"update t_user_detail set avatar_url = #{detail.avatar_url}, gender = #{detail.gender}, language = #{detail.language}  where a.delete_flag = '0' and phone_number = #{detail.phone_number}"#
+    r#"update t_user_detail set avatar_url = #{detail.avatar_url}, gender = #{detail.gender}, language = #{detail.language}  where delete_flag = '0' and phone_number = #{detail.phone_number}"#
 )]
 pub async fn update_user_by_phone2(
     tx: &mut RBatisTxExecutorGuard,

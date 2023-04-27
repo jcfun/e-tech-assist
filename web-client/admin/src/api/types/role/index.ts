@@ -15,3 +15,32 @@ export interface RoleVO {
   operatorId: string;
   perms: Array<PermVO>;
 }
+
+export interface CreateRoleDTO {
+  name: string;
+  disableFlag: string;
+  description: string;
+  code: string;
+  permIds: Array<string>;
+}
+
+export interface UpdateRoleDTO {
+  id: string;
+  name: string;
+  disableFlag: string;
+  description: string;
+  code: string;
+}
+
+export interface UpdateRolePermDTO {
+  id: string;
+  permIds: Array<string>;
+}
+
+export interface QueryRoleDTO {
+  createTimeStart: string;
+  createTimeEnd: string;
+  disableFlag: string;
+  pageNo: number;
+  pageSize: number;
+}

@@ -71,9 +71,9 @@ pub async fn create_user(
             "添加失败，账号已存在",
         ));
     }
-    // 如果密码为空，则默认为手机号后6位
+    // 如果密码为空，则置为空串
     if let None = payload.password {
-        payload.password = Some(payload.phone_number.as_ref().unwrap()[5..].to_string());
+        payload.password = Some("".into());
     }
     // 密码sha256加密
     payload.password = Some(encrypt_sha256(payload.password.as_ref().unwrap()));
@@ -167,7 +167,6 @@ pub async fn update_user(
             "修改失败, 该用户不存在",
         ));
     }
-
     // 更新用户角色关联信息
     let mut base_dto = BaseDTO::default();
     fields::copy_fields(&payload, &mut base_dto, false, false)?;
@@ -188,7 +187,6 @@ pub async fn update_user(
             ));
         }
     }
-
     // 更新用户信息
     // 如果密码为空，则默认为手机号后6位
     if let None = payload.password {

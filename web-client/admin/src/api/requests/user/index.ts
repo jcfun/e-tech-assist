@@ -1,6 +1,6 @@
 import http from '@/api';
 import { Method, type PageRes, type Res } from '@/api/types/common';
-import type { UserDTO, QueryUserDTO, UserVO } from '@/api/types/user';
+import type { QueryUserDTO, UserVO, UpdateUserDTO, CreateUserDTO } from '@/api/types/user';
 class User {
   public getUsersFq = (data: QueryUserDTO): Promise<Res<PageRes<Array<UserVO>>>> => {
     return http.request({
@@ -10,7 +10,7 @@ class User {
     });
   };
 
-  public createUser = (data: UserDTO): Promise<Res<string>> => {
+  public createUser = (data: CreateUserDTO): Promise<Res<null>> => {
     return http.request({
       url: '/user',
       method: Method.POST,
@@ -18,11 +18,25 @@ class User {
     });
   };
 
-  public updateUser = (data: UserDTO): Promise<Res<string>> => {
+  public updateUser = (data: UpdateUserDTO): Promise<Res<null>> => {
     return http.request({
       url: '/user',
       method: Method.PUT,
       data,
+    });
+  };
+
+  public deleteUser = (id: string): Promise<Res<null>> => {
+    return http.request({
+      url: `/user/${id}`,
+      method: Method.DELETE,
+    });
+  };
+
+  public updateUserStatus = (id: string, disableFlag = '0'): Promise<Res<null>> => {
+    return http.request({
+      url: `/user/${id}/${disableFlag}`,
+      method: Method.PATCH,
     });
   };
 }

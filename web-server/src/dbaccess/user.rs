@@ -147,6 +147,9 @@ pub async fn delete_user(
         `, operator_id = #{dto.operator_id}`
     if dto.password != '':
         `, password = #{dto.password}`
+    if dto.description != '':
+        `, description = #{dto.description}`
+    
     ` where delete_flag = '0'` 
     ` and id = #{dto.id}`"#
 )]
@@ -176,7 +179,7 @@ pub async fn delete_user_role(
 
 /// 多条件分页查询用户信息
 #[py_sql(
-    r#"`select a.id, a.operate_time, a.operator, a.operator_id, a.create_time, a.creator, a.creator_id, a.delete_flag, a.account, a.disable_flag, a.detail_id, a.description, a.openid, b.phone_number, b.email, b.nickname, b.avatar_url, b.last_login_time, b.last_login_ip, b.gender, b.language, b.country, b.province, b.city`
+    r#"`select a.id, to_char(a.operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, a.operator, a.operator_id, to_char(a.create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, a.creator, a.creator_id, a.delete_flag, a.account, a.disable_flag, a.detail_id, a.description, a.openid, b.phone_number, b.email, b.nickname, b.avatar_url, b.last_login_time, b.last_login_ip, b.gender, b.language, b.country, b.province, b.city`
     ` from t_user a join t_user_detail b on a.detail_id = b.id`
     ` where a.delete_flag = '0'` 
     ` and b.delete_flag = '0'`
@@ -194,6 +197,7 @@ pub async fn delete_user_role(
         ` and b.gender = #{dto.gender}`
     if dto.disable_flag != '':
         ` and a.disable_flag = #{dto.disable_flag}`
+    ` order by a.create_time desc`
     ` limit ${page_size}`
     ` offset ${offset}`"#
 )]

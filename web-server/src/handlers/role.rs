@@ -8,7 +8,7 @@ use crate::{
     models::{
         dto::{
             base::BaseDTO,
-            role::{CreateRoleDTO, QueryRoleDTO, UpdateRoleDTO},
+            role::{CreateRoleDTO, QueryRoleDTO, UpdateRoleDTO, UpdateRolePermDTO},
         },
         vo::role::QueryRoleVO,
     },
@@ -92,6 +92,32 @@ pub async fn update_role(
             tracing::error!("An error occurred, rollback!");
         }
     });
+    // 更新角色信息
+    let count = role::update_role(&mut tx, &payload).await?.rows_affected;
+    if count == 0 {
+        return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "修改失败"));
+    } else {
+        tx.commit().await.unwrap();
+        Ok(Res::from_success_msg("修改成功"))
+    }
+}
+
+/// 修改角色权限信息
+pub async fn update_role_perm(
+    claims: Claims,
+    Json(mut payload): Json<UpdateRolePermDTO>,
+) -> Result<Res<()>, MyError> {
+    fields::fill_fields(&mut payload.base_dto, &claims, false);
+    validate::param_validate(&payload)?;
+    let db = &APP_CONTEXT.db;
+    let tx = db.acquire_begin().await.unwrap();
+    // 异步回滚回调
+    let mut tx = tx.defer_async(|mut tx| async move {
+        if !tx.done {
+            tx.rollback().await.unwrap();
+            tracing::error!("An error occurred, rollback!");
+        }
+    });
     // 更新角色权限关联信息
     let mut base_dto = BaseDTO::default();
     fields::copy_fields(&payload, &mut base_dto, false, false)?;
@@ -112,14 +138,8 @@ pub async fn update_role(
             ));
         }
     }
-    // 更新角色信息
-    let count = role::update_role(&mut tx, &payload).await?.rows_affected;
-    if count == 0 {
-        return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "修改失败"));
-    } else {
-        tx.commit().await.unwrap();
-        Ok(Res::from_success_msg("修改成功"))
-    }
+    tx.commit().await.unwrap();
+    Ok(Res::from_success_msg("修改成功"))
 }
 
 /// 多条件查询角色信息

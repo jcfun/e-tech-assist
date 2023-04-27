@@ -66,7 +66,6 @@
         });
       }
       function handleSelect(key: string) {
-        console.log(key);
         switch (key) {
           case 'personal-center':
             personalCenter();

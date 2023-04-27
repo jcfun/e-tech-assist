@@ -1,15 +1,19 @@
+use crate::common::errors::MyError;
+use crate::config::init::APP_CFG;
 use bytes::Bytes;
 use crypto::buffer::{BufferResult, ReadBuffer, WriteBuffer};
 use crypto::{aes, blockmodes, buffer, symmetriccipher};
-use serde::{Serialize, Deserialize};
-use tracing::info;
-use std::time::Duration;
-use std::str;
 use reqwest::{header, Client as HttpClient};
-use crate::common::errors::MyError;
-use crate::config::init::APP_CFG;
+use serde::{Deserialize, Serialize};
+use std::str;
+use std::time::Duration;
+use tracing::info;
 
-pub fn resolve_data(session_key: String, iv: String, encrypted_data: String) -> Result<WxUserInfo, MyError> {
+pub fn resolve_data(
+    session_key: String,
+    iv: String,
+    encrypted_data: String,
+) -> Result<WxUserInfo, MyError> {
     let key = base64::decode(session_key).unwrap();
     let iv = base64::decode(iv).unwrap();
     let aes = AesCrypt::new(key, iv);
@@ -39,7 +43,11 @@ pub struct WxappSessionKey {
     pub unionid: Option<String>,
 }
 
-pub async fn get_session_key(appid: &str, secret: &str, code: &str) -> Result<serde_json::Value, MyError> {
+pub async fn get_session_key(
+    appid: &str,
+    secret: &str,
+    code: &str,
+) -> Result<serde_json::Value, MyError> {
     let url = format!(
         "{api}/sns/jscode2session?appid={appid}&secret={secret}&js_code={code}&grant_type=authorization_code",
         api = &APP_CFG.wxapp.api_domain,
@@ -66,7 +74,6 @@ pub async fn get_session_key(appid: &str, secret: &str, code: &str) -> Result<se
         }
     }
 }
-
 
 pub fn json_decode(data: &str) -> Result<serde_json::Value, MyError> {
     let obj: serde_json::Value = match serde_json::from_str(data) {
@@ -97,7 +104,6 @@ pub fn json_decode(data: &str) -> Result<serde_json::Value, MyError> {
     info!("obj====={:?}", obj);
     Ok(obj)
 }
-
 
 ///aes 加解密
 pub struct AesCrypt {
@@ -264,8 +270,6 @@ fn vec_pad(txt: Vec<u8>, length: usize) -> Vec<u8> {
     txt
 }
 
-
-
 pub struct Client {
     pub(crate) client: HttpClient,
 }
@@ -286,7 +290,11 @@ impl Client {
                 .unwrap(),
         }
     }
-    pub async fn _post<T: Serialize + ?Sized>(&self, url: &str, params: &T) -> Result<String, MyError> {
+    pub async fn _post<T: Serialize + ?Sized>(
+        &self,
+        url: &str,
+        params: &T,
+    ) -> Result<String, MyError> {
         match self.client.post(url).json(params).send().await {
             Ok(res) => {
                 if res.status() == 200 {

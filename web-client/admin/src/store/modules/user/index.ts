@@ -23,9 +23,6 @@ const useUserStore = defineStore(Names.USER, {
         this.$reset();
         localStorage.clear();
         sessionStorage.clear();
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 2000);
         resolve();
       });
     },

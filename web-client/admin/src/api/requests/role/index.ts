@@ -1,24 +1,56 @@
 import http from '@/api';
 import { Method, type PageRes, type Res } from '@/api/types/common';
-import type { RoleVO } from '@/api/types/role';
+import type { CreateRoleDTO, QueryRoleDTO, RoleVO, UpdateRoleDTO, UpdateRolePermDTO } from '@/api/types/role';
 class Role {
-  // public getUsersFq = (data: QueryUserDTO): Promise<Res<PageRes<Array<UserVO>>>> => {
-  //   return http.request({
-  //     url: '/user/fq',
-  //     method: Method.POST,
-  //     data,
-  //   });
-  // };
+  // 多条件模糊查询
+  public getRolesFq = (data: QueryRoleDTO): Promise<Res<PageRes<Array<RoleVO>>>> => {
+    return http.request({
+      url: '/role/fq',
+      method: Method.POST,
+      data,
+    });
+  };
 
-  // public createUser = (data: CreateUserDTO): Promise<Res<string>> => {
-  //   return http.request({
-  //     url: '/user',
-  //     method: Method.POST,
-  //     data,
-  //   });
-  // };
+  public createRole = (data: CreateRoleDTO): Promise<Res<null>> => {
+    return http.request({
+      url: '/role',
+      method: Method.POST,
+      data,
+    });
+  };
 
-  public getRole = (): Promise<Res<PageRes<RoleVO>>> => {
+  public updateRole = (data: UpdateRoleDTO): Promise<Res<null>> => {
+    return http.request({
+      url: '/role',
+      method: Method.PUT,
+      data,
+    });
+  };
+
+  public updateRolePerm = (data: UpdateRolePermDTO): Promise<Res<null>> => {
+    return http.request({
+      url: '/role/rp',
+      method: Method.PUT,
+      data,
+    });
+  };
+
+  public deleteRole = (id: string): Promise<Res<null>> => {
+    return http.request({
+      url: `/role/${id}`,
+      method: Method.DELETE,
+    });
+  };
+
+  public updateRoleStatus = (id: string, disableFlag = '0'): Promise<Res<null>> => {
+    return http.request({
+      url: `/role/${id}/${disableFlag}`,
+      method: Method.PATCH,
+    });
+  };
+
+  // 全量查询
+  public getRoles = (): Promise<Res<PageRes<RoleVO>>> => {
     return http.request({
       url: '/role',
       method: Method.GET,

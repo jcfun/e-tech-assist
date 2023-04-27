@@ -4,11 +4,11 @@
       <template #extra v-if="showFilter">
         <a-space>
           <a-button type="primary" size="small" @click="doSearch">搜索</a-button>
-          <a-button status="danger" size="small" @click="doResetSearch">重置</a-button>
+          <a-button type="primary" size="small" @click="doResetSearch">重置</a-button>
         </a-space>
       </template>
       <slot name="search-content"></slot>
-      <div class="flex justify-end">
+      <div class="flex justify-start">
         <slot name="table-config"></slot>
       </div>
     </a-card>
@@ -59,8 +59,16 @@
     },
   });
 </script>
-<style lang="less" scoped>
+<style lang="scss" scoped>
   :deep(.arco-drawer-footer) {
     border-bottom: 2px solid #f5f5f5;
+  }
+  #tableHeaderContainer {
+    :deep(.arco-card-body) {
+      padding: 10px 0;
+    }
+    :deep(.arco-card-header) {
+      padding: 10px 0;
+    }
   }
 </style>

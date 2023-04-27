@@ -7,6 +7,7 @@ class Http {
   private baseUrl = 'http://192.168.31.201:3000/api/v1';
   private baseUrlWindows = 'http://192.168.31.201:3000/api/v1';
   private baseUrlLinux = 'http://10.7.7.2:33000/api/v1';
+  private baseUrlLinux2 = 'http://ddns.urainstar.top:33000/api/v1';
 
   // private user = useUserStore();
 
@@ -22,7 +23,7 @@ class Http {
       //   this.baseUrl = this.baseUrlLinux;
       // }
       service({
-        url: `${this.baseUrl}${comReqParams.url}`,
+        url: `${this.baseUrlLinux2}${comReqParams.url}`,
         method: comReqParams.method,
         data: comReqParams.data,
       })

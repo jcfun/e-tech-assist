@@ -10,6 +10,7 @@ export enum Method {
   HEAD = 'HEAD',
   POST = 'POST',
   PUT = 'PUT',
+  PATCH = 'PATCH',
   DELETE = 'DELETE',
   TRACE = 'TRACE',
   CONNECT = 'CONNECT',

@@ -15,9 +15,9 @@ use rbatis::{
 /// 新增权限信息
 #[py_sql(
     r#"`insert into t_perm`
-    ` (id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, fe_route, fe_name, fe_code, resource, description)`
+    ` (id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, fe_route, fe_name, fe_code, parent_route, resource, hidden_flag, description)`
     ` values`
-    ` (#{dto.id}, #{dto.operate_time}, #{dto.operator}, #{dto.operator_id}, #{dto.create_time}, #{dto.creator}, #{dto.creator_id}, #{dto.delete_flag}, #{dto.name}, #{dto.parent_id}, #{dto.perm_type}, #{dto.disable_flag}, #{dto.api_path}, #{dto.fe_route}, #{dto.fe_name}, #{dto.fe_code}, #{dto.resource}, #{dto.description})`"#
+    ` (#{dto.id}, #{dto.operate_time}, #{dto.operator}, #{dto.operator_id}, #{dto.create_time}, #{dto.creator}, #{dto.creator_id}, #{dto.delete_flag}, #{dto.name}, #{dto.parent_id}, #{dto.perm_type}, #{dto.disable_flag}, #{dto.api_path}, #{dto.fe_route}, #{dto.fe_name}, #{dto.fe_code}, #{dto.parent_route}, #{dto.resource}, #{dto.hidden_flag}, #{dto.description})`"#
 )]
 pub async fn create_perm(
     tx: &mut RBatisTxExecutorGuard,
@@ -55,7 +55,8 @@ pub async fn delete_perm(
         `, operator_id = #{dto.operator_id}`
     if dto.name != '':
         `, name = #{dto.name}`
-    `, parent_id = #{dto.parent_id}`
+    if dto.parent_id != '':
+        `, parent_id = #{dto.parent_id}`
     if dto.perm_type != '':
         `, perm_type = #{dto.perm_type}`
     if dto.disable_flag != '':
@@ -68,8 +69,12 @@ pub async fn delete_perm(
         `, fe_name = #{dto.fe_name}`
     if dto.fe_code != '':
         `, fe_code = #{dto.fe_code}`
+    if dto.parent_route != '':
+        `, parent_route = #{dto.parent_route}`
     if dto.resource != '':
         `, resource = #{dto.resource}`
+    if dto.hidden_flag != '':
+        `, hidden_flag = #{dto.hidden_flag}`
     if dto.description != '':
         `, description = #{dto.description}`
     ` where delete_flag = '0'` 
@@ -84,7 +89,7 @@ pub async fn update_perm(
 
 /// 多条件分页查询权限信息
 #[py_sql(
-    r#"`select id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, fe_route, fe_name, fe_code, resource, hidden_flag, parent_route, description`
+    r#"`select id, to_char(operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, operator, operator_id, to_char(create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, fe_route, fe_name, fe_code, resource, hidden_flag, parent_route, description`
     ` from t_perm`
     ` where delete_flag = '0'` 
     if dto.create_time_start != '':
@@ -97,6 +102,9 @@ pub async fn update_perm(
         ` and perm_type = #{dto.perm_type}`
     if dto.disable_flag != '':
         ` and disable_flag = #{dto.disable_flag}`
+    if dto.hidden_flag != '':
+        ` and hidden_flag = #{dto.hidden_flag}`
+    ` order by create_time desc`
     ` limit ${page_size}`
     ` offset ${offset}`"#
 )]
@@ -124,6 +132,8 @@ pub async fn query_perms_fq(
         ` and perm_type = #{dto.perm_type}`
     if dto.disable_flag != '':
         ` and disable_flag = #{dto.disable_flag}`
+    if dto.hidden_flag != '':
+        ` and hidden_flag = #{dto.hidden_flag}`
     "#
 )]
 pub async fn query_perms_fq_count(
@@ -146,12 +156,23 @@ pub async fn query_perms_fq_count(
     if disable_flag != '':
         `, disable_flag = #{disable_flag}`
     ` where delete_flag = '0'` 
-    ` and id = #{dto.id}`"#
+    ` and (id = #{dto.id}`
+    ` or parent_id = #{dto.id})` 
+    "#
 )]
 pub async fn update_disable_flag(
     db: &Rbatis,
     dto: &BaseDTO,
     disable_flag: &String,
 ) -> Result<ExecResult, Error> {
+    impled!();
+}
+
+/// 全量查询
+#[py_sql(
+    r#"`select id, to_char(operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, operator, operator_id, to_char(create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, fe_route, fe_name, fe_code, resource, hidden_flag, parent_route, description`
+    ` from t_perm where delete_flag = '0'`"#
+)]
+pub async fn query_perms(db: &Rbatis) -> Result<Option<Vec<QueryPermVO>>, Error> {
     impled!();
 }

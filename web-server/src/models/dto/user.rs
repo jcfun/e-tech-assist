@@ -12,7 +12,7 @@ pub struct CreateUserDTO {
 
     #[validate(
         required(message = "账号不可为空"),
-        length(min = 5, max = 18, message = "账号格式错误")
+        length(min = 1, max = 18, message = "账号格式错误")
     )]
     pub account: Option<String>,
 
@@ -69,6 +69,8 @@ pub struct UpdateUserDTO {
     pub country: Option<String>,
     pub province: Option<String>,
     pub city: Option<String>,
+    #[validate(length(min = 1, max = 50, message = "角色描述格式错误"))]
+    pub description: Option<String>,
 }
 
 // 微信小程序用户信息修改结构体
