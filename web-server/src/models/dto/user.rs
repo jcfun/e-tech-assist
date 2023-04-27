@@ -37,7 +37,7 @@ pub struct CreateUserDTO {
 
     #[validate(
         required(message = "用户手机号不可为空"),
-        length(max = 11, message = "用户手机号格式错误")
+        length(equal = 11, message = "用户手机号格式错误")
     )]
     pub phone_number: Option<String>,
 
@@ -57,7 +57,7 @@ pub struct UpdateUserDTO {
     #[validate(custom(function = "id_vector", message = "角色id格式错误"))]
     pub role_ids: Option<Vec<String>>,
 
-    #[validate(length(max = 11, message = "用户手机号格式错误"))]
+    #[validate(length(equal = 11, message = "用户手机号格式错误"))]
     pub phone_number: Option<String>,
 
     #[validate(email(message = "邮箱格式错误"))]
@@ -108,7 +108,7 @@ pub struct QueryUserDTO {
 
     pub email: Option<String>,
 
-    #[validate(length(max = 11, message = "手机号格式错误"))]
+    #[validate(length(equal = 11, message = "手机号格式错误"))]
     pub phone_number: Option<String>,
 
     #[validate(length(equal = 1, message = "性别格式错误"))]
