@@ -23,9 +23,16 @@
 <script setup lang="ts">
   import type { _NotifyRef } from '@ttou/uview-typings/types/notify';
   import { ref } from 'vue';
-  import { login, register } from '@/api/login';
-  import type { LoginDTO, RegisterDTO } from '@/models/login';
+  import { login, register } from '@/api/modules/login';
+  import type { LoginDTO, RegisterDTO } from '@/api/types/login';
   import { useUserStore } from '@/store/user';
+  import { onLoad } from '@dcloudio/uni-app';
+
+  const perv = ref('');
+
+  onLoad(options => {
+    perv.value = options?.prev;
+  });
 
   const src = '/static/images/logo/logo.png';
   const authMsg = ref<_NotifyRef>();
@@ -47,9 +54,15 @@
         user.setToken(res.data.token);
         user.setUserInfo(res.data.userInfo);
       }
-      uni.reLaunch({
-        url: '/pages/mine/mine',
-      });
+      if (perv.value == 'quickMsg') {
+        uni.reLaunch({
+          url: '/pages/quickMsg/quickMsg',
+        });
+      } else {
+        uni.reLaunch({
+          url: '/pages/mine/mine',
+        });
+      }
     });
   };
   // 取消输入手机号后的处理事件
@@ -97,9 +110,15 @@
           } else {
             user.setToken(res.data.token);
             user.setUserInfo(res.data.userInfo);
-            uni.reLaunch({
-              url: '/pages/mine/mine',
-            });
+            if (perv.value == 'quickMsg') {
+              uni.reLaunch({
+                url: '/pages/quickMsg/quickMsg',
+              });
+            } else {
+              uni.reLaunch({
+                url: '/pages/mine/mine',
+              });
+            }
           }
         });
       },

@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
   // import { ref } from 'vue';
-  import type { Token, UserInfo } from '@/models/login';
+  import type { Token, UserInfo } from '@/api/types/login';
   import { useUserStore } from '@/store/user';
   const user = useUserStore();
   const logout = () => {

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ComReqParams, Res } from './../models/common';
+import type { ComReqParams, Res } from './types/common';
 import { useUserStore } from '@/store/user';
 class Request {
   private baseUrl = 'http://192.168.31.201:3000/api/v1';
+  private baseUrl2 = 'http://ddns.urainstar.top:33000/api/v1';
   private baseUrlWindows = 'http://192.168.31.201:3000/api/v1';
   private baseUrlLinux = 'http://10.7.7.2:33000/api/v1';
 
@@ -20,7 +21,7 @@ class Request {
       //   this.baseUrl = this.baseUrlLinux;
       // }
       uni.request({
-        url: `${this.baseUrlWindows}${comReqParams.url}`,
+        url: `${this.baseUrl2}${comReqParams.url}`,
         data: comReqParams.data,
         method: comReqParams.method,
         header: {

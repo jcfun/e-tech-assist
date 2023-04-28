@@ -38,9 +38,9 @@
 </template>
 
 <script setup lang="ts">
-  import { saveAccount } from '@/api/account';
-  import type { Account } from '@/models/account';
-  import type { UserInfo } from '@/models/login';
+  import { saveAccount } from '@/api/modules/account';
+  import type { Account } from '@/api/types/account';
+  import type { UserInfo } from '@/api/types/login';
   import { useUserStore } from '@/store/user';
   import { ref } from 'vue';
   const user = useUserStore();
