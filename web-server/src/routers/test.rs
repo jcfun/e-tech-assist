@@ -1,5 +1,5 @@
-use crate::handlers::test::test;
+use crate::handlers::quick_msg::send_quick_msg;
 use axum::{routing::get, Router};
 pub fn test_routes() -> Router {
-    Router::new().route("/test", get(test))
+    Router::new().route("/test", get(send_quick_msg))
 }

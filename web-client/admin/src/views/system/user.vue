@@ -372,7 +372,7 @@
     {
       label: '用户性别',
       key: 'gender',
-      value: ref(''),
+      value: ref('1'),
       type: 'radio',
       placeholder: '请选择用户性别',
       optionItems: [

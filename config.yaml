@@ -29,3 +29,8 @@ wxapp:
   api_domain: https://api.weixin.qq.com # 微信api地址
   wechat_open_uri: https://open.weixin.qq.com/connect/qrconnect # 微信开放平台地址
   default_user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36 # 默认user-agent
+
+email:
+  email_addr: 17633877664@163.com # 邮箱地址
+  code: PRBASIOXUARJZSZA # 授权码
+  smtp_addr: smtp.163.com # smtp邮箱服务器地址
