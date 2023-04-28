@@ -146,7 +146,7 @@ where
     pub fn _from_error_msg(err: MyError) -> Self {
         Self {
             code: Some(StatusCode::INTERNAL_SERVER_ERROR.as_u16()),
-            msg: Some(err._error_msg()),
+            msg: Some(err.error_msg()),
             data: None,
         }
     }

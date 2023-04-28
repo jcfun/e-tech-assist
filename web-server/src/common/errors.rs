@@ -19,10 +19,11 @@ pub enum MyError {
     AddrParseError(String),
     MaxMindDBError(String),
     UnwrapError(String),
+    EmailSendError(String),
 }
 
 impl MyError {
-    pub fn _error_msg(&self) -> String {
+    pub fn error_msg(&self) -> String {
         match self {
             MyError::DBError(msg) => {
                 info!("数据库错误: {:?}", msg);
@@ -59,6 +60,10 @@ impl MyError {
             MyError::UnwrapError(msg) => {
                 info!("拆箱错误: {:?}", msg);
                 format!("拆箱错误: {:?}", msg)
+            }
+            MyError::EmailSendError(msg) => {
+                info!("邮件发送错误: {:?}", msg);
+                format!("邮件发送错误: {:?}", msg)
             }
         }
     }
@@ -101,6 +106,10 @@ impl IntoResponse for MyError {
             }
             MyError::UnwrapError(msg) => {
                 info!("拆箱错误: {:?}", msg);
+                (StatusCode::INTERNAL_SERVER_ERROR, msg)
+            }
+            MyError::EmailSendError(msg) => {
+                info!("邮件发送: {:?}", msg);
                 (StatusCode::INTERNAL_SERVER_ERROR, msg)
             }
         };

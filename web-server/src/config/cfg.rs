@@ -6,6 +6,7 @@ pub struct Config {
     pub api: Api,
     pub captcha: Captcha,
     pub wxapp: Wxapp,
+    pub email: Email,
 }
 use log::info;
 use serde::Deserialize;
@@ -77,7 +78,17 @@ pub struct Wxapp {
     pub wechat_open_uri: String,
     // 默认agent
     pub default_user_agent: String,
+}
 
+/// 邮件服务
+#[derive(Debug, Deserialize)]
+pub struct Email {
+    // 邮件地址
+    pub email_addr: String,
+    // 授权码
+    pub code: String,
+    // smtp地址
+    pub smtp_addr: String,
 }
 
 impl Config {
