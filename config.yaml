@@ -1,13 +1,13 @@
 database:
-  pg_url: postgres://postgres:123456@192.168.31.243:3308/e_tech_assist # postgresql连接地址
-  redis_url: redis://:123456@192.168.31.243:3310 # redis连接地址
+  pg_url: postgres://postgres:123456@172.18.32.1:3308/e_tech_assist # postgresql连接地址
+  redis_url: redis://:123456@172.18.32.1:3310 # redis连接地址
 
 jwt:
   secret: secret # jwt密钥
   exp: 2592000 # 30*24*60*60 30天
 
 server:
-  ip: "::" # 监听地址
+  ip: "[::]" # 监听地址
   port: 3000 # 监听端口
 
 api:

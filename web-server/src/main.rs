@@ -54,11 +54,9 @@ fn main() {
         // 初始化配置
         init::app_init();
         // 设置socket地址
-        let socket = SocketAddr::from_str(&format!(
-            "[{}]:{}",
-            &APP_CFG.server.ip, &APP_CFG.server.port
-        ))
-        .expect("socket地址绑定失败");
+        let socket =
+            SocketAddr::from_str(&format!("{}:{}", &APP_CFG.server.ip, &APP_CFG.server.port))
+                .expect("socket地址绑定失败");
         // 打印服务连接信息
         info!("listening on {} ...", socket);
         // 获取路由

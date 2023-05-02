@@ -42,6 +42,16 @@ where
             current_page: Some(current_page),
         }
     }
+
+    pub fn data(mut self, data: Vec<T>) -> PageRes<T> {
+        self.data = Some(data);
+        self
+    }
+
+    pub fn total(mut self, total: u64) -> PageRes<T> {
+        self.total = Some(total);
+        self
+    }
 }
 impl PageRes<()> {
     pub fn total_page(count: u64, page_size: u64) -> u64 {
