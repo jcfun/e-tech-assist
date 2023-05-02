@@ -766,6 +766,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "fast_qr"
+version = "0.8.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2688af7b0627fca756414f1378bf1b2ab4418f541dda829514b2fcb4fa828eb9"
+dependencies = [
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "fastdate"
 version = "0.1.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3598,6 +3607,7 @@ dependencies = [
  "color-eyre",
  "colored",
  "dotenv",
+ "fast_qr",
  "futures",
  "headers",
  "heck",

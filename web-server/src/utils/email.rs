@@ -6,14 +6,16 @@ use tracing::info;
 use crate::common::errors::MyError;
 use crate::config::init::APP_CFG;
 
+// 发送单条邮件
 pub async fn send_email_single(
+    reply: String,
     to: String,
     subject: String,
     body: String,
 ) -> Result<String, MyError> {
     let email = Message::builder()
         .from(APP_CFG.email.email_addr.parse().unwrap())
-        .reply_to(APP_CFG.email.email_addr.parse().unwrap())
+        .reply_to(reply.parse().unwrap())
         .to(to.parse().unwrap())
         .subject(subject)
         .header(ContentType::TEXT_PLAIN)

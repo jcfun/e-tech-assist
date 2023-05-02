@@ -12,9 +12,9 @@ use crate::models::{
     vo::login::UserInfoVO,
 };
 
-/// 根据用户账号密码查询用户信息
+/// 根据用户标识密码查询用户信息
 #[py_sql(
-    r#"select a.id, a.operate_time, a.operator, a.operator_id, a.create_time, a.creator, a.creator_id, a.delete_flag, a.account, a.disable_flag, a.detail_id, a.description, a.openid, b.phone_number, b.email, b.nickname, b.avatar_url, b.last_login_time, b.last_login_ip, b.gender, b.language, b.country, b.province, b.city from t_user a join t_user_detail b on a.detail_id = b.id where (a.account = #{identity} or b.email = #{identity} or b.phone_number = #{identity} ) and a.password = #{password} and a.delete_flag = '0' and a.disable_flag = '0'"#,
+    r#"select a.id, a.operate_time, a.operator, a.operator_id, a.create_time, a.creator, a.creator_id, a.delete_flag, a.account, a.disable_flag, a.detail_id, a.description, a.openid, b.phone_number, b.email, b.nickname, b.avatar_url, b.last_login_time, b.last_login_ip, b.gender, b.language, b.country, b.province, b.city from t_user a join t_user_detail b on a.detail_id = b.id where (a.account = #{identity} or b.email = #{identity} or b.phone_number = #{identity}) and a.password = #{password} and a.delete_flag = '0' and a.disable_flag = '0'"#,
 )]
 pub async fn get_user_info(
     tx: &mut RBatisTxExecutorGuard,

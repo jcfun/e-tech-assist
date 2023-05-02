@@ -277,18 +277,18 @@ pub async fn query_roles_by_user_id(
     impled!();
 }
 
-/// 根据id查询用户信息
+/// 根据用户标识查询用户信息
 #[py_sql(
     r#"`select a.id, to_char(a.operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, a.operator, a.operator_id, to_char(a.create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, a.creator, a.creator_id, a.delete_flag, a.account, a.disable_flag, a.detail_id, a.description, a.openid, b.phone_number, b.email, b.nickname, b.avatar_url, b.last_login_time, b.last_login_ip, b.gender, b.language, b.country, b.province, b.city`
     ` from t_user a join t_user_detail b on a.detail_id = b.id`
     ` where a.delete_flag = '0'` 
     ` and b.delete_flag = '0'`
-    ` and a.id = #{id}`
+    ` and (a.id = #{identity} or a.account = #{identity} or b.email = #{identity} or b.phone_number = #{identity})`
     "#
 )]
-pub async fn query_user_by_id(
+pub async fn query_user_by_identity(
     tx: &mut RBatisTxExecutorGuard,
-    id: &String,
+    identity: &String,
 ) -> Result<Option<QueryUserVO>, Error> {
     impled!();
 }

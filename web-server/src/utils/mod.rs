@@ -5,6 +5,7 @@ pub mod fields;
 pub mod ip;
 pub mod jwt;
 pub mod log;
+pub mod qrcode;
 pub mod redis;
 pub mod time;
 pub mod validate;

@@ -1,4 +1,5 @@
 use super::base::BaseDTO;
+use crate::utils::validate::id_vector;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
@@ -15,17 +16,17 @@ pub struct CreateQuickMsgDTO {
     pub sender_id: Option<String>,
 
     #[validate(
-        required(message = "接收者id不可为空"),
-        length(equal = 18, message = "接收者id格式错误")
+        required(message = "接收者标识不可为空"),
+        length(min = 1, max = 50, message = "接收者标识格式错误")
     )]
-    pub recipient_id: Option<String>,
+    pub recipient_identity: Option<String>,
 
     #[validate(length(max = 100, message = "标题格式错误"))]
     pub title: Option<String>,
 
     #[validate(
         required(message = "消息内容不可为空"),
-        length(max = 2000, message = "消息内容格式错误")
+        length(min = 1, max = 2000, message = "消息内容格式错误")
     )]
     pub content: Option<String>,
 
@@ -37,4 +38,33 @@ pub struct CreateQuickMsgDTO {
 
     #[serde(skip_deserializing)]
     pub description: Option<String>,
+
+    // 消息类型：0-发送，1-回复
+    #[validate(
+        required(message = "消息类型不可为空"),
+        length(equal = 1, message = "消息类型格式错误")
+    )]
+    pub msg_type: Option<String>,
+
+    #[validate(length(equal = 18, message = "回复消息id格式错误"))]
+    pub reply_id: Option<String>,
+
+    #[validate(length(equal = 1, message = "是否已读格式错误"))]
+    pub read_flag: Option<String>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone, Validate, Default)]
+#[serde(rename_all(deserialize = "camelCase"))]
+pub struct UpdateReadFlagDTO {
+    #[serde(flatten)]
+    pub base_dto: BaseDTO,
+
+    #[validate(
+        required(message = "是否已读不可为空"),
+        length(equal = 1, message = "是否已读格式错误")
+    )]
+    pub read_flag: Option<String>,
+
+    #[validate(custom(function = "id_vector", message = "id格式错误"))]
+    pub ids: Option<Vec<String>>,
 }
