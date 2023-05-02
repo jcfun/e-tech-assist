@@ -2,7 +2,7 @@
   <view class="auth-box">
     <view class="welcome">欢迎使用 鄂助教</view>
     <view class="info">授权微信头像、昵称</view>
-    <view class="icon">
+    <view class="logo">
       <u-image :showLoading="true" :src="src" mode="widthFix" width="100%" height="100%"></u-image>
     </view>
     <view class="info">为提供优质服务, 鄂助教需要获取你的以下信息:</view>
@@ -50,13 +50,13 @@
     registerDTO.value.phoneNumber = phoneNumber.value;
     console.log('registerDTOvalue====>', registerDTO.value);
     register(registerDTO.value).then(res => {
-      if (res.code == '200') {
+      if (res.code == 200) {
         user.setToken(res.data.token);
         user.setUserInfo(res.data.userInfo);
       }
-      if (perv.value == 'quickMsg') {
+      if (perv.value == 'send') {
         uni.reLaunch({
-          url: '/pages/quickMsg/quickMsg',
+          url: '/pages/quickMsg/send',
         });
       } else {
         uni.reLaunch({
@@ -98,7 +98,7 @@
         };
         login(loginDTO).then(res => {
           console.log('loginRes====>', res);
-          if (res.code != '200') {
+          if (res.code != 200) {
             registerDTO.value = {
               sessionKey: res.data.userInfo.sessionKey,
               encryptedData: getUserProfileRes.encryptedData,
@@ -110,9 +110,9 @@
           } else {
             user.setToken(res.data.token);
             user.setUserInfo(res.data.userInfo);
-            if (perv.value == 'quickMsg') {
+            if (perv.value == 'send') {
               uni.reLaunch({
-                url: '/pages/quickMsg/quickMsg',
+                url: '/pages/quickMsg/send',
               });
             } else {
               uni.reLaunch({
@@ -149,7 +149,7 @@
       margin-top: 5%;
     }
 
-    .icon {
+    .logo {
       margin-top: 10%;
       margin-left: -25rpx;
     }

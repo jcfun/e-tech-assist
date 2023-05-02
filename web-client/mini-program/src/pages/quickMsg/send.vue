@@ -18,11 +18,12 @@
     <span class="sign">发送至</span>
     <view class="userinfo">
       <span class="avatar">
-        <u-avatar :src="user?.userInfo.avatarUrl" :size="40" mode="aspectFill"></u-avatar>
+        <u-avatar :src="recipient.avatarUrl" :size="40" mode="aspectFill"></u-avatar>
       </span>
-      <view style="margin-left: 15rpx" v-if="user?.userInfo.account">{{ user?.userInfo.account }}</view>
-    </view></view
-  >
+      <view style="margin-left: 15rpx" v-if="recipient.identity != ''">{{ recipient.identity }}</view>
+      <view style="margin-left: 15rpx; width: 400rpx" v-else><u-input v-model="recipientIdentity" border="none" clearable></u-input></view>
+    </view>
+  </view>
   <u-line></u-line>
   <view class="title-box"><span style="margin-right: 30rpx">标题</span><u-input v-model="title" border="none" clearable></u-input></view>
   <u-line></u-line>
@@ -36,34 +37,76 @@
   import { useUserStore } from '@/store/user';
   import quickMsg from '@/api/modules/quickMsg';
   import type { CreateQuickMsgDTO } from '@/api/types/quickMsg';
+  import { onLoad } from '@dcloudio/uni-app';
+  import { isEmpty } from '@/utils';
+  import type { Ref } from 'vue';
+  import { useQuickMsgDetailStore } from '@/store/quick-msg';
+  const quickMsgDetail = useQuickMsgDetailStore().getQuickMsgDetail;
+  // 上一个页面
+  let prev = '';
+  onLoad(options => {
+    prev = options?.prev ?? '';
+    recipient.value = isEmpty(options?.recipient)
+      ? { identity: '', avatarUrl: '/static/images/logo/logo.png' }
+      : { identity: options?.recipient.identity, avatarUrl: options?.recipient.avatarUrl };
+    if (prev == 'detail') {
+      recipient.value =
+        user.userInfo.email == quickMsgDetail.senderEmail
+          ? { identity: quickMsgDetail.recipientEmail, avatarUrl: quickMsgDetail.recipientAvatar }
+          : { identity: quickMsgDetail.senderEmail, avatarUrl: quickMsgDetail.senderAvatar };
+    }
+  });
   const user = useUserStore();
   if (!user.userInfo.account) {
     uni.redirectTo({
-      url: '/pages/auth/auth?prev=quickMsg',
+      url: '/pages/auth/auth?prev=send',
     });
   }
+  const recipientIdentity = ref('');
   const content = ref('');
   const title = ref('');
+  const recipient: Ref<{
+    identity: string;
+    avatarUrl: string;
+  }> = ref({
+    identity: '',
+    avatarUrl: '/static/images/logo/logo.png',
+  });
   const send = () => {
     const dto = {
       senderId: user.userInfo.id,
-      recipientId: user.userInfo.id,
+      recipientIdentity: recipient.value.identity == '' ? recipientIdentity.value : recipient.value.identity,
       title: title.value,
       content: content.value,
       sendType: '1',
+      msgType: prev == 'detail' ? '1' : '0',
+      replyId: prev == 'detail' ? quickMsgDetail.id : null,
     } as CreateQuickMsgDTO;
     quickMsg.sendQuickMsg(dto).then(res => {
-      if (res.code == '200') {
-        uni.reLaunch({
-          url: '/pages/mine/mine',
-          success: () => {
-            uni.showToast({
-              title: res.msg,
-              duration: 3000,
-              icon: 'none',
-            });
-          },
-        });
+      if (res.code == 200) {
+        if (prev == 'list' || prev == 'detail') {
+          uni.navigateBack({
+            delta: 1,
+            success: () => {
+              uni.showToast({
+                title: res.msg,
+                duration: 3000,
+                icon: 'none',
+              });
+            },
+          });
+        } else {
+          uni.reLaunch({
+            url: '/pages/mine/mine',
+            success: () => {
+              uni.showToast({
+                title: res.msg,
+                duration: 3000,
+                icon: 'none',
+              });
+            },
+          });
+        }
       } else {
         uni.showToast({
           title: res.msg,

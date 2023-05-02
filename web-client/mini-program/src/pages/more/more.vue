@@ -1,7 +1,11 @@
 <template>
   <view class="more-page">
     <view class="list-item" @click="toAccount">
-      <span class="title">账户设置</span>
+      <span class="title">账户信息</span>
+      <span class="arrow"><u-icon name="arrow-right" color="#c4c4c4" size="25"></u-icon></span>
+    </view>
+    <view class="list-item" @click="toQrcode">
+      <span class="title">个人二维码</span>
       <span class="arrow"><u-icon name="arrow-right" color="#c4c4c4" size="25"></u-icon></span>
     </view>
     <view class="list-item">
@@ -42,6 +46,12 @@
   const toAccount = () => {
     uni.navigateTo({
       url: '/pages/account/account',
+    });
+  };
+
+  const toQrcode = () => {
+    uni.navigateTo({
+      url: '/pages/qrcode/qrcode',
     });
   };
 </script>

@@ -4,6 +4,9 @@
       <u-form-item borderBottom labelWidth="150" labelPosition="left" label="昵称" prop="nickname">
         <u-input v-model="account.nickname" border="none"></u-input>
       </u-form-item>
+      <u-form-item borderBottom labelWidth="150" labelPosition="left" label="账号" prop="email">
+        <u-input v-model="account.account" border="none"></u-input>
+      </u-form-item>
       <u-form-item borderBottom labelWidth="150" labelPosition="left" label="邮箱" prop="email">
         <u-input v-model="account.email" border="none"></u-input>
       </u-form-item>
@@ -39,12 +42,12 @@
 
 <script setup lang="ts">
   import { saveAccount } from '@/api/modules/account';
-  import type { Account } from '@/api/types/account';
+  import type { AccountInfo } from '@/api/types/account';
   import type { UserInfo } from '@/api/types/login';
   import { useUserStore } from '@/store/user';
   import { ref } from 'vue';
   const user = useUserStore();
-  const account = ref(<Account>{ ...user.userInfo });
+  const account = ref(<AccountInfo>{ ...user.userInfo });
   account.value.gender = account.value.gender == '1' ? '男' : account.value.gender == '2' ? '女' : '未知';
   const showPickerPanel = ref(false);
   const columns = ref([['男', '女']]);
@@ -63,7 +66,7 @@
   const save = () => {
     account.value.gender = account.value.gender == '男' ? '1' : account.value.gender == '女' ? '2' : '0';
     saveAccount(account.value).then(res => {
-      if (res.code == '200') {
+      if (res.code == 200) {
         user.userInfo = <UserInfo>{ ...account.value };
       }
       uni.navigateBack();

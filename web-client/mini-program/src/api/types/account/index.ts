@@ -1,5 +1,6 @@
-interface Account {
+interface AccountInfo {
   id: string;
+  account: string;
   nickname: string;
   email: string;
   phoneNumber: string;
@@ -9,4 +10,4 @@ interface Account {
   city: string;
 }
 
-export type { Account };
+export type { AccountInfo };

@@ -30,13 +30,31 @@
     {
       "path": "pages/account/account",
       "style": {
-        "navigationBarTitleText": "账户设置"
+        "navigationBarTitleText": "账户信息"
       }
     },
     {
-      "path": "pages/quickMsg/quickMsg",
+      "path": "pages/quickMsg/send",
       "style": {
         "navigationBarTitleText": "快捷消息"
+      }
+    },
+    {
+      "path": "pages/quickMsg/list",
+      "style": {
+        "navigationBarTitleText": "消息列表"
+      }
+    },
+    {
+      "path": "pages/quickMsg/detail",
+      "style": {
+        "navigationBarTitleText": "消息详情"
+      }
+    },
+    {
+      "path": "pages/qrcode/qrcode",
+      "style": {
+        "navigationBarTitleText": "个人二维码"
       }
     }
   ],

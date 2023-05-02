@@ -46,6 +46,9 @@ dependencies:
   '@ttou/uview-typings':
     specifier: ^2.0.3
     version: 2.0.3
+  '@uqrcode/js':
+    specifier: ^4.0.7
+    version: 4.0.7
   clipboard:
     specifier: ^2.0.11
     version: 2.0.11
@@ -3141,6 +3144,10 @@ packages:
       '@typescript-eslint/types': 5.57.1
       eslint-visitor-keys: 3.3.0
     dev: true
+
+  /@uqrcode/js@4.0.7:
+    resolution: {integrity: sha512-4lIVp0mBrZw3yltc3C0/JuxMyNcqh7olX95xQYttrotITAxCL1AA0/RdcsBTSMP1M6TcKvJSuDDNUurDKyNuNw==}
+    dev: false
 
   /@vitejs/plugin-legacy@4.0.2(terser@5.16.6)(vite@4.0.4):
     resolution: {integrity: sha512-ivnt9sCkgwJTYTWLjuvY6H/HTuiQC1EgzAPkiAvi0yNAssiqOJjyjhG3hAK5LFUUorE0w9kGxn8K0f/74DlbxQ==}
