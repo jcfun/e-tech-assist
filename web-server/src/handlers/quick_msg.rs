@@ -21,7 +21,7 @@ pub async fn send_quick_msg(
 ) -> Result<Res<()>, MyError> {
     fill_fields(&mut payload.base_dto, &claims, true);
     validate::param_validate(&payload)?;
-    let db = &APP_CONTEXT.db;
+    let db = &APP_CONTEXT.get().unwrap().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {
@@ -51,7 +51,9 @@ pub async fn send_quick_msg(
                 ));
             }
             // 发送邮件
-            let reply = sender.email.unwrap_or(APP_CFG.email.email_addr.clone());
+            let reply = sender
+                .email
+                .unwrap_or(APP_CFG.get().unwrap().email.email_addr.clone());
             payload.content =
                 Some("来自 ".to_string() + &reply + " 的邮件：\n\n" + &payload.content.unwrap());
             let email_res = email::send_email_single(
@@ -98,7 +100,7 @@ pub async fn query_quick_msg_log(
     claims: Claims,
     Path((page_no, page_size)): Path<(u64, u64)>,
 ) -> Result<Res<PageRes<QueryQuickMsgVO>>, MyError> {
-    let db = &APP_CONTEXT.db;
+    let db = &APP_CONTEXT.get().unwrap().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {
@@ -125,7 +127,7 @@ pub async fn query_quick_msg_log(
 pub async fn query_by_reply_id(
     Path(id): Path<String>,
 ) -> Result<Res<PageRes<QueryQuickMsgVO>>, MyError> {
-    let db = &APP_CONTEXT.db;
+    let db = &APP_CONTEXT.get().unwrap().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {
@@ -149,7 +151,7 @@ pub async fn update_read_flag(
     Json(mut payload): Json<UpdateReadFlagDTO>,
 ) -> Result<Res<u64>, MyError> {
     fill_fields(&mut payload.base_dto, &claims, false);
-    let db = &APP_CONTEXT.db;
+    let db = &APP_CONTEXT.get().unwrap().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {

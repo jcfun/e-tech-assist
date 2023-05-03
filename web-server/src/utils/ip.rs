@@ -20,8 +20,8 @@ pub async fn get_ip_addr(ip: &str) -> Result<String, MyError> {
     } else if ip.starts_with("127") || ip.starts_with("0") || ip.starts_with("::") {
         "本机".into()
     } else {
-        let reader = &APP_CONTEXT.reader;
         let addr: IpAddr = ip.parse()?;
+        let reader = &APP_CONTEXT.get().unwrap().reader;
         let res: City = reader.lookup(addr)?;
         info!("geoip2 =========> {:?}", res);
         let continent = res

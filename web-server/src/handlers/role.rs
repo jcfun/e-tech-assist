@@ -25,7 +25,7 @@ pub async fn create_role(
     // 填充公共属性
     fields::fill_fields(&mut payload.base_dto, &claims, true);
     validate::param_validate(&payload)?;
-    let db = &APP_CONTEXT.db;
+    let db = &APP_CONTEXT.get().unwrap().db;
     // 开启事务
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
@@ -55,7 +55,7 @@ pub async fn create_role(
 
 /// 删除角色
 pub async fn delete_role(claims: Claims, Path(id): Path<String>) -> Result<Res<()>, MyError> {
-    let db = &APP_CONTEXT.db;
+    let db = &APP_CONTEXT.get().unwrap().db;
     // 开启事务
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
@@ -83,7 +83,7 @@ pub async fn update_role(
 ) -> Result<Res<()>, MyError> {
     fields::fill_fields(&mut payload.base_dto, &claims, false);
     validate::param_validate(&payload)?;
-    let db = &APP_CONTEXT.db;
+    let db = &APP_CONTEXT.get().unwrap().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {
@@ -109,7 +109,7 @@ pub async fn update_role_perm(
 ) -> Result<Res<()>, MyError> {
     fields::fill_fields(&mut payload.base_dto, &claims, false);
     validate::param_validate(&payload)?;
-    let db = &APP_CONTEXT.db;
+    let db = &APP_CONTEXT.get().unwrap().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {
@@ -146,7 +146,7 @@ pub async fn update_role_perm(
 pub async fn query_roles_fq(
     Json(payload): Json<QueryRoleDTO>,
 ) -> Result<Res<PageRes<QueryRoleVO>>, MyError> {
-    let db = &APP_CONTEXT.db;
+    let db = &APP_CONTEXT.get().unwrap().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {
@@ -180,7 +180,7 @@ pub async fn update_disable_flag(
     claims: Claims,
     Path((id, disable_flag)): Path<(String, String)>,
 ) -> Result<Res<u64>, MyError> {
-    let db = &APP_CONTEXT.db;
+    let db = &APP_CONTEXT.get().unwrap().db;
     let mut dto = BaseDTO::default();
     fields::fill_fields(&mut dto, &claims, false);
     dto.id = Some(id);
@@ -198,7 +198,7 @@ pub async fn update_disable_flag(
 
 /// 全量查询角色信息
 pub async fn query_roles() -> Result<Res<PageRes<QueryRoleVO>>, MyError> {
-    let db = &APP_CONTEXT.db;
+    let db = &APP_CONTEXT.get().unwrap().db;
     let res = role::query_roles(&db).await?;
     if let Some(vos) = res {
         let total = vos.len() as u64;

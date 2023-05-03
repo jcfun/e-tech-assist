@@ -107,7 +107,7 @@
           </template>
           <template v-if="item.type === 'radio'">
             <a-radio-group v-model="item.value.value">
-              <a-radio v-for="opt of item.optionItems" :value="opt.value" :key="opt.value">
+              <a-radio v-for="opt of (item.optionItems as any[])" :value="opt.value" :key="opt.value">
                 {{ opt.label }}
               </a-radio>
             </a-radio-group>
@@ -232,7 +232,7 @@
     },
   ]);
   // 新增/更新表单项
-  const formItems: any = [
+  const formItems: any[] = [
     {
       label: '权限名称',
       type: 'input',

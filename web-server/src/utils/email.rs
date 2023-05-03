@@ -14,7 +14,7 @@ pub async fn send_email_single(
     body: String,
 ) -> Result<String, MyError> {
     let email = Message::builder()
-        .from(APP_CFG.email.email_addr.parse().unwrap())
+        .from(APP_CFG.get().unwrap().email.email_addr.parse().unwrap())
         .reply_to(reply.parse().unwrap())
         .to(to.parse().unwrap())
         .subject(subject)
@@ -23,12 +23,12 @@ pub async fn send_email_single(
         .unwrap();
 
     let creds = Credentials::new(
-        APP_CFG.email.email_addr.to_owned(),
-        APP_CFG.email.code.to_owned(),
+        APP_CFG.get().unwrap().email.email_addr.to_owned(),
+        APP_CFG.get().unwrap().email.code.to_owned(),
     );
 
     // Open a remote connection to gmail
-    let mailer = SmtpTransport::relay(&APP_CFG.email.smtp_addr)
+    let mailer = SmtpTransport::relay(&APP_CFG.get().unwrap().email.smtp_addr)
         .unwrap()
         .credentials(creds)
         .build();

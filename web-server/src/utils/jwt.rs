@@ -34,7 +34,7 @@ impl Claims {
             account,
             nickname,
             iat: epoch,
-            exp: epoch + APP_CFG.jwt.exp,
+            exp: epoch + APP_CFG.get().unwrap().jwt.exp,
         }
     }
 }
@@ -60,7 +60,7 @@ pub async fn encode_jwt(login_info: &UserInfoVO) -> Token {
     let token = encode(
         &Header::default(),
         &claims,
-        &EncodingKey::from_secret(&APP_CFG.jwt.secret.as_bytes()),
+        &EncodingKey::from_secret(&APP_CFG.get().unwrap().jwt.secret.as_bytes()),
     )
     .unwrap();
     Token {
@@ -72,7 +72,7 @@ pub async fn encode_jwt(login_info: &UserInfoVO) -> Token {
 pub async fn decode_jwt(token: String) -> Result<Claims, MyError> {
     let token_info = decode::<Claims>(
         &token,
-        &DecodingKey::from_secret(&APP_CFG.jwt.secret.as_bytes()),
+        &DecodingKey::from_secret(&APP_CFG.get().unwrap().jwt.secret.as_bytes()),
         &Validation::new(Algorithm::HS256),
     );
     token_info

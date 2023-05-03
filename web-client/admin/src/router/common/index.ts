@@ -36,7 +36,7 @@ export const commonRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: 'info',
-        component: () => import('@/views/personal/index.vue'),
+        component: () => import('@/views/index/personal/index.vue'),
         meta: {
           title: '个人中心',
         },
