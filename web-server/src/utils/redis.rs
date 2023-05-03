@@ -3,12 +3,12 @@ use redis::aio::Connection;
 use redis::AsyncCommands;
 extern crate redis;
 use crate::common::errors::MyError;
-use crate::config::init::APP_CFG;
+use crate::config::init::get_cfg;
 
 pub async fn get_redis_conn() -> Result<Connection, MyError> {
     // 获取redis链接
     // let redis_url = env::var("REDIS_URL").expect("REDIS_URL is not found");
-    let redis_url = APP_CFG.get().unwrap().database.redis_url.as_str();
+    let redis_url = get_cfg().database.redis_url.as_str();
     let client = redis::Client::open(redis_url)?;
     let conn = client.get_async_connection().await;
     if conn.is_err() {

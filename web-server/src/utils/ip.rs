@@ -1,4 +1,4 @@
-use crate::{common::errors::MyError, config::init::APP_CONTEXT};
+use crate::{common::errors::MyError, config::init::get_ctx};
 use maxminddb::{geoip2::City, Reader};
 use std::{collections::BTreeMap, fs, net::IpAddr, sync::Arc};
 use tracing::info;
@@ -21,7 +21,7 @@ pub async fn get_ip_addr(ip: &str) -> Result<String, MyError> {
         "本机".into()
     } else {
         let addr: IpAddr = ip.parse()?;
-        let reader = &APP_CONTEXT.get().unwrap().reader;
+        let reader = &get_ctx().reader;
         let res: City = reader.lookup(addr)?;
         info!("geoip2 =========> {:?}", res);
         let continent = res

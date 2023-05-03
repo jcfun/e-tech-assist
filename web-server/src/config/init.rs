@@ -9,5 +9,13 @@ pub fn app_init() {
     APP_CFG.set(Config::new()).unwrap();
     APP_CONTEXT.set(AppState::new()).unwrap();
     // let _app_fcg = &APP_CFG.server;
-    // let _app_context = &APP_CONTEXT.get().unwrap().db;
+    // let _app_context = &get_ctx().db;
+}
+
+pub fn get_ctx() -> &'static AppState {
+    APP_CONTEXT.get().unwrap()
+}
+
+pub fn get_cfg() -> &'static Config {
+    APP_CFG.get().unwrap()
 }

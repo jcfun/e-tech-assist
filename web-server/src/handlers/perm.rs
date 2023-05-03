@@ -3,7 +3,7 @@ use crate::{
         errors::MyError,
         res::{PageRes, Res},
     },
-    config::init::APP_CONTEXT,
+    config::init::get_ctx,
     dbaccess::perm,
     models::{
         dto::{
@@ -25,7 +25,7 @@ pub async fn create_perm(
     // 填充公共属性
     fields::fill_fields(&mut payload.base_dto, &claims, true);
     validate::param_validate(&payload)?;
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     // 开启事务
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
@@ -49,7 +49,7 @@ pub async fn create_perm(
 
 /// 删除权限
 pub async fn delete_perm(claims: Claims, Path(id): Path<String>) -> Result<Res<()>, MyError> {
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     // 开启事务
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
@@ -77,7 +77,7 @@ pub async fn update_perm(
 ) -> Result<Res<()>, MyError> {
     fields::fill_fields(&mut payload.base_dto, &claims, false);
     validate::param_validate(&payload)?;
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {
@@ -100,7 +100,7 @@ pub async fn update_perm(
 pub async fn query_perms_fq(
     Json(payload): Json<QueryPermDTO>,
 ) -> Result<Res<PageRes<QueryPermVO>>, MyError> {
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {
@@ -149,7 +149,7 @@ pub async fn update_disable_flag(
     claims: Claims,
     Path((id, disable_flag)): Path<(String, String)>,
 ) -> Result<Res<u64>, MyError> {
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     let mut dto = BaseDTO::default();
     fields::fill_fields(&mut dto, &claims, false);
     dto.id = Some(id);
@@ -180,7 +180,7 @@ pub fn get_children(parents: &mut Vec<QueryPermVO>, vos: &Vec<QueryPermVO>) {
 
 /// 全量查询权限信息
 pub async fn query_perms() -> Result<Res<PageRes<QueryPermVO>>, MyError> {
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     let res = perm::query_perms(&db).await?;
     if let Some(vos) = res {
         // 构建树形结构

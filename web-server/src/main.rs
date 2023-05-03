@@ -10,7 +10,7 @@ use tracing::info;
 
 use crate::{
     common::banner,
-    config::init::{self, APP_CFG},
+    config::init::{self, get_cfg},
     utils::log,
 };
 // #[macro_use]
@@ -56,19 +56,15 @@ fn main() {
         // 设置socket地址
         let socket = SocketAddr::from_str(&format!(
             "{}:{}",
-            &APP_CFG.get().unwrap().server.ip,
-            &APP_CFG.get().unwrap().server.port
+            &get_cfg().server.ip,
+            &get_cfg().server.port
         ))
         .expect("socket地址绑定失败");
         // 打印服务连接信息
         info!("listening on {} ...", socket);
         // 获取路由
         let routers = Router::new().nest(
-            &format!(
-                "/{}/{}",
-                &APP_CFG.get().unwrap().api.prefix,
-                &APP_CFG.get().unwrap().api.version
-            ),
+            &format!("/{}/{}", &get_cfg().api.prefix, &get_cfg().api.version),
             get_sys_routers(),
         );
         // 启动服务

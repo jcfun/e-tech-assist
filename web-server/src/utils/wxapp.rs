@@ -1,5 +1,5 @@
 use crate::common::errors::MyError;
-use crate::config::init::APP_CFG;
+use crate::config::init::get_cfg;
 use bytes::Bytes;
 use crypto::buffer::{BufferResult, ReadBuffer, WriteBuffer};
 use crypto::{aes, blockmodes, buffer, symmetriccipher};
@@ -50,7 +50,7 @@ pub async fn get_session_key(
 ) -> Result<serde_json::Value, MyError> {
     let url = format!(
         "{api}/sns/jscode2session?appid={appid}&secret={secret}&js_code={code}&grant_type=authorization_code",
-        api = &APP_CFG.get().unwrap().wxapp.api_domain,
+        api = &get_cfg().wxapp.api_domain,
         appid = appid,
         code = code,
         secret = secret
@@ -278,7 +278,7 @@ impl Client {
         let mut headers = header::HeaderMap::new();
         headers.insert(
             header::USER_AGENT,
-            header::HeaderValue::from_static(&APP_CFG.get().unwrap().wxapp.default_user_agent),
+            header::HeaderValue::from_static(&get_cfg().wxapp.default_user_agent),
         );
 
         Client {

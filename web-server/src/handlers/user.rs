@@ -3,7 +3,7 @@ use crate::{
         errors::MyError,
         res::{PageRes, Res},
     },
-    config::init::APP_CONTEXT,
+    config::init::get_ctx,
     dbaccess::{login::get_user_count, user},
     models::{
         dto::{
@@ -31,7 +31,7 @@ pub async fn update_user_wx(
     fill_fields(&mut payload.base_dto, &claims, false);
     payload.base_dto.id = claims.id;
     param_validate(&payload)?;
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     let tx = db.acquire_begin().await.unwrap();
     let mut tx = tx.defer_async(|mut tx| async move {
         if !tx.done {
@@ -56,7 +56,7 @@ pub async fn create_user(
     // 填充公共属性
     fill_fields(&mut payload.base_dto, &claims, true);
     param_validate(&payload)?;
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     let count = get_user_count(&db, &payload.phone_number.clone().unwrap()).await?;
     if count != 0 {
         return Ok(Res::from_fail(
@@ -114,7 +114,7 @@ pub async fn create_user(
 
 /// 删除用户
 pub async fn delete_user(claims: Claims, Path(id): Path<String>) -> Result<Res<()>, MyError> {
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     // 开启事务
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
@@ -146,7 +146,7 @@ pub async fn update_user(
 ) -> Result<Res<()>, MyError> {
     fill_fields(&mut payload.base_dto, &claims, false);
     param_validate(&payload)?;
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {
@@ -207,7 +207,7 @@ pub async fn update_user(
 pub async fn query_users_fq(
     Json(payload): Json<QueryUserDTO>,
 ) -> Result<Res<PageRes<QueryUserVO>>, MyError> {
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {
@@ -241,7 +241,7 @@ pub async fn update_disable_flag(
     claims: Claims,
     Path((id, disable_flag)): Path<(String, String)>,
 ) -> Result<Res<u64>, MyError> {
-    let db = &APP_CONTEXT.get().unwrap().db;
+    let db = &get_ctx().db;
     let mut dto = BaseDTO::default();
     fill_fields(&mut dto, &claims, false);
     dto.id = Some(id);
