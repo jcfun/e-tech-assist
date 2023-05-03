@@ -46,7 +46,7 @@ fn main() {
     // 设置环境变量
     dotenv().ok();
     // 初始化日志配置（多线程暂时无法获取本地时间，因此要在tokio初始化之前完成初始化）
-    log::log_init();
+    let _guard = log::log_init();
     // banner
     banner::print_banner();
     let rt = tokio::runtime::Runtime::new().expect("异步运行时初始化失败");

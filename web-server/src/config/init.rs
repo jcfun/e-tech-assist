@@ -1,6 +1,6 @@
 use once_cell::sync::OnceCell;
 
-use super::{cfg::Config, context::AppState};
+use super::{cfg::Config, ctx::AppState};
 
 pub static APP_CFG: OnceCell<Config> = OnceCell::new();
 pub static APP_CONTEXT: OnceCell<AppState> = OnceCell::new();

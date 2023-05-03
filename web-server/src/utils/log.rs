@@ -2,7 +2,7 @@ use std::env;
 
 use color_eyre;
 use time::UtcOffset;
-use tracing_appender::{non_blocking, rolling};
+use tracing_appender::{non_blocking, non_blocking::WorkerGuard, rolling};
 use tracing_error::ErrorLayer;
 use tracing_subscriber::{
     fmt::{self, time::OffsetTime},
@@ -11,7 +11,7 @@ use tracing_subscriber::{
     EnvFilter, Registry,
 };
 
-pub fn log_init() {
+pub fn log_init() -> WorkerGuard {
     let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("DEBUG"));
     let timer = OffsetTime::new(
         UtcOffset::current_local_offset().expect("本地时间偏移量获取失败"),
@@ -33,7 +33,8 @@ pub fn log_init() {
     let log_dir = env::var("LOG_DIR").expect("日志输出文件夹路径获取失败");
     let log_file = env::var("LOG_FILE").expect("日志输出文件夹路径获取失败");
     let file_appender = rolling::hourly(log_dir, log_file);
-    let (non_blocking_appender, _guard) = non_blocking(file_appender);
+    // 这里guard必须返回到main函数中才能确保日志写入文件
+    let (non_blocking_appender, guard) = non_blocking(file_appender);
     let file_layer = fmt::layer()
         .with_thread_ids(true)
         .with_thread_names(true)
@@ -52,4 +53,5 @@ pub fn log_init() {
 
     // 安裝 color-eyre 的 panic 处理句柄
     color_eyre::install().unwrap();
+    guard
 }
