@@ -60,6 +60,7 @@
           cancelText: '再想想',
           onOk: () => {
             userStore.logout().then(() => {
+              window.location.hash = '#/login?redirect=/';
               window.location.reload();
             });
           },

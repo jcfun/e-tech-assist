@@ -5,7 +5,7 @@ import service from './axios.config';
 // import { useUserStore } from '@/store/user';
 class Http {
   private baseUrl = 'http://192.168.31.201:3000/api/v1';
-  private baseUrl2 = 'http://10.4.6.12:33000/api/v1';
+  private baseUrl2 = 'http://10.4.6.4:33000/api/v1';
   private baseUrlWindows = 'http://192.168.31.201:3000/api/v1';
   private baseUrlLinux = 'http://10.7.7.2:33000/api/v1';
   private baseUrlLinux2 = 'http://ddns.urainstar.top:33000/api/v1';

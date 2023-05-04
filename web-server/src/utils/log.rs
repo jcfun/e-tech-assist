@@ -32,7 +32,7 @@ pub fn log_init() -> WorkerGuard {
     // 获取环境变量
     let log_dir = env::var("LOG_DIR").expect("日志输出文件夹路径获取失败");
     let log_file = env::var("LOG_FILE").expect("日志输出文件夹路径获取失败");
-    let file_appender = rolling::hourly(log_dir, log_file);
+    let file_appender = rolling::daily(log_dir, log_file);
     // 这里guard必须返回到main函数中才能确保日志写入文件
     let (non_blocking_appender, guard) = non_blocking(file_appender);
     let file_layer = fmt::layer()

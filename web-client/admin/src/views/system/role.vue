@@ -13,7 +13,7 @@
                   <a-input v-model="item.value.value" :placeholder="item.placeholder" />
                 </template>
                 <template v-if="item.type === 'select'">
-                  <a-select v-model="item.value.value" style="width: 227.5px" :placeholder="item.placeholder" allow-clear>
+                  <a-select v-model="item.value.value" style="width: 193.5px" :placeholder="item.placeholder" allow-clear>
                     <a-option v-for="optionItem of item.optionItems" :key="optionItem.value" :value="optionItem.value">
                       {{ optionItem.label }}
                     </a-option>

@@ -7,7 +7,6 @@ pub mod login;
 pub mod perm;
 pub mod quick_msg;
 pub mod role;
-pub mod sql;
 pub mod user;
 
 pub fn get_db_conn() -> Rbatis {

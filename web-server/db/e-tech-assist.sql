@@ -522,11 +522,11 @@ CREATE TABLE "t_perm" (
   "perm_type" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
   "disable_flag" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
   "api_path" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "fe_route" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "fe_code" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "route" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "route_code" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
   "description" varchar(255) COLLATE "pg_catalog"."default",
   "resource" varchar(255) COLLATE "pg_catalog"."default",
-  "fe_name" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "route_name" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
   "hidden_flag" varchar COLLATE "pg_catalog"."default",
   "parent_route" varchar COLLATE "pg_catalog"."default"
 )
@@ -536,22 +536,22 @@ COMMENT ON COLUMN "t_perm"."parent_id" IS '父权限id';
 COMMENT ON COLUMN "t_perm"."perm_type" IS '权限类型(菜单、接口)';
 COMMENT ON COLUMN "t_perm"."disable_flag" IS '禁用标志';
 COMMENT ON COLUMN "t_perm"."api_path" IS '接口路径';
-COMMENT ON COLUMN "t_perm"."fe_route" IS '前端路由';
-COMMENT ON COLUMN "t_perm"."fe_code" IS '前端路由编号';
+COMMENT ON COLUMN "t_perm"."route" IS '前端路由';
+COMMENT ON COLUMN "t_perm"."route_code" IS '前端路由编号';
 COMMENT ON COLUMN "t_perm"."description" IS '权限描述';
 COMMENT ON COLUMN "t_perm"."resource" IS '权限资源(菜单icon)';
-COMMENT ON COLUMN "t_perm"."fe_name" IS '前端路由名称';
+COMMENT ON COLUMN "t_perm"."route_name" IS '前端路由名称';
 COMMENT ON COLUMN "t_perm"."parent_route" IS '父级路由';
 
 -- ----------------------------
 -- Records of t_perm
 -- ----------------------------
 BEGIN;
-INSERT INTO "t_perm" ("id", "operate_time", "operator", "operator_id", "create_time", "creator", "creator_id", "delete_flag", "name", "parent_id", "perm_type", "disable_flag", "api_path", "fe_route", "fe_code", "description", "resource", "fe_name", "hidden_flag", "parent_route") VALUES ('493831700011421696', '2023-04-27 10:14:23.393', '匆忙~', '488641278255435776', '2023-04-27 01:10:52.232', '匆忙~', '488641278255435776', '1', 'test', '490200324989128704', '1', '0', '/test', '/test', 'PERM_TEST', 'test', 'IconLoading', 'Test', '0', '/system');
-INSERT INTO "t_perm" ("id", "operate_time", "operator", "operator_id", "create_time", "creator", "creator_id", "delete_flag", "name", "parent_id", "perm_type", "disable_flag", "api_path", "fe_route", "fe_code", "description", "resource", "fe_name", "hidden_flag", "parent_route") VALUES ('490343906261733376', '2023-04-27 16:56:56.242', '匆忙~', '488641278255435776', '2023-04-17 10:11:37.402', '匆忙~UR', '487958588334149632', '0', '用户管理', '490200324989128704', '1', '0', '/user', '/user', 'PERM_USER', '用户管理', 'icon-user', 'User', '0', '/system');
-INSERT INTO "t_perm" ("id", "operate_time", "operator", "operator_id", "create_time", "creator", "creator_id", "delete_flag", "name", "parent_id", "perm_type", "disable_flag", "api_path", "fe_route", "fe_code", "description", "resource", "fe_name", "hidden_flag", "parent_route") VALUES ('490200324989128704', '2023-04-27 16:56:56.242', '匆忙~', '488641278255435776', '2023-04-17 00:41:04.959', '匆忙~UR', '487958588334149632', '0', '系统管理', '', '0', '0', '', '/system', 'PERM_SYSTEM', '系统管理目录', 'icon-settings', 'System', '0', NULL);
-INSERT INTO "t_perm" ("id", "operate_time", "operator", "operator_id", "create_time", "creator", "creator_id", "delete_flag", "name", "parent_id", "perm_type", "disable_flag", "api_path", "fe_route", "fe_code", "description", "resource", "fe_name", "hidden_flag", "parent_route") VALUES ('490185420768940032', '2023-04-27 16:56:56.242', '匆忙~', '488641278255435776', '2023-04-16 23:41:51.516', '匆忙~UR', '487958588334149632', '0', '角色管理', '490200324989128704', '1', '0', '/role', '/role', 'PERM_ROLE', '角色管理', 'icon-user-group', 'Role', '0', '/system');
-INSERT INTO "t_perm" ("id", "operate_time", "operator", "operator_id", "create_time", "creator", "creator_id", "delete_flag", "name", "parent_id", "perm_type", "disable_flag", "api_path", "fe_route", "fe_code", "description", "resource", "fe_name", "hidden_flag", "parent_route") VALUES ('493751159786442752', '2023-04-27 16:56:59.192', '匆忙~', '488641278255435776', '2023-04-26 19:50:49.946', '匆忙~UR', '487958588334149632', '0', '权限管理', '490200324989128704', '1', '0', '/perm', '/perm', 'PERM_PERM', '权限管理', 'IconSafe', 'Perm', '0', '/system');
+INSERT INTO "t_perm" ("id", "operate_time", "operator", "operator_id", "create_time", "creator", "creator_id", "delete_flag", "name", "parent_id", "perm_type", "disable_flag", "api_path", "route", "route_code", "description", "resource", "route_name", "hidden_flag", "parent_route") VALUES ('493831700011421696', '2023-04-27 10:14:23.393', '匆忙~', '488641278255435776', '2023-04-27 01:10:52.232', '匆忙~', '488641278255435776', '1', 'test', '490200324989128704', '1', '0', '/test', '/test', 'PERM_TEST', 'test', 'IconLoading', 'Test', '0', '/system');
+INSERT INTO "t_perm" ("id", "operate_time", "operator", "operator_id", "create_time", "creator", "creator_id", "delete_flag", "name", "parent_id", "perm_type", "disable_flag", "api_path", "route", "route_code", "description", "resource", "route_name", "hidden_flag", "parent_route") VALUES ('490343906261733376', '2023-04-27 16:56:56.242', '匆忙~', '488641278255435776', '2023-04-17 10:11:37.402', '匆忙~UR', '487958588334149632', '0', '用户管理', '490200324989128704', '1', '0', '/user', '/user', 'PERM_USER', '用户管理', 'icon-user', 'User', '0', '/system');
+INSERT INTO "t_perm" ("id", "operate_time", "operator", "operator_id", "create_time", "creator", "creator_id", "delete_flag", "name", "parent_id", "perm_type", "disable_flag", "api_path", "route", "route_code", "description", "resource", "route_name", "hidden_flag", "parent_route") VALUES ('490200324989128704', '2023-04-27 16:56:56.242', '匆忙~', '488641278255435776', '2023-04-17 00:41:04.959', '匆忙~UR', '487958588334149632', '0', '系统管理', '', '0', '0', '', '/system', 'PERM_SYSTEM', '系统管理目录', 'icon-settings', 'System', '0', NULL);
+INSERT INTO "t_perm" ("id", "operate_time", "operator", "operator_id", "create_time", "creator", "creator_id", "delete_flag", "name", "parent_id", "perm_type", "disable_flag", "api_path", "route", "route_code", "description", "resource", "route_name", "hidden_flag", "parent_route") VALUES ('490185420768940032', '2023-04-27 16:56:56.242', '匆忙~', '488641278255435776', '2023-04-16 23:41:51.516', '匆忙~UR', '487958588334149632', '0', '角色管理', '490200324989128704', '1', '0', '/role', '/role', 'PERM_ROLE', '角色管理', 'icon-user-group', 'Role', '0', '/system');
+INSERT INTO "t_perm" ("id", "operate_time", "operator", "operator_id", "create_time", "creator", "creator_id", "delete_flag", "name", "parent_id", "perm_type", "disable_flag", "api_path", "route", "route_code", "description", "resource", "route_name", "hidden_flag", "parent_route") VALUES ('493751159786442752', '2023-04-27 16:56:59.192', '匆忙~', '488641278255435776', '2023-04-26 19:50:49.946', '匆忙~UR', '487958588334149632', '0', '权限管理', '490200324989128704', '1', '0', '/perm', '/perm', 'PERM_PERM', '权限管理', 'IconSafe', 'Perm', '0', '/system');
 COMMIT;
 
 -- ----------------------------

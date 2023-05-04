@@ -34,9 +34,7 @@ export default ({ options, store }: PiniaPluginContext) => {
     } else {
       const storage = window[storageType];
       const data = storage.getItem(persist.option!.key);
-      if (data) {
-        store.$patch(JSON.parse(data));
-      }
+      store.$patch(data ? JSON.parse(data) : {});
     }
   }
 

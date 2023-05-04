@@ -194,9 +194,9 @@ pub async fn update_disable_flag(
             ` p.perm_type,`
             ` p.disable_flag,`
             ` p.api_path,`
-            ` p.fe_route,`
-            ` p.fe_name,`
-            ` p.fe_code,`
+            ` p.route,`
+            ` p.route_name,`
+            ` p.route_code,`
             ` p.resource,`
             ` hidden_flag,`
             ` parent_route,`
@@ -209,26 +209,6 @@ pub async fn update_disable_flag(
             ` (rp.delete_flag = '0'`
                 ` AND p.delete_flag = '0'`
                 ` AND rp.role_id = #{role_id})`
-            ` OR (p.id IN (`
-            ` SELECT`
-                ` parent_id`
-            ` FROM`
-                ` t_perm`
-            ` WHERE`
-                ` delete_flag = '0'`
-                ` AND id IN (`
-                ` SELECT`
-                    ` tp.id`
-                ` FROM`
-                    ` t_perm tp`
-                ` LEFT JOIN t_role_perm trp ON`
-                    ` tp.id = trp.perm_id`
-                ` WHERE`
-                    ` trp.delete_flag = '0'`
-                    ` AND tp.delete_flag = '0'`
-                    ` AND trp.role_id = #{role_id})`
-                ` )`
-            ` )`
             ` OR (p.delete_flag = '0'`
                 ` AND p.parent_id IN (`
                 ` SELECT`

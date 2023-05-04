@@ -13,7 +13,7 @@
                   <a-input v-model="item.value.value" :placeholder="item.placeholder" />
                 </template>
                 <template v-if="item.type === 'select'">
-                  <a-select v-model="item.value.value" style="width: 227.5px" :placeholder="item.placeholder" allow-clear>
+                  <a-select v-model="item.value.value" style="width: 193.5px" :placeholder="item.placeholder" allow-clear>
                     <a-option v-for="optionItem of item.optionItems" :key="optionItem.value" :value="optionItem.value">
                       {{ optionItem.label }}
                     </a-option>
@@ -94,7 +94,7 @@
           </template>
           <template v-if="item.type === 'input'">
             <a-input :placeholder="item.placeholder" v-model="item.value.value">
-              <template #prepend v-if="item.key === 'feCode'">
+              <template #prepend v-if="item.key === 'routeCode'">
                 {{ PERM_CODE_FLAG }}
               </template>
             </a-input>
@@ -182,18 +182,18 @@
     },
     {
       title: '路由编号',
-      key: 'feCode',
-      dataIndex: 'feCode',
+      key: 'routeCode',
+      dataIndex: 'routeCode',
     },
     {
       title: '前端路由',
-      key: 'feRoute',
-      dataIndex: 'feRoute',
+      key: 'route',
+      dataIndex: 'route',
     },
     {
       title: '路由名称',
-      key: 'feName',
-      dataIndex: 'feName',
+      key: 'routeName',
+      dataIndex: 'routeName',
     },
     {
       title: '状态',
@@ -322,7 +322,7 @@
     },
     {
       label: '权限编号',
-      key: 'feCode',
+      key: 'routeCode',
       value: ref(''),
       type: 'input',
       required: true,
@@ -337,7 +337,7 @@
     },
     {
       label: '前端路由',
-      key: 'feRoute',
+      key: 'route',
       value: ref(''),
       type: 'input',
       required: true,
@@ -352,7 +352,7 @@
     },
     {
       label: '路由名称',
-      key: 'feName',
+      key: 'routeName',
       value: ref(''),
       type: 'input',
       required: true,
@@ -521,7 +521,7 @@
         res.data.data.forEach(it => {
           treeData.value.push({
             title: it.name,
-            key: `${it.id}:${it.feRoute ? it.feRoute : ''}`,
+            key: `${it.id}:${it.route ? it.route : ''}`,
             children: getPermTree(it.children),
           });
         });
@@ -537,7 +537,7 @@
     perms.forEach(it => {
       treeData.push({
         title: it.name,
-        key: `${it.id}:${it.feRoute ? it.feRoute : ''}`,
+        key: `${it.id}:${it.route ? it.route : ''}`,
         children: getPermTree(it.children),
       });
     });
@@ -562,7 +562,7 @@
         res.data.data.forEach(it => {
           treeData.value.push({
             title: it.name,
-            key: `${it.id}:${it.feRoute ? it.feRoute : ''}`,
+            key: `${it.id}:${it.route ? it.route : ''}`,
             children: getPermTree(it.children),
           });
         });
@@ -586,8 +586,8 @@
             permDTO.value.parentId = item.value.value.split(':')[0];
             permDTO.value.parentRoute = item.value.value.split(':')[1] == '' ? null : item.value.value.split(':')[1];
           }
-        } else if (item.key == 'feCode') {
-          permDTO.value.feCode = item.value.value.startsWith(PERM_CODE_FLAG) ? item.value.value : PERM_CODE_FLAG + item.value.value;
+        } else if (item.key == 'routeCode') {
+          permDTO.value.routeCode = item.value.value.startsWith(PERM_CODE_FLAG) ? item.value.value : PERM_CODE_FLAG + item.value.value;
         } else if (item.value.value != '' && item.value.value != undefined && item.value.value != null) {
           permDTO.value[item.key] = item.value.value;
         }

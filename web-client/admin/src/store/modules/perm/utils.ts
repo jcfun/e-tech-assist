@@ -25,8 +25,8 @@ const getRouteTree = (perms: Array<PermVO>) => {
   const routers = [] as Array<RouteRecordRaw>;
   perms.forEach(perm => {
     const route: RouteRecordRaw = {
-      path: `${perm.parentRoute ?? ''}${perm.feRoute}`,
-      name: perm.feName,
+      path: `${perm.parentRoute ?? ''}${perm.route}`,
+      name: perm.routeName,
       component: perm.permType == '0' ? () => import('@/layout/Layout.vue') : getComponent(perm),
       meta: {
         title: perm.name,
@@ -47,7 +47,7 @@ export function loadComponents() {
 export const components = loadComponents();
 
 export function getComponent(perm: PermVO) {
-  return components[`/src/views${perm.parentRoute ?? ''}${perm.feRoute}.vue`];
+  return components[`/src/views${perm.parentRoute ?? ''}${perm.route}.vue`];
 }
 
 export function transformSplitTabMenu(routes: Array<RouteRecordRaw>): Array<SplitTab> {

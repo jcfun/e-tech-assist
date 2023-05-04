@@ -19,7 +19,7 @@ impl AppState {
         // ip归属地，maxminddb数据库reader
         let reader = get_reader();
 
-        info!("应用上下文初始化完毕");
+        info!("应用上下文初始化完毕!");
         AppState { db, reader }
     }
 }
