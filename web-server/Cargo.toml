@@ -99,7 +99,7 @@ uuid = { version = "1.3.0", features = [
 # ip所属地
 maxminddb = "0.23.0"
 
-# 对象缓存
+# 全局容器
 once_cell = "1.17.1"
 
 rust-crypto = "0.2.36"

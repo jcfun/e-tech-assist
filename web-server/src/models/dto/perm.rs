@@ -30,29 +30,26 @@ pub struct CreatePermDTO {
     )]
     pub disable_flag: Option<String>,
 
-    #[validate(
-        required(message = "接口路径不可为空"),
-        length(max = 100, message = "接口路径格式错误")
-    )]
+    #[validate(length(max = 100, message = "接口路径格式错误"))]
     pub api_path: Option<String>,
 
     #[validate(
         required(message = "前端路由不可为空"),
         length(max = 100, message = "前端路由格式错误")
     )]
-    pub fe_route: Option<String>,
+    pub route: Option<String>,
 
     #[validate(
         required(message = "前端路由名称不可为空"),
         length(max = 100, message = "前端路由名称格式错误")
     )]
-    pub fe_name: Option<String>,
+    pub route_name: Option<String>,
 
     #[validate(
         required(message = "前端权限编号不可为空"),
         length(min = 5, max = 20, message = "前端权限编号格式错误")
     )]
-    pub fe_code: Option<String>,
+    pub route_code: Option<String>,
 
     #[validate(length(max = 100, message = "父路由路由格式错误"))]
     pub parent_route: Option<String>,
@@ -89,13 +86,13 @@ pub struct UpdatePermDTO {
     pub api_path: Option<String>,
 
     #[validate(length(max = 100, message = "前端路由格式错误"))]
-    pub fe_route: Option<String>,
+    pub route: Option<String>,
 
     #[validate(length(max = 100, message = "前端路由名称格式错误"))]
-    pub fe_name: Option<String>,
+    pub route_name: Option<String>,
 
     #[validate(length(min = 5, max = 20, message = "前端权限编号格式错误"))]
-    pub fe_code: Option<String>,
+    pub route_code: Option<String>,
 
     #[validate(length(max = 100, message = "父路由路由格式错误"))]
     pub parent_route: Option<String>,

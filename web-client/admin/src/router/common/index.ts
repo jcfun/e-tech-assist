@@ -36,7 +36,7 @@ export const commonRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: 'info',
-        component: () => import('@/views/personal/index.vue'),
+        component: () => import('@/views/index/personal/index.vue'),
         meta: {
           title: '个人中心',
         },
@@ -50,7 +50,7 @@ export const commonRoutes: RouteRecordRaw[] = [
  * No match found for location with xxx 的警告
  */
 export const perLoadPathRoute = {
-  path: window.location.hash.replace('#', '') || window.location.pathname,
+  path: window.location.hash.includes('redirect=/') ? '/' : window.location.hash.split('?')[0].replace('#', '') || window.location.pathname,
   name: 'perLoadPathRouteName',
   component: () => import('@/views/redirect/preload-route.vue'),
   meta: {

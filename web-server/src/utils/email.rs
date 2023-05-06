@@ -4,7 +4,7 @@ use lettre::{Message, SmtpTransport, Transport};
 use tracing::info;
 
 use crate::common::errors::MyError;
-use crate::config::init::APP_CFG;
+use crate::config::init::get_cfg;
 
 // 发送单条邮件
 pub async fn send_email_single(
@@ -14,7 +14,7 @@ pub async fn send_email_single(
     body: String,
 ) -> Result<String, MyError> {
     let email = Message::builder()
-        .from(APP_CFG.email.email_addr.parse().unwrap())
+        .from(get_cfg().email.email_addr.parse().unwrap())
         .reply_to(reply.parse().unwrap())
         .to(to.parse().unwrap())
         .subject(subject)
@@ -23,12 +23,12 @@ pub async fn send_email_single(
         .unwrap();
 
     let creds = Credentials::new(
-        APP_CFG.email.email_addr.to_owned(),
-        APP_CFG.email.code.to_owned(),
+        get_cfg().email.email_addr.to_owned(),
+        get_cfg().email.code.to_owned(),
     );
 
     // Open a remote connection to gmail
-    let mailer = SmtpTransport::relay(&APP_CFG.email.smtp_addr)
+    let mailer = SmtpTransport::relay(&get_cfg().email.smtp_addr)
         .unwrap()
         .credentials(creds)
         .build();

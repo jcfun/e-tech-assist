@@ -8,6 +8,7 @@
   export default defineComponent({
     created() {
       const { params, query } = this.$route;
+      console.log('params ===> ', params);
       const { path } = params;
       this.$router.replace({
         path: '/' + (typeof path === 'string' ? path : path.join('/')),

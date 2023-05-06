@@ -66,7 +66,7 @@
   const loading = ref(false);
   const projectName = setting.projectName;
   const { version } = useAppInfo();
-
+  const user = useUserStore();
   const route = useRoute();
   const identity = ref('admin');
   const password = ref('123456');
@@ -95,14 +95,12 @@
         uuid: captcha.value.uuid,
       } as LoginDTO)
       .then(res => {
-        useUserStore()
-          .setUser(res.data)
-          .then(_res => {
-            router.replace({
-              path: route.query.redirect ? (route.query.redirect as string) : '/',
-            });
-            Message.success(`登录成功，欢迎 ${identity.value}，即将跳转到首页`);
+        user.setUser(res.data).then(_res => {
+          router.replace({
+            path: route.query.redirect ? (route.query.redirect as string) : '/',
           });
+          Message.success(`登录成功，欢迎 ${identity.value}，即将跳转到首页`);
+        });
       })
       .catch(err => {
         console.log(err);

@@ -13,7 +13,7 @@
                   <a-input v-model="item.value.value" :placeholder="item.placeholder" />
                 </template>
                 <template v-if="item.type === 'select'">
-                  <a-select v-model="item.value.value" style="width: 227.5px" :placeholder="item.placeholder" allow-clear>
+                  <a-select v-model="item.value.value" style="width: 193.5px" :placeholder="item.placeholder" allow-clear>
                     <a-option v-for="optionItem of item.optionItems" :key="optionItem.value" :value="optionItem.value">
                       {{ optionItem.label }}
                     </a-option>
@@ -70,9 +70,9 @@
     <template #content>
       <a-form :model="roleDTO">
         <a-form-item
+          v-for="item of formItems"
           :class="[item.required ? 'form-item__require' : 'form-item__no_require']"
           :label="item.label"
-          v-for="item of formItems"
           :key="item.key"
         >
           <template v-if="item.type === 'textarea'">
@@ -87,7 +87,7 @@
           </template>
           <template v-if="item.type === 'radio'">
             <a-radio-group v-model="item.value.value">
-              <a-radio v-for="opt of item.optionItems" :value="opt.value" :key="opt.value">
+              <a-radio v-for="opt of (item.optionItems as any[])" :value="opt.value" :key="opt.value">
                 {{ opt.label }}
               </a-radio>
             </a-radio-group>
@@ -179,7 +179,7 @@
     },
   ]);
   // 修改表单项
-  const formItems: any = [
+  const formItems: any[] = [
     {
       label: '角色名称',
       type: 'input',

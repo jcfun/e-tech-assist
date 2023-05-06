@@ -108,7 +108,7 @@ impl Config {
         let config = serde_yaml::from_str(&cfg_string)
             .map(|data| data)
             .unwrap_or_else(|err| panic!("配置文件解析失败: {}", err));
-        info!("配置文件初始化完毕");
+        info!("配置文件初始化完毕!");
         config
     }
 }

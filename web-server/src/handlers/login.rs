@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use crate::{
     common::{errors::MyError, res::Res},
-    config::init::{APP_CFG, APP_CONTEXT},
+    config::init::{get_cfg, get_ctx},
     dbaccess::{
         login::{
             self, create_user_detail_wxapp, get_user_count, get_user_info_by_openid,
@@ -55,7 +55,7 @@ pub async fn login(
         login_log(&headers, &payload, "登录失败", "验证码已失效").await?;
         return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "验证码已失效"));
     }
-    let db = &APP_CONTEXT.db;
+    let db = &get_ctx().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
     let mut tx = tx.defer_async(|mut tx| async move {
@@ -144,7 +144,7 @@ pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, 
     }
     // 填充公共属性
     fill_fields_system(&mut payload.base_dto);
-    let db = &APP_CONTEXT.db;
+    let db = &get_ctx().db;
     let count = get_user_count(&db, &payload.phone_number.clone().unwrap()).await?;
     if count != 0 {
         return Ok(Res::from_fail(
@@ -192,7 +192,7 @@ pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, 
 /// 验证码
 pub async fn captcha() -> Result<Res<Captcha>, MyError> {
     let captcha = utils::captcha::get_captcha();
-    set_string_ex(&captcha.uuid, &captcha.captcha, APP_CFG.captcha.exp).await?;
+    set_string_ex(&captcha.uuid, &captcha.captcha, get_cfg().captcha.exp).await?;
     Ok(Res::from_success("获取成功", captcha))
 }
 
@@ -203,7 +203,7 @@ pub async fn login_log(
     status: &str,
     description: &str,
 ) -> Result<ExecResult, MyError> {
-    let db = &APP_CONTEXT.db;
+    let db = &get_ctx().db;
     let mut login_log = LoginLogDTO::default();
     let user_agent = headers
         .get("User-Agent")
@@ -261,7 +261,7 @@ pub async fn reset_pwd(Json(mut payload): Json<ResetPwdDTO>) -> Result<Res<u64>,
     param_validate(&payload)?;
     // 密码sha256加密
     payload.new_password = Some(encrypt_sha256(payload.new_password.as_ref().unwrap()));
-    let db = &APP_CONTEXT.db;
+    let db = &get_ctx().db;
     let res = login::reset_pwd(db, &payload).await?;
     Ok(Res::from_success("重置成功", res.rows_affected))
 }
@@ -275,8 +275,8 @@ pub async fn login_wxapp(
     param_validate(&payload)?;
     // 获取openid和session_key
     let res = wxapp::get_session_key(
-        &APP_CFG.wxapp.appid,
-        &APP_CFG.wxapp.secret,
+        &get_cfg().wxapp.appid,
+        &get_cfg().wxapp.secret,
         &payload.code.unwrap(),
     )
     .await?;
@@ -301,7 +301,7 @@ pub async fn login_wxapp(
         .and_then(|value| value.as_str())
         .unwrap_or_default();
     // 根据openid查询用户信息
-    let res = get_user_info_by_openid(&APP_CONTEXT.db, &String::from(openid)).await?;
+    let res = get_user_info_by_openid(&get_ctx().db, &String::from(openid)).await?;
     // 判断是否已经授权过微信登录
     if res.is_none() {
         let mut user_info = UserInfoVO::default();
@@ -365,7 +365,7 @@ pub async fn wxapp_register(
     // 构建用户信息所需的数据
     let mut register_dto = RegisterDTO::default();
     register_dto.openid = payload.openid.clone();
-    let db = &APP_CONTEXT.db;
+    let db = &get_ctx().db;
     // 开启事务
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
@@ -382,7 +382,7 @@ pub async fn wxapp_register(
         // 如果更新成功，说明是系统用户，直接返回登录信息
         if count.rows_affected != 0 {
             // 通过用户openid获取用户数据
-            let res = get_user_info_by_openid(&APP_CONTEXT.db, &payload.openid.unwrap()).await?;
+            let res = get_user_info_by_openid(&get_ctx().db, &payload.openid.unwrap()).await?;
             let mut user_info = res.unwrap();
             user_info.openid = Some(register_dto.openid.unwrap());
 
@@ -422,7 +422,7 @@ pub async fn wxapp_register(
     }
 
     // 通过用户openid获取用户数据
-    let res = get_user_info_by_openid(&APP_CONTEXT.db, &payload.openid.unwrap()).await?;
+    let res = get_user_info_by_openid(&get_ctx().db, &payload.openid.unwrap()).await?;
     let mut user_info = res.unwrap();
     user_info.openid = Some(register_dto.openid.unwrap());
 

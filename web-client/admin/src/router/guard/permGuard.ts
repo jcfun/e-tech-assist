@@ -11,7 +11,7 @@ const usePermGuard = () => {
     }
     const userStore = useUserStore();
     if (userStore.tokenExpireFlag()) {
-      return { path: '/login', query: { push: to.fullPath } };
+      return { path: '/login', query: { redirect: '/' }, replace: true };
     }
     const permStore = usePermStore();
     const emptyPermRoutesFlag = permStore.emptyPermRoutesFlag();

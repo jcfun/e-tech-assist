@@ -10,7 +10,7 @@ use tracing::info;
 
 use crate::{
     common::banner,
-    config::init::{self, APP_CFG},
+    config::init::{self, get_cfg},
     utils::log,
 };
 // #[macro_use]
@@ -46,7 +46,7 @@ fn main() {
     // 设置环境变量
     dotenv().ok();
     // 初始化日志配置（多线程暂时无法获取本地时间，因此要在tokio初始化之前完成初始化）
-    log::log_init();
+    let _guard = log::log_init();
     // banner
     banner::print_banner();
     let rt = tokio::runtime::Runtime::new().expect("异步运行时初始化失败");
@@ -54,14 +54,17 @@ fn main() {
         // 初始化配置
         init::app_init();
         // 设置socket地址
-        let socket =
-            SocketAddr::from_str(&format!("{}:{}", &APP_CFG.server.ip, &APP_CFG.server.port))
-                .expect("socket地址绑定失败");
+        let socket = SocketAddr::from_str(&format!(
+            "{}:{}",
+            &get_cfg().server.ip,
+            &get_cfg().server.port
+        ))
+        .expect("socket地址绑定失败");
         // 打印服务连接信息
         info!("listening on {} ...", socket);
         // 获取路由
         let routers = Router::new().nest(
-            &format!("/{}/{}", &APP_CFG.api.prefix, &APP_CFG.api.version),
+            &format!("/{}/{}", &get_cfg().api.prefix, &get_cfg().api.version),
             get_sys_routers(),
         );
         // 启动服务

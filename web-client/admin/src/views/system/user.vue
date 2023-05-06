@@ -13,7 +13,7 @@
                   <a-input v-model="item.value.value" :placeholder="item.placeholder" />
                 </template>
                 <template v-if="item.type === 'select'">
-                  <a-select v-model="item.value.value" style="width: 227.5px" :placeholder="item.placeholder" allow-clear>
+                  <a-select v-model="item.value.value" style="width: 193.5px" :placeholder="item.placeholder" allow-clear>
                     <a-option v-for="optionItem of item.optionItems" :key="optionItem.value" :value="optionItem.value">
                       {{ optionItem.label }}
                     </a-option>
@@ -101,14 +101,14 @@
           </template>
           <template v-if="item.type === 'select-multiple'">
             <a-select v-model="item.value.value" multiple :placeholder="item.placeholder">
-              <a-option v-for="opt of item.optionItems" :value="opt.value" :key="opt.value">
+              <a-option v-for="opt of (item.optionItems as any[])" :value="opt.value" :key="opt.value">
                 {{ opt.label }}
               </a-option>
             </a-select>
           </template>
           <template v-if="item.type === 'radio'">
             <a-radio-group v-model="item.value.value">
-              <a-radio v-for="opt of item.optionItems" :value="opt.value" :key="opt.value">
+              <a-radio v-for="opt of (item.optionItems as any[])" :value="opt.value" :key="opt.value">
                 {{ opt.label }}
               </a-radio>
             </a-radio-group>
@@ -223,7 +223,7 @@
     },
   ]);
   // 新增表单项
-  const addFormItem: any = [
+  const addFormItem: any[] = [
     {
       label: '账号',
       type: 'input',

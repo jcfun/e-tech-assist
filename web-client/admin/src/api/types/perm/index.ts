@@ -6,9 +6,9 @@ export interface PermVO {
   deleteFlag: string;
   description: string;
   disableFlag: string;
-  feCode: string;
-  feRoute: string;
-  feName: string;
+  routeCode: string;
+  route: string;
+  routeName: string;
   id: string;
   name: string;
   operateTime: string;
@@ -28,9 +28,9 @@ export interface CreatePermDTO {
   permType: string;
   disableFlag: string;
   apiPath: string;
-  feRoute: string;
-  feName: string;
-  feCode: string;
+  route: string;
+  routeName: string;
+  routeCode: string;
   resource: string;
   hiddenFlag: string;
   parentRoute: string;
@@ -44,9 +44,9 @@ export interface UpdatePermDTO {
   permType: string;
   disableFlag: string;
   apiPath: string;
-  feRoute: string;
-  feName: string;
-  feCode: string;
+  route: string;
+  routeName: string;
+  routeCode: string;
   resource: string;
   hiddenFlag: string;
   parentRoute: string;
