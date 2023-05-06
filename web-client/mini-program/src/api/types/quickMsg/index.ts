@@ -31,7 +31,7 @@ export interface QueryQuickMsgVO {
   recipientEmail: string;
   senderAvatar: string;
   recipientAvatar: string;
-  replyQuickMsg: Array<QueryQuickMsgVO>;
+  children: Array<QueryQuickMsgVO>;
 }
 
 export interface UpdateReadFlagDTO {

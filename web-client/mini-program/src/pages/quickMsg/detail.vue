@@ -4,7 +4,7 @@
     <span class="description">回复</span>
   </view>
   <view class="u-page">
-    <view class="msg-box" v-for="(item, index) in replyQuickMsg" :key="index">
+    <view class="msg-box" v-for="(item, index) in children" :key="index">
       <view class="msg-title">{{ item.title }}</view>
       <view class="msg-profile">
         <view class="avatar">
@@ -56,12 +56,12 @@
   // 获取回复的快捷消息并更新
   onShow(() => {
     quickMsg.getQuickMsgReplyList(quickMsgDetail.value.id).then(res => {
-      replyQuickMsg.value = quickMsgDetail.value.replyQuickMsg = res.data.data;
+      children.value = quickMsgDetail.value.children = res.data.data;
     });
   });
   const quickMsgDetailStore = useQuickMsgDetailStore();
   const quickMsgDetail = ref(quickMsgDetailStore.getQuickMsgDetail);
-  const replyQuickMsg = ref(quickMsgDetail.value.replyQuickMsg);
+  const children = ref(quickMsgDetail.value.children);
   const toReply = () => {
     uni.navigateTo({
       url: '/pages/quickMsg/send?prev=detail',
@@ -72,7 +72,7 @@
     console.log('update!');
     const ids: Array<string> = [];
     ids.push(quickMsgDetail.value.id);
-    quickMsgDetail.value.replyQuickMsg.forEach(item => {
+    quickMsgDetail.value.children.forEach(item => {
       ids.push(item.id);
     });
     console.log('ids ====> ', ids);
@@ -120,7 +120,7 @@
           width: 80rpx;
           height: 80rpx;
           display: flex;
-          justify-content: start;
+          justify-content: flex-start;
           align-items: center;
           :deep(.u-avatar) {
             background-color: #ffffff !important;
