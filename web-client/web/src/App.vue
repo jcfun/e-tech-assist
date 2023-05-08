@@ -1,15 +1,7 @@
 <template>
-  <div>
-
-  </div>
+  <router-view></router-view>
 </template>
 
-<script setup lang='ts'>
-import { ref, reactive, onMounted } from 'vue';
-import * as wasm from 'webassembly'
-wasm.greet("wasm")
+<script setup lang="ts"></script>
 
-
-</script>
-
-<style scoped lang='scss'></style>
+<style scoped lang="scss"></style>

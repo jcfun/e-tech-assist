@@ -69,3 +69,18 @@ object {
 /* .arco-trigger-popup{
   width: 150px;
 } */
+
+/*input输入框、select选择器宽度*/
+.arco-form-item-layout-inline .arco-input-wrapper,
+.arco-form-item-layout-inline .arco-select-view-single {
+  width: 200px;
+}
+/*dataPicker日期选择器宽度*/
+.arco-form-item-layout-inline .arco-picker-range {
+  width: 400px;
+}
+
+/*popover气泡卡片宽度*/
+.arco-trigger-popup {
+  max-width: 40%;
+}

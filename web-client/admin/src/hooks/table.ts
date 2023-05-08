@@ -55,7 +55,7 @@ export const useTable = function (): Table {
   const handleSuccess = (data: any): Promise<any> => {
     tableLoading.value = false;
     dataList.length = 0;
-    dataList.push(...data);
+    dataList.push(...(data ? data : []));
     return Promise.resolve(data);
   };
   return {
@@ -104,7 +104,7 @@ export const useTableIndexColumn = function () {
   return {
     title: '序号',
     key: 'index',
-    width: 60,
+    width: 70,
     dataIndex: 'index',
   };
 };

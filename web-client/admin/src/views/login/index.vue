@@ -31,10 +31,10 @@
             <a-image :preview="false" :src="captcha.img" height="35" width="90" alt="验证码加载失败" />
           </div>
         </div>
-        <div class="mt-20">
+        <div class="mt-10">
           <a-button type="primary" class="login" :loading="loading" @click="onLogin"> 登录 </a-button>
         </div>
-        <div class="my-width mt-6 mb-20">
+        <div class="my-width mt-6 mb-10">
           <div class="flex justify-between">
             <a-checkbox v-model="autoLogin">自动登录</a-checkbox>
             <a-link :underline="false" type="primary">忘记密码？</a-link>
@@ -184,7 +184,6 @@
         .title {
           font-size: 25px;
           font-weight: bold;
-          margin-bottom: 20px;
           text-align: center;
         }
         .login {

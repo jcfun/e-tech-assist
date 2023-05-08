@@ -49,3 +49,32 @@ export interface UserInfo {
   province: string;
   perms: Array<PermVO>;
 }
+
+export interface QueryLoginLogDTO {
+  createTimeStart: string;
+  createTimeEnd: string;
+  identity: string;
+  successFlag: string;
+  method: string;
+  pageNo: number;
+  pageSize: number;
+}
+
+export interface QueryLoginLogVO {
+  id: string;
+  operateTime: string;
+  operator: string;
+  operatorId: string;
+  createTime: string;
+  creator: string;
+  creatorId: string;
+  deleteFlag: string;
+  account: string;
+  successFlag: string;
+  description: string;
+  userAgent: string;
+  ip: string;
+  location: string;
+  mac: string;
+  method: string;
+}

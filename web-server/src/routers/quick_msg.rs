@@ -1,6 +1,6 @@
 use crate::handlers::quick_msg::*;
 use axum::{
-    routing::{get, post, put},
+    routing::{get, post, put, patch},
     Router,
 };
 
@@ -10,4 +10,6 @@ pub fn quick_msg_routes() -> Router {
         .route("/:a/:b", get(query_quick_msg_log))
         .route("/", put(update_read_flag))
         .route("/:a", get(query_by_reply_id))
+        .route("/:a/:b", patch(update_disable_flag))
+        .route("/fq", post(query_quick_msgs_fq))
 }

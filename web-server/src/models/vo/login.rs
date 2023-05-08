@@ -42,3 +42,25 @@ pub struct LoginVO {
     pub user_info: UserInfoVO,
     pub token: Token,
 }
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all(serialize = "camelCase"))]
+pub struct QueryLoginLogVO {
+    pub id: Option<String>,
+    pub operate_time: Option<DateTime>,
+    pub operator: Option<String>,
+    pub operator_id: Option<String>,
+    pub create_time: Option<DateTime>,
+    pub creator: Option<String>,
+    pub creator_id: Option<String>,
+    pub delete_flag: Option<String>,
+    pub identity: Option<String>,
+    pub account: Option<String>,
+    pub success_flag: Option<String>,
+    pub description: Option<String>,
+    pub user_agent: Option<String>,
+    pub ip: Option<String>,
+    pub location: Option<String>,
+    pub mac: Option<String>,
+    pub method: Option<String>,
+}

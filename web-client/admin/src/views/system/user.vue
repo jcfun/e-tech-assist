@@ -13,7 +13,7 @@
                   <a-input v-model="item.value.value" :placeholder="item.placeholder" />
                 </template>
                 <template v-if="item.type === 'select'">
-                  <a-select v-model="item.value.value" style="width: 193.5px" :placeholder="item.placeholder" allow-clear>
+                  <a-select v-model="item.value.value" :placeholder="item.placeholder" allow-clear>
                     <a-option v-for="optionItem of item.optionItems" :key="optionItem.value" :value="optionItem.value">
                       {{ optionItem.label }}
                     </a-option>
@@ -72,7 +72,7 @@
             <template v-else-if="item.key === 'actions'" #cell="{ record }">
               <a-space>
                 <a-button type="text" size="medium" @click="onUpdateItem(record)">编辑</a-button>
-                <a-button type="text" size="medium" @click="onUpdateStatus(record)">{{ record.disableFlag == '0' ? '禁用' : '启用' }}</a-button>
+                <a-button type="text" size="medium" @click="onUpdateDisableFlag(record)">{{ record.disableFlag == '0' ? '禁用' : '启用' }}</a-button>
                 <a-button type="text" size="medium" @click="onDeleteItem(record)">删除</a-button>
               </a-space>
             </template>
@@ -418,15 +418,6 @@
       },
     },
     {
-      key: 'createTime',
-      label: '创建日期',
-      type: 'range-picker',
-      value: ref<string[]>(),
-      reset: function () {
-        this.value.value = [];
-      },
-    },
-    {
       key: 'phoneNumber',
       label: '用户手机',
       value: ref(),
@@ -460,6 +451,15 @@
         this.value.value = undefined;
       },
     },
+    {
+      key: 'createTime',
+      label: '创建日期',
+      type: 'range-picker',
+      value: ref<string[]>(),
+      reset: function () {
+        this.value.value = [];
+      },
+    },
   ];
   // 变量区结束-----------------------------------
 
@@ -475,7 +475,7 @@
   const getUsers = (data: QueryUserDTO) => {
     user.getUsersFq(data).then(res => {
       table.handleSuccess(res?.data?.data);
-      pagination.setTotalSize(res?.data?.total);
+      pagination.setTotalSize(res?.data?.total ? res?.data?.total : 0);
     });
   };
   // 搜索
@@ -594,7 +594,7 @@
     });
   };
   // 启用禁用
-  const onUpdateStatus = (item: any) => {
+  const onUpdateDisableFlag = (item: any) => {
     let id = item.id;
     let disableFlag = item?.disableFlag == '0' ? '1' : '0';
     user.updateUserStatus(id, disableFlag).then(res => {

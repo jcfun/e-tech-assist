@@ -105,41 +105,12 @@ pub async fn update_perm(
     if dto.hidden_flag != '':
         ` and hidden_flag = #{dto.hidden_flag}`
     ` order by create_time desc`
-    ` limit ${page_size}`
-    ` offset ${offset}`"#
+    "#
 )]
 pub async fn query_perms_fq(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryPermDTO,
-    page_size: &u64,
-    offset: &u64,
 ) -> Result<Option<Vec<QueryPermVO>>, Error> {
-    impled!();
-}
-
-/// 分页查询角色信息数量
-#[py_sql(
-    r#"`select count(*)`
-    ` from t_perm`
-    ` where delete_flag = '0'` 
-    if dto.create_time_start != '':
-        ` and create_time >= #{dto.create_time_start}`
-    if dto.create_time_end != '':
-        ` and create_time <= #{dto.create_time_end}`
-    if dto.name != '':
-        ` and name like '%${dto.name}%'`
-    if dto.perm_type != '':
-        ` and perm_type = #{dto.perm_type}`
-    if dto.disable_flag != '':
-        ` and disable_flag = #{dto.disable_flag}`
-    if dto.hidden_flag != '':
-        ` and hidden_flag = #{dto.hidden_flag}`
-    "#
-)]
-pub async fn query_perms_fq_count(
-    tx: &mut RBatisTxExecutorGuard,
-    dto: &QueryPermDTO,
-) -> Result<u64, Error> {
     impled!();
 }
 
@@ -173,6 +144,8 @@ pub async fn update_disable_flag(
     r#"`select id, to_char(operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, operator, operator_id, to_char(create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, route, route_name, route_code, resource, hidden_flag, parent_route, description`
     ` from t_perm where delete_flag = '0'`"#
 )]
-pub async fn query_perms(db: &Rbatis) -> Result<Option<Vec<QueryPermVO>>, Error> {
+pub async fn query_perms(
+    tx: &mut RBatisTxExecutorGuard,
+) -> Result<Option<Vec<QueryPermVO>>, Error> {
     impled!();
 }

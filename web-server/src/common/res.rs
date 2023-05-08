@@ -8,15 +8,15 @@ use http_body::Full;
 use hyper::header;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
-use tracing::info;
+use tracing::{info, warn};
 
 // 分页查询返回结构体
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct PageRes<T> {
     pub data: Option<Vec<T>>,
-    pub total: Option<u64>,
-    pub total_page: Option<u64>,
-    pub current_page: Option<u64>,
+    pub total: Option<usize>,
+    pub total_page: Option<usize>,
+    pub current_page: Option<usize>,
 }
 
 impl<T> Default for PageRes<T> {
@@ -34,7 +34,7 @@ impl<T> PageRes<T>
 where
     T: Clone + Serialize,
 {
-    pub fn new(data: Vec<T>, total: u64, total_page: u64, current_page: u64) -> PageRes<T> {
+    pub fn new(data: Vec<T>, total: usize, total_page: usize, current_page: usize) -> PageRes<T> {
         PageRes {
             data: Some(data),
             total: Some(total),
@@ -48,13 +48,23 @@ where
         self
     }
 
-    pub fn total(mut self, total: u64) -> PageRes<T> {
+    pub fn total(mut self, total: usize) -> PageRes<T> {
         self.total = Some(total);
+        self
+    }
+
+    pub fn total_page(mut self, total_page: usize) -> PageRes<T> {
+        self.total_page = Some(total_page);
+        self
+    }
+
+    pub fn current_page(mut self, current_page: Option<usize>) -> PageRes<T> {
+        self.current_page = current_page;
         self
     }
 }
 impl PageRes<()> {
-    pub fn total_page(count: u64, page_size: u64) -> u64 {
+    pub fn get_total_page(count: usize, page_size: usize) -> usize {
         if count % page_size == 0 {
             count / page_size
         } else {
@@ -62,7 +72,7 @@ impl PageRes<()> {
         }
     }
 
-    pub fn offset(page_no: u64, page_size: u64) -> u64 {
+    pub fn get_offset(page_no: usize, page_size: usize) -> usize {
         (page_no - 1) * page_size
     }
 }
@@ -99,8 +109,11 @@ where
         //     .header(header::CONTENT_TYPE, "application/json")
         //     .body(Body::from(self.to_string()))
         //     .unwrap();
-        info!("响应体 ==============> {:?}", self);
-
+        if self.code.unwrap_or(500) == 200 {
+            info!("响应体 ==============> {:?}", self);
+        } else {
+            warn!("响应体 ==============> {:?}", self);
+        }
         Response::builder()
             .status(StatusCode::OK)
             .header(header::CONTENT_TYPE, "application/json")
@@ -171,7 +184,7 @@ where
 
     pub fn from_vec_not_found(data: T) -> Self {
         Self {
-            code: Some(StatusCode::NOT_FOUND.as_u16()),
+            code: Some(StatusCode::OK.as_u16()),
             msg: Some("没有符合条件的结果".into()),
             data: Some(data),
         }

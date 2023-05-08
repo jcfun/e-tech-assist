@@ -204,8 +204,8 @@ pub async fn delete_user_role(
 pub async fn query_users_fq(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryUserDTO,
-    page_size: &u64,
-    offset: &u64,
+    page_size: &usize,
+    offset: &usize,
 ) -> Result<Option<Vec<QueryUserVO>>, Error> {
     impled!();
 }
@@ -234,7 +234,7 @@ pub async fn query_users_fq(
 pub async fn query_users_fq_count(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryUserDTO,
-) -> Result<u64, Error> {
+) -> Result<usize, Error> {
     impled!();
 }
 
@@ -287,6 +287,22 @@ pub async fn query_roles_by_user_id(
     "#
 )]
 pub async fn query_user_by_identity(
+    tx: &mut RBatisTxExecutorGuard,
+    identity: &String,
+) -> Result<Option<QueryUserVO>, Error> {
+    impled!();
+}
+
+/// 根据用户标识模糊查询用户信息
+#[py_sql(
+    r#"`select a.id, to_char(a.operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, a.operator, a.operator_id, to_char(a.create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, a.creator, a.creator_id, a.delete_flag, a.account, a.disable_flag, a.detail_id, a.description, a.openid, b.phone_number, b.email, b.nickname, b.avatar_url, b.last_login_time, b.last_login_ip, b.gender, b.language, b.country, b.province, b.city`
+    ` from t_user a join t_user_detail b on a.detail_id = b.id`
+    ` where a.delete_flag = '0'` 
+    ` and b.delete_flag = '0'`
+    ` and (a.id like '%${identity}%' or a.account like '%${identity}%' or b.email like '%${identity}%' or b.phone_number like '%${identity}%')`
+    "#
+)]
+pub async fn query_user_by_identity_fq(
     tx: &mut RBatisTxExecutorGuard,
     identity: &String,
 ) -> Result<Option<QueryUserVO>, Error> {

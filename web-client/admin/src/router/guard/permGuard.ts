@@ -1,6 +1,7 @@
 import useUserStore from '@/store/modules/user';
 import router from '..';
 import usePermStore from '@/store/modules/perm';
+import { Message } from '@arco-design/web-vue';
 
 const whiteRoutes: Array<string> = ['/login', '/404', '403', '/500'];
 
@@ -11,6 +12,10 @@ const usePermGuard = () => {
     }
     const userStore = useUserStore();
     if (userStore.tokenExpireFlag()) {
+      Message.error({
+        content: '登录已过期',
+        duration: 2000,
+      });
       return { path: '/login', query: { redirect: '/' }, replace: true };
     }
     const permStore = usePermStore();

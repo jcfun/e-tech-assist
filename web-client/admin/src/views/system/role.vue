@@ -13,7 +13,7 @@
                   <a-input v-model="item.value.value" :placeholder="item.placeholder" />
                 </template>
                 <template v-if="item.type === 'select'">
-                  <a-select v-model="item.value.value" style="width: 193.5px" :placeholder="item.placeholder" allow-clear>
+                  <a-select v-model="item.value.value" :placeholder="item.placeholder" allow-clear>
                     <a-option v-for="optionItem of item.optionItems" :key="optionItem.value" :value="optionItem.value">
                       {{ optionItem.label }}
                     </a-option>
@@ -53,7 +53,7 @@
             <template v-else-if="item.key === 'actions'" #cell="{ record }">
               <a-space>
                 <a-button type="text" size="medium" @click="onUpdateItem(record)">编辑</a-button>
-                <a-button type="text" size="medium" @click="onUpdateStatus(record)">{{ record.disableFlag == '0' ? '禁用' : '启用' }}</a-button>
+                <a-button type="text" size="medium" @click="onUpdateDisableFlag(record)">{{ record.disableFlag == '0' ? '禁用' : '启用' }}</a-button>
                 <a-button type="text" size="medium" @click="onDeleteItem(record)">删除</a-button>
               </a-space>
               <a-button type="text" size="medium" @click="onShowMenu(record)"> 角色权限 </a-button>
@@ -248,15 +248,6 @@
       },
     },
     {
-      key: 'createTime',
-      label: '创建日期',
-      type: 'range-picker',
-      value: ref<string[]>(),
-      reset: function () {
-        this.value.value = [];
-      },
-    },
-    {
       key: 'disableFlag',
       label: '是否启用',
       type: 'select',
@@ -276,6 +267,15 @@
         this.value.value = '';
       },
     },
+    {
+      key: 'createTime',
+      label: '创建日期',
+      type: 'range-picker',
+      value: ref<string[]>(),
+      reset: function () {
+        this.value.value = [];
+      },
+    },
   ];
   // 变量区结束-----------------------------------
 
@@ -291,7 +291,7 @@
   const getRoles = (data: QueryRoleDTO) => {
     role.getRolesFq(data).then(res => {
       table.handleSuccess(res?.data?.data);
-      pagination.setTotalSize(res?.data?.total);
+      pagination.setTotalSize(res?.data?.total ? res?.data?.total : 0);
     });
   };
   // 搜索
@@ -426,10 +426,10 @@
     });
   };
   // 启用禁用
-  const onUpdateStatus = (item: any) => {
+  const onUpdateDisableFlag = (item: any) => {
     let id = item.id;
     let disableFlag = item?.disableFlag == '0' ? '1' : '0';
-    role.updateRoleStatus(id, disableFlag).then(res => {
+    role.updateDisableFlag(id, disableFlag).then(res => {
       if (res.code == 200) {
         Message.success(res.msg);
         doRefresh();

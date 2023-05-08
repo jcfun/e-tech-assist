@@ -127,8 +127,8 @@ pub struct QueryPermDTO {
     pub hidden_flag: Option<String>,
 
     #[validate(range(min = 1, message = "页码最小为1"))]
-    pub page_no: Option<u64>,
+    pub page_no: Option<usize>,
 
     #[validate(range(min = 1, message = "分页最小为1"))]
-    pub page_size: Option<u64>,
+    pub page_size: Option<usize>,
 }

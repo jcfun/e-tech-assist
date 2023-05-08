@@ -6,6 +6,7 @@ use crate::middleware::{
 use crate::utils::jwt::Claims;
 use axum::error_handling::HandleErrorLayer;
 use axum::{middleware, Router};
+use axum_client_ip::SecureClientIpSource;
 use std::time::Duration;
 use tower::ServiceBuilder;
 use tower_http::{catch_panic::CatchPanicLayer, trace::TraceLayer};
@@ -39,6 +40,8 @@ pub fn get_sys_routers() -> Router {
                 .layer(HandleErrorLayer::new(handle_timeout_error))
                 .timeout(Duration::from_secs(600)),
         )
+        // ip
+        .layer(SecureClientIpSource::ConnectInfo.into_extension())
         // http info
         .layer(TraceLayer::new_for_http())
         // filter

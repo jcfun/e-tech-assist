@@ -12,7 +12,7 @@ pub struct CreateUserDTO {
 
     #[validate(
         required(message = "账号不可为空"),
-        length(min = 1, max = 18, message = "账号格式错误")
+        length(min = 1, max = 50, message = "账号格式错误")
     )]
     pub account: Option<String>,
 
@@ -41,7 +41,7 @@ pub struct CreateUserDTO {
     )]
     pub phone_number: Option<String>,
 
-    #[validate(length(min = 1, max = 18, message = "昵称格式错误"))]
+    #[validate(length(min = 1, max = 50, message = "昵称格式错误"))]
     pub nickname: Option<String>,
 }
 
@@ -63,13 +63,13 @@ pub struct UpdateUserDTO {
     #[validate(email(message = "邮箱格式错误"))]
     pub email: Option<String>,
 
-    #[validate(length(min = 1, max = 18, message = "昵称格式错误"))]
+    #[validate(length(min = 1, max = 50, message = "昵称格式错误"))]
     pub nickname: Option<String>,
     pub gender: Option<String>,
     pub country: Option<String>,
     pub province: Option<String>,
     pub city: Option<String>,
-    #[validate(length(min = 1, max = 50, message = "角色描述格式错误"))]
+    #[validate(length(min = 1, max = 100, message = "角色描述格式错误"))]
     pub description: Option<String>,
 }
 
@@ -80,7 +80,7 @@ pub struct UpdateUserWxDTO {
     #[serde(flatten)]
     pub base_dto: BaseDTO,
 
-    #[validate(length(min = 1, max = 18, message = "昵称格式错误"))]
+    #[validate(length(min = 1, max = 50, message = "昵称格式错误"))]
     pub nickname: Option<String>,
 
     pub email: Option<String>,
@@ -103,7 +103,7 @@ pub struct QueryUserDTO {
     #[validate(length(equal = 18, message = "id格式错误"))]
     pub id: Option<String>,
 
-    #[validate(length(min = 1, max = 18, message = "昵称格式错误"))]
+    #[validate(length(min = 1, max = 50, message = "昵称格式错误"))]
     pub nickname: Option<String>,
 
     pub email: Option<String>,
@@ -118,8 +118,8 @@ pub struct QueryUserDTO {
     pub disable_flag: Option<String>,
 
     #[validate(range(min = 1, message = "页码最小为1"))]
-    pub page_no: Option<u64>,
+    pub page_no: Option<usize>,
 
     #[validate(range(min = 1, message = "分页最小为1"))]
-    pub page_size: Option<u64>,
+    pub page_size: Option<usize>,
 }

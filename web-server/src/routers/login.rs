@@ -1,4 +1,4 @@
-use crate::handlers::login::{captcha, login, register, reset_pwd, login_wxapp, wxapp_register};
+use crate::handlers::login::{captcha, login, register, reset_pwd, login_wxapp, wxapp_register, query_login_log_fq};
 use axum::{
     routing::{get, patch, post},
     Router,
@@ -11,4 +11,5 @@ pub fn login_routes() -> Router {
         .route("/reset", patch(reset_pwd))
         .route("/wxapp", post(login_wxapp))
         .route("/wr", post(wxapp_register))
+        .route("/log/fq", post(query_login_log_fq))
 }

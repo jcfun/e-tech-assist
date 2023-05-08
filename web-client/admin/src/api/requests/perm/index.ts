@@ -34,7 +34,7 @@ class Perm {
     });
   };
 
-  public updatePermStatus = (id: string, disableFlag = '0'): Promise<Res<null>> => {
+  public updateDisableFlag = (id: string, disableFlag = '0'): Promise<Res<null>> => {
     return http.request({
       url: `/perm/${id}/${disableFlag}`,
       method: Method.PATCH,
