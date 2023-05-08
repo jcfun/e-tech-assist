@@ -78,7 +78,7 @@
       recipientIdentity: recipient.value.identity == '' ? recipientIdentity.value : recipient.value.identity,
       title: title.value,
       content: content.value,
-      sendType: '1',
+      sendMethod: '1',
       msgType: prev == 'detail' ? '1' : '0',
       replyId: prev == 'detail' ? quickMsgDetail.id : null,
     } as CreateQuickMsgDTO;

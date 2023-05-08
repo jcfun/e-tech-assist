@@ -9,13 +9,7 @@
           <template #icon>
             <u-badge
               :isDot="true"
-              :show="
-                (item.readFlag == '0' ||
-                  item.replyQuickMsg.filter(item => {
-                    return item.readFlag != '1';
-                  }).length != 0) &&
-                item.senderEmail != user.email
-              "
+              :show="(item.readFlag == '0' || item.children.filter(item => item.readFlag != '1').length != 0) && item.senderEmail != user.email"
               type="error"
             ></u-badge>
             <u-avatar shape="circle" size="100" :src="item.senderAvatar" customStyle="margin: -3px 5px -3px 0"></u-avatar>

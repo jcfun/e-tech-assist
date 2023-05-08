@@ -3,7 +3,7 @@ export interface CreateQuickMsgDTO {
   recipientIdentity: string;
   title: string;
   content: string;
-  sendType: string;
+  sendMethod: string;
   msgType: string;
   replyId: string | null;
 }
@@ -22,7 +22,7 @@ export interface QueryQuickMsgVO {
   title: string;
   content: string;
   failFlag: string;
-  sendType: string;
+  sendMethod: string;
   description: string;
   msgType: string;
   replyId: string;
@@ -31,7 +31,7 @@ export interface QueryQuickMsgVO {
   recipientEmail: string;
   senderAvatar: string;
   recipientAvatar: string;
-  replyQuickMsg: Array<QueryQuickMsgVO>;
+  children: Array<QueryQuickMsgVO>;
 }
 
 export interface UpdateReadFlagDTO {
