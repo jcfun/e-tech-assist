@@ -56,7 +56,7 @@
       }
       if (perv.value == 'send') {
         uni.reLaunch({
-          url: '/pages/quickMsg/send',
+          url: '/pages/quick-msg/send',
         });
       } else {
         uni.reLaunch({
@@ -112,7 +112,7 @@
             user.setUserInfo(res.data.userInfo);
             if (perv.value == 'send') {
               uni.reLaunch({
-                url: '/pages/quickMsg/send',
+                url: '/pages/quick-msg/send',
               });
             } else {
               uni.reLaunch({

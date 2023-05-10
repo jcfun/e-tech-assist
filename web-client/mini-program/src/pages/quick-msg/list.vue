@@ -35,8 +35,8 @@
 </template>
 
 <script setup lang="ts">
-  import quickMsg from '@/api/modules/quickMsg';
-  import type { QueryQuickMsgVO } from '@/api/types/quickMsg';
+  import quickMsg from '@/api/modules/quick-msg';
+  import type { QueryQuickMsgVO } from '@/api/types/quick-msg';
   import { onShow } from '@dcloudio/uni-app';
   import { ref } from 'vue';
   import { useQuickMsgDetailStore } from '@/store/quick-msg';
@@ -52,7 +52,7 @@
   };
   const toNew = () => {
     uni.navigateTo({
-      url: '/pages/quickMsg/send?prev=list',
+      url: '/pages/quick-msg/send?prev=list',
     });
   };
   const loadmore = () => {
@@ -79,7 +79,7 @@
   const toDetail = (item: QueryQuickMsgVO) => {
     useQuickMsgDetailStore().setQuickMsgDetail(item);
     uni.navigateTo({
-      url: '/pages/quickMsg/detail',
+      url: '/pages/quick-msg/detail',
     });
   };
   onShow(() => {

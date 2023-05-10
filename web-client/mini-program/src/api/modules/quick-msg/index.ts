@@ -1,11 +1,11 @@
 import request from '../..';
 import { Method, type PageRes, type Res } from '@/api/types/common';
-import type { CreateQuickMsgDTO, QueryQuickMsgVO, UpdateReadFlagDTO } from '@/api/types/quickMsg';
+import type { CreateQuickMsgDTO, QueryQuickMsgVO, UpdateReadFlagDTO } from '@/api/types/quick-msg';
 
 class QuickMsg {
   public sendQuickMsg = (data: CreateQuickMsgDTO): Promise<Res<null>> => {
     return request.request({
-      url: '/quickMsg',
+      url: '/quick-msg',
       method: Method.POST,
       data,
     });
@@ -13,7 +13,7 @@ class QuickMsg {
 
   public getQuickMsgList = (pageNo: number, pageSize: number): Promise<Res<PageRes<QueryQuickMsgVO>>> => {
     return request.request({
-      url: `/quickMsg/${pageNo}/${pageSize}`,
+      url: `/quick-msg/${pageNo}/${pageSize}`,
       method: Method.GET,
     });
   };
@@ -21,7 +21,7 @@ class QuickMsg {
   public updateReadFlag(data: UpdateReadFlagDTO): Promise<Res<number>> {
     console.log('data ===> ', data);
     return request.request({
-      url: `/quickMsg`,
+      url: `/quick-msg`,
       method: Method.PUT,
       data,
     });
@@ -29,7 +29,7 @@ class QuickMsg {
 
   public getQuickMsgReplyList(id: string): Promise<Res<PageRes<QueryQuickMsgVO>>> {
     return request.request({
-      url: `/quickMsg/${id}`,
+      url: `/quick-msg/${id}`,
       method: Method.GET,
     });
   }

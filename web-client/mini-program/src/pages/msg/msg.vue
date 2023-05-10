@@ -32,7 +32,7 @@
 <script setup lang="ts">
   const toList = () => {
     uni.navigateTo({
-      url: '/pages/quickMsg/list',
+      url: '/pages/quick-msg/list',
     });
   };
 </script>

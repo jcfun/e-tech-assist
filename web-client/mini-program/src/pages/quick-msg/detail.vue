@@ -46,8 +46,8 @@
 </template>
 
 <script setup lang="ts">
-  import quickMsg from '@/api/modules/quickMsg';
-  import type { UpdateReadFlagDTO } from '@/api/types/quickMsg';
+  import quickMsg from '@/api/modules/quick-msg';
+  import type { UpdateReadFlagDTO } from '@/api/types/quick-msg';
   import { useQuickMsgDetailStore } from '@/store/quick-msg';
   import { onShow } from '@dcloudio/uni-app';
   import { ref } from 'vue';
@@ -64,7 +64,7 @@
   const children = ref(quickMsgDetail.value.children);
   const toReply = () => {
     uni.navigateTo({
-      url: '/pages/quickMsg/send?prev=detail',
+      url: '/pages/quick-msg/send?prev=detail',
     });
   };
   // 如果当前用户不是发送者，则将消息标记为已读

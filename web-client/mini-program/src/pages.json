@@ -34,19 +34,19 @@
       }
     },
     {
-      "path": "pages/quickMsg/send",
+      "path": "pages/quick-msg/send",
       "style": {
         "navigationBarTitleText": "快捷消息"
       }
     },
     {
-      "path": "pages/quickMsg/list",
+      "path": "pages/quick-msg/list",
       "style": {
         "navigationBarTitleText": "消息列表"
       }
     },
     {
-      "path": "pages/quickMsg/detail",
+      "path": "pages/quick-msg/detail",
       "style": {
         "navigationBarTitleText": "消息详情"
       }
