@@ -1,6 +1,6 @@
 use fast_qr::qr::QRBuilder;
 use log::info;
-
+#[allow(dead_code)]
 pub async fn generate_qrcode(_content: &str) -> () {
     let qrcode = QRBuilder::new("test").build().unwrap();
     info!("{:?}", qrcode.data);

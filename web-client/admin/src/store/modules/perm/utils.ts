@@ -149,7 +149,7 @@ export function mapTwoLevelRouter(srcRoutes: Array<RouteRecordRaw>) {
 
 export function findRootPathRoute(routes: RouteRecordRaw[]) {
   if (!routes || routes.length === 0) {
-    Message.error('系统加载菜单发生异常，请打开控制台查看具体原因');
+    Message.error('系统路由加载异常');
     console.error(
       '系统加载菜单发生异常，有可能是在加载菜单的时候返回了空数据或者接口发生异常，如果您采用前端加载菜单的方式请确保/src/router/routes/default-route.ts文件里面有配置路由',
     );

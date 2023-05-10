@@ -18,6 +18,7 @@ pub async fn filter(req: Request<Body>, next: Next<Body>) -> Result<Response, Re
     };
     info!("请求体 ===========> {:?}", body_string);
     let req = Request::from_parts(parts, Body::from(body_bytes));
+
     // 获取响应
     let resp = next.run(req).await;
     // 如果为成功响应，则直接返回
@@ -31,7 +32,6 @@ pub async fn filter(req: Request<Body>, next: Next<Body>) -> Result<Response, Re
             body_string = "操作失败".to_string()
         }
         let resp = Res::<()>::from_fail(status, &body_string);
-        // warn!("响应体 ===========> {:?}", resp);
         Err(resp)
     }
 }

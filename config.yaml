@@ -4,7 +4,7 @@ database:
 
 jwt:
   secret: secret # jwt密钥
-  exp: 2592000 # 30*24*60*60 30天
+  exp: 4363200 # 30*24*60*60 30天
 
 server:
   ip: "[::]" # 监听地址

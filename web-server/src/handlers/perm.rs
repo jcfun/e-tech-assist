@@ -111,9 +111,7 @@ pub async fn query_perms_fq(
     });
     let page_no = payload.page_no.map(|v| v).unwrap_or(1);
     let page_size = payload.page_size.map(|v| v).unwrap_or(10);
-    let offset = PageRes::offset(page_no, page_size);
-    let res = perm::query_perms_fq(&mut tx, &payload, &page_size, &offset).await?;
-    let count = perm::query_perms_fq_count(&mut tx, &payload).await?;
+    let res = perm::query_perms_fq(&mut tx, &payload).await?;
     if let Some(vos) = res {
         // 构建树形结构
         let mut parents = vos
@@ -130,17 +128,28 @@ pub async fn query_perms_fq(
             .map(|vo| vo.clone())
             .collect();
         get_children(&mut parents, &vos);
+        // 获取切片索引
+        let start = (page_no * page_size - page_size) as usize;
+        let end = if parents.len() < page_size {
+            parents.len()
+        } else {
+            page_no * page_size
+        } as usize;
+        // 切片
+        let res = (&parents[start..end]).to_vec();
         // 构建返回值
         let page_res = PageRes::new(
-            parents,
-            count,
-            PageRes::total_page(count, page_size),
+            res,
+            parents.len() as usize,
+            PageRes::get_total_page(parents.len(), page_size),
             page_no,
         );
         tx.commit().await.unwrap();
         return Ok(Res::from_success("查询成功", page_res));
     } else {
-        Ok(Res::from_vec_not_found(PageRes::default()))
+        Ok(Res::from_vec_not_found(
+            PageRes::default().current_page(payload.page_no),
+        ))
     }
 }
 
@@ -148,14 +157,14 @@ pub async fn query_perms_fq(
 pub async fn update_disable_flag(
     claims: Claims,
     Path((id, disable_flag)): Path<(String, String)>,
-) -> Result<Res<u64>, MyError> {
+) -> Result<Res<usize>, MyError> {
     let db = &get_ctx().db;
     let mut dto = BaseDTO::default();
     fields::fill_fields(&mut dto, &claims, false);
     dto.id = Some(id);
     let count = perm::update_disable_flag(db, &dto, &disable_flag)
         .await?
-        .rows_affected;
+        .rows_affected as usize;
     if count == 0 {
         return Ok(Res::from_fail(
             StatusCode::INTERNAL_SERVER_ERROR,
@@ -181,7 +190,15 @@ pub fn get_children(parents: &mut Vec<QueryPermVO>, vos: &Vec<QueryPermVO>) {
 /// 全量查询权限信息
 pub async fn query_perms() -> Result<Res<PageRes<QueryPermVO>>, MyError> {
     let db = &get_ctx().db;
-    let res = perm::query_perms(&db).await?;
+    let tx = db.acquire_begin().await.unwrap();
+    // 异步回滚回调
+    let mut tx = tx.defer_async(|mut tx| async move {
+        if !tx.done {
+            tx.rollback().await.unwrap();
+            tracing::error!("An error occurred, rollback!");
+        }
+    });
+    let res = perm::query_perms(&mut tx).await?;
     if let Some(vos) = res {
         // 构建树形结构
         let mut parents = vos
@@ -190,7 +207,8 @@ pub async fn query_perms() -> Result<Res<PageRes<QueryPermVO>>, MyError> {
             .map(|vo| vo.clone())
             .collect();
         get_children(&mut parents, &vos);
-        let total = vos.len() as u64;
+        let total = vos.len() as usize;
+        tx.commit().await.unwrap();
         Ok(Res::from_success(
             "查询成功",
             PageRes::new(parents, total, 0, 0),

@@ -47,8 +47,6 @@ fn main() {
     dotenv().ok();
     // 初始化日志配置（多线程暂时无法获取本地时间，因此要在tokio初始化之前完成初始化）
     let _guard = log::log_init();
-    // banner
-    banner::print_banner();
     let rt = tokio::runtime::Runtime::new().expect("异步运行时初始化失败");
     rt.block_on(async {
         // 初始化配置
@@ -62,6 +60,8 @@ fn main() {
         .expect("socket地址绑定失败");
         // 打印服务连接信息
         info!("listening on {} ...", socket);
+        // banner
+        banner::print_banner();
         // 获取路由
         let routers = Router::new().nest(
             &format!("/{}/{}", &get_cfg().api.prefix, &get_cfg().api.version),
@@ -69,7 +69,7 @@ fn main() {
         );
         // 启动服务
         axum::Server::bind(&socket)
-            .serve(routers.into_make_service())
+            .serve(routers.into_make_service_with_connect_info::<SocketAddr>())
             .await
             .unwrap();
     });

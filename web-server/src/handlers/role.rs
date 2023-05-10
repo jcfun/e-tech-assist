@@ -157,7 +157,7 @@ pub async fn query_roles_fq(
     });
     let page_no = payload.page_no.map(|v| v).unwrap_or(1);
     let page_size = payload.page_size.map(|v| v).unwrap_or(10);
-    let offset = PageRes::offset(page_no, page_size);
+    let offset = PageRes::get_offset(page_no, page_size);
     let res = role::query_roles_fq(&mut tx, &payload, &page_size, &offset).await?;
     let count = role::query_roles_fq_count(&mut tx, &payload).await?;
     if let Some(mut vos) = res {
@@ -167,7 +167,7 @@ pub async fn query_roles_fq(
                 .await
                 .unwrap_or(Some(vec![]));
         }
-        let page_res = PageRes::new(vos, count, PageRes::total_page(count, page_size), page_no);
+        let page_res = PageRes::new(vos, count, PageRes::get_total_page(count, page_size), page_no);
         tx.commit().await.unwrap();
         return Ok(Res::from_success("查询成功", page_res));
     } else {
@@ -179,14 +179,14 @@ pub async fn query_roles_fq(
 pub async fn update_disable_flag(
     claims: Claims,
     Path((id, disable_flag)): Path<(String, String)>,
-) -> Result<Res<u64>, MyError> {
+) -> Result<Res<usize>, MyError> {
     let db = &get_ctx().db;
     let mut dto = BaseDTO::default();
     fields::fill_fields(&mut dto, &claims, false);
     dto.id = Some(id);
     let count = role::update_disable_flag(db, &dto, &disable_flag)
         .await?
-        .rows_affected;
+        .rows_affected as usize;
     if count == 0 {
         return Ok(Res::from_fail(
             StatusCode::INTERNAL_SERVER_ERROR,
@@ -201,7 +201,7 @@ pub async fn query_roles() -> Result<Res<PageRes<QueryRoleVO>>, MyError> {
     let db = &get_ctx().db;
     let res = role::query_roles(&db).await?;
     if let Some(vos) = res {
-        let total = vos.len() as u64;
+        let total = vos.len() as usize;
         Ok(Res::from_success(
             "查询成功",
             PageRes::new(vos, total, 0, 0),

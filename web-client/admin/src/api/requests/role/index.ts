@@ -42,7 +42,7 @@ class Role {
     });
   };
 
-  public updateRoleStatus = (id: string, disableFlag = '0'): Promise<Res<null>> => {
+  public updateDisableFlag = (id: string, disableFlag = '0'): Promise<Res<null>> => {
     return http.request({
       url: `/role/${id}/${disableFlag}`,
       method: Method.PATCH,

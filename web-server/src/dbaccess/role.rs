@@ -127,8 +127,8 @@ pub async fn delete_role_perm(
 pub async fn query_roles_fq(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryRoleDTO,
-    page_size: &u64,
-    offset: &u64,
+    page_size: &usize,
+    offset: &usize,
 ) -> Result<Option<Vec<QueryRoleVO>>, Error> {
     impled!();
 }
@@ -151,7 +151,7 @@ pub async fn query_roles_fq(
 pub async fn query_roles_fq_count(
     tx: &mut RBatisTxExecutorGuard,
     dto: &QueryRoleDTO,
-) -> Result<u64, Error> {
+) -> Result<usize, Error> {
     impled!();
 }
 

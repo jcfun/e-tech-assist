@@ -119,7 +119,10 @@ where
                 let token = token.replace("Bearer ", "");
                 let token = decode_jwt(token.into()).await;
                 token
-                    .map(|claims| Ok(claims))
+                    .map(|claims| {
+                        parts.extensions.insert(claims.clone());
+                        Ok(claims)
+                    })
                     .unwrap_or_else(|_| Err(AuthError::InvalidToken))
             }
             None => Err(AuthError::MissingCredentials),

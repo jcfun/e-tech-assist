@@ -27,7 +27,7 @@ use hyper::StatusCode;
 pub async fn update_user_wx(
     claims: Claims,
     Json(mut payload): Json<UpdateUserWxDTO>,
-) -> Result<Res<u64>, MyError> {
+) -> Result<Res<usize>, MyError> {
     fill_fields(&mut payload.base_dto, &claims, false);
     payload.base_dto.id = claims.id;
     param_validate(&payload)?;
@@ -42,7 +42,7 @@ pub async fn update_user_wx(
     let res = user::update_user_detail(&mut tx, &payload).await?;
     if res.rows_affected != 0 {
         tx.commit().await.unwrap();
-        return Ok(Res::from_success("保存成功", res.rows_affected));
+        return Ok(Res::from_success("保存成功", res.rows_affected as usize));
     } else {
         Ok(Res::from_fail_msg("保存失败"))
     }
@@ -218,7 +218,7 @@ pub async fn query_users_fq(
     });
     let page_no = payload.page_no.map(|v| v).unwrap_or(1);
     let page_size = payload.page_size.map(|v| v).unwrap_or(10);
-    let offset = PageRes::offset(page_no, page_size);
+    let offset = PageRes::get_offset(page_no, page_size);
     let res = user::query_users_fq(&mut tx, &payload, &page_size, &offset).await?;
     let count = user::query_users_fq_count(&mut tx, &payload).await?;
     if let Some(mut vos) = res {
@@ -228,7 +228,7 @@ pub async fn query_users_fq(
                 .await
                 .unwrap_or(Some(vec![]));
         }
-        let page_res = PageRes::new(vos, count, PageRes::total_page(count, page_size), page_no);
+        let page_res = PageRes::new(vos, count, PageRes::get_total_page(count, page_size), page_no);
         tx.commit().await.unwrap();
         return Ok(Res::from_success("查询成功", page_res));
     } else {
@@ -240,14 +240,14 @@ pub async fn query_users_fq(
 pub async fn update_disable_flag(
     claims: Claims,
     Path((id, disable_flag)): Path<(String, String)>,
-) -> Result<Res<u64>, MyError> {
+) -> Result<Res<usize>, MyError> {
     let db = &get_ctx().db;
     let mut dto = BaseDTO::default();
     fill_fields(&mut dto, &claims, false);
     dto.id = Some(id);
     let count = user::update_disable_flag(db, &dto, &disable_flag)
         .await?
-        .rows_affected;
+        .rows_affected as usize;
     if count == 0 {
         return Ok(Res::from_fail(
             StatusCode::INTERNAL_SERVER_ERROR,

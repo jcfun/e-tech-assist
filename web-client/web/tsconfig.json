@@ -1,17 +1,16 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "bootstrap.js"],
+  "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
+    // "verbatimModuleSyntax": true,
+    "ignoreDeprecations": "5.0",
+    "sourceMap": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "allowJs": true
+    "lib": ["esnext", "dom"]
+    // "types": ["@dcloudio/types", "@ttou/uview-typings/v3.d.ts", "@ttou/uview-typings/refs"]
   },
-
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/**/*.ts"],
+  "forceConsistentCasingInFileNames": false // 是否强制代码中使用的模块文件名和文件系统中的文件名保持大小写一致
 }

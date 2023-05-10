@@ -1,3 +1,4 @@
+use rbatis::rbdc::datetime::DateTime;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
@@ -9,7 +10,7 @@ use super::base::BaseDTO;
 pub struct LoginDTO {
     #[validate(
         required(message = "用户标识不可为空"),
-        length(min = 5, max = 18, message = "用户标识格式错误")
+        length(min = 1, max = 50, message = "用户标识格式错误")
     )]
     pub identity: Option<String>,
     #[validate(
@@ -29,7 +30,7 @@ pub struct LoginDTO {
     )]
     pub uuid: Option<String>,
 
-    // 登录方式(网站、后台、小程序)
+    // 登录方式(前台、后台、小程序)
     #[serde(skip_deserializing)]
     pub method: Option<String>,
 }
@@ -42,8 +43,8 @@ pub struct RegisterDTO {
     pub base_dto: BaseDTO,
 
     #[validate(
-        required(message = "用户标识不可为空"),
-        length(min = 5, max = 18, message = "用户标识格式错误")
+        required(message = "用户账号不可为空"),
+        length(min = 1, max = 50, message = "用户账号格式错误")
     )]
     pub account: Option<String>,
 
@@ -69,7 +70,7 @@ pub struct RegisterDTO {
     pub uuid: Option<String>,
 
     #[serde(skip_deserializing)]
-    #[validate(length(min = 1, max = 18, message = "昵称格式错误"))]
+    #[validate(length(min = 1, max = 50, message = "昵称格式错误"))]
     pub nickname: Option<String>,
 
     #[serde(skip_deserializing)]
@@ -89,7 +90,7 @@ pub struct LoginLogDTO {
 
     pub identity: Option<String>,
 
-    pub status: Option<String>,
+    pub success_flag: Option<String>,
 
     pub description: Option<String>,
 
@@ -97,7 +98,7 @@ pub struct LoginLogDTO {
 
     pub ip: Option<String>,
 
-    pub ip_addr: Option<String>,
+    pub location: Option<String>,
 
     pub mac: Option<String>,
     pub method: Option<String>,
@@ -113,7 +114,7 @@ pub struct ResetPwdDTO {
     /// 用户标识(账号、手机号、邮箱)
     #[validate(
         required(message = "用户标识不可为空"),
-        length(min = 5, max = 18, message = "用户标识格式错误")
+        length(min = 1, max = 50, message = "用户标识格式错误")
     )]
     pub identity: Option<String>,
 
@@ -123,7 +124,10 @@ pub struct ResetPwdDTO {
     )]
     pub new_password: Option<String>,
 
-    #[validate(required(message = "电话号不可为空"))]
+    #[validate(
+        required(message = "电话号不可为空"),
+        length(equal = 11, message = "电话号格式错误")
+    )]
     pub phone_number: Option<String>,
 
     #[validate(
@@ -162,4 +166,40 @@ pub struct AuthRegisterDTO {
     pub encrypted_data: Option<String>,
     #[validate(required(message = "电话号不可为空"))]
     pub phone_number: Option<String>,
+}
+
+/// 多条件查询登录日志dto
+#[derive(Debug, Deserialize, Serialize, Validate, Clone)]
+#[serde(rename_all(deserialize = "camelCase"))]
+pub struct QueryLoginLogDTO {
+    pub create_time_start: Option<DateTime>,
+
+    pub create_time_end: Option<DateTime>,
+
+    #[validate(length(min = 1, max = 50, message = "登录用户格式错误"))]
+    pub identity: Option<String>,
+
+    #[validate(length(equal = 1, message = "是否成功格式错误"))]
+    pub success_flag: Option<String>,
+
+    #[validate(length(equal = 1, message = "登录方式格式错误"))]
+    pub method: Option<String>,
+
+    #[validate(range(min = 1, message = "页码最小为1"))]
+    pub page_no: Option<usize>,
+
+    #[validate(range(min = 1, message = "分页最小为1"))]
+    pub page_size: Option<usize>,
+
+    #[serde(skip_deserializing)]
+    pub account: Option<String>,
+
+    #[serde(skip_deserializing)]
+    pub phone_number: Option<String>,
+
+    #[serde(skip_deserializing)]
+    pub email: Option<String>,
+
+    #[serde(skip_deserializing)]
+    pub openid: Option<String>,
 }

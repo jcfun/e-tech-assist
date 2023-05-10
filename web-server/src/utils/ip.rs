@@ -14,8 +14,8 @@ fn get_name(names: Option<BTreeMap<&str, &str>>) -> String {
         .unwrap_or_default()
 }
 
-pub async fn get_ip_addr(ip: &str) -> Result<String, MyError> {
-    let ip_addr = if ip.starts_with("192") || ip.starts_with("172") || ip.starts_with("10") {
+pub async fn get_location(ip: &str) -> Result<String, MyError> {
+    let location = if ip.starts_with("192") || ip.starts_with("172") || ip.starts_with("10") {
         "局域网".into()
     } else if ip.starts_with("127") || ip.starts_with("0") || ip.starts_with("::") {
         "本机".into()
@@ -41,6 +41,6 @@ pub async fn get_ip_addr(ip: &str) -> Result<String, MyError> {
 
         format!("{} {} {} {}", continent, country, subdivisions, city)
     };
-    info!("ip_addr =========> {:?}", ip_addr);
-    Ok(ip_addr)
+    info!("location =========> {:?}", location);
+    Ok(location)
 }

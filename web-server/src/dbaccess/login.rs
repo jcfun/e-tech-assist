@@ -7,9 +7,9 @@ use rbatis::{
 use rbs::to_value;
 
 use crate::models::{
-    dto::login::{LoginLogDTO, RegisterDTO, ResetPwdDTO},
+    dto::login::{LoginLogDTO, RegisterDTO, ResetPwdDTO, QueryLoginLogDTO},
     entity::user_detail::TUserDetail,
-    vo::login::UserInfoVO,
+    vo::login::{UserInfoVO, QueryLoginLogVO},
 };
 
 /// 根据用户标识密码查询用户信息
@@ -56,10 +56,10 @@ pub async fn create_user_detail(
 
 /// 新增登录日志
 #[py_sql(
-    r#"`insert into t_login_log(id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, identity, status, description, user_agent, ip, ip_addr, mac, method ) `
+    r#"`insert into t_login_log(id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, identity, success_flag, description, user_agent, ip, location, mac, method ) `
     `values`
         (
-            `#{login_log_dto.id}, #{login_log_dto.operate_time}, #{login_log_dto.operator}, #{login_log_dto.operator_id}, #{login_log_dto.create_time}, #{login_log_dto.creator}, #{login_log_dto.creator_id}, #{login_log_dto.delete_flag}, #{login_log_dto.identity}, #{login_log_dto.status}, #{login_log_dto.description}, #{login_log_dto.user_agent}, #{login_log_dto.ip}, #{login_log_dto.ip_addr}, #{login_log_dto.mac}, #{login_log_dto.method}`
+            `#{login_log_dto.id}, #{login_log_dto.operate_time}, #{login_log_dto.operator}, #{login_log_dto.operator_id}, #{login_log_dto.create_time}, #{login_log_dto.creator}, #{login_log_dto.creator_id}, #{login_log_dto.delete_flag}, #{login_log_dto.identity}, #{login_log_dto.success_flag}, #{login_log_dto.description}, #{login_log_dto.user_agent}, #{login_log_dto.ip}, #{login_log_dto.location}, #{login_log_dto.mac}, #{login_log_dto.method}`
         )"#
 )]
 pub async fn create_login_log(
@@ -146,5 +146,78 @@ pub async fn update_user_by_phone2(
     tx: &mut RBatisTxExecutorGuard,
     detail: &TUserDetail,
 ) -> Result<ExecResult, Error> {
+    impled!();
+}
+
+/// 多条件分页查询用户登录日志
+#[py_sql(
+    r#"`select id, to_char(operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, operator, operator_id, to_char(create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, creator, creator_id, delete_flag, identity, success_flag, description, user_agent, ip, location, mac, method`
+    ` from t_login_log`
+    ` where delete_flag = '0'` 
+    if dto.create_time_start != '':
+        ` and create_time >= #{dto.create_time_start}`
+    if dto.create_time_end != '':
+        ` and create_time <= #{dto.create_time_end}`
+    if dto.identity != '':
+        ` and (`
+        trim 'or':
+            if dto.account != '':
+                ` identity like '%${dto.account}%'`
+            if dto.phone_number != '':
+                ` or identity like '%${dto.phone_number}%'`
+            if dto.email != '':
+                ` or identity like '%${dto.email}%'`
+            if dto.openid != '':
+                ` or identity like '%${dto.openid}%'`
+        ` )`
+    if dto.method != '':
+        ` and method = #{dto.method}`
+    if dto.success_flag != '':
+        ` and success_flag = #{dto.success_flag}`
+    ` order by create_time desc`
+    ` limit ${page_size}`
+    ` offset ${offset}`
+    "#
+)]
+pub async fn query_login_log_fq(
+    tx: &mut RBatisTxExecutorGuard,
+    dto: &QueryLoginLogDTO,
+    page_size: &usize,
+    offset: &usize,
+) -> Result<Vec<QueryLoginLogVO>, Error> {
+    impled!();
+}
+
+/// 多条件分页查询用户登录日志数量
+#[py_sql(
+    r#"`select count(*)`
+    ` from t_login_log`
+    ` where delete_flag = '0'` 
+    if dto.create_time_start != '':
+        ` and create_time >= #{dto.create_time_start}`
+    if dto.create_time_end != '':
+        ` and create_time <= #{dto.create_time_end}`
+    if dto.identity != '':
+        ` and (`
+        trim 'or':
+            if dto.account != '':
+                ` identity like '%${dto.account}%'`
+            if dto.phone_number != '':
+                ` or identity like '%${dto.phone_number}%'`
+            if dto.email != '':
+                ` or identity like '%${dto.email}%'`
+            if dto.openid != '':
+                ` or identity like '%${dto.openid}%'`
+        ` )`
+    if dto.method != '':
+        ` and method = #{dto.method}`
+    if dto.success_flag != '':
+        ` and success_flag = #{dto.success_flag}`
+    "#
+)]
+pub async fn query_login_log_fq_count(
+    tx: &mut RBatisTxExecutorGuard,
+    dto: &QueryLoginLogDTO,
+) -> Result<usize, Error> {
     impled!();
 }

@@ -1,7 +1,10 @@
 use std::collections::HashSet;
 
 use crate::{
-    common::{errors::MyError, res::Res},
+    common::{
+        errors::MyError,
+        res::{PageRes, Res},
+    },
     config::init::{get_cfg, get_ctx},
     dbaccess::{
         login::{
@@ -11,16 +14,19 @@ use crate::{
         role, user,
     },
     models::{
-        dto::login::{AuthDTO, AuthRegisterDTO, LoginDTO, LoginLogDTO, RegisterDTO, ResetPwdDTO},
+        dto::login::{
+            AuthDTO, AuthRegisterDTO, LoginDTO, LoginLogDTO, QueryLoginLogDTO, RegisterDTO,
+            ResetPwdDTO,
+        },
         entity::user_detail::TUserDetail,
-        vo::login::{LoginVO, UserInfoVO},
+        vo::login::{LoginVO, QueryLoginLogVO, UserInfoVO},
     },
     utils::{
         self,
         captcha::Captcha,
         epc::encrypt_sha256,
         fields::{fill_fields_system, fill_fields_system_entity},
-        ip::get_ip_addr,
+        ip::get_location,
         jwt::{encode_jwt, Token},
         redis::{del_string, get_string, set_string_ex},
         time::get_epoch,
@@ -29,6 +35,7 @@ use crate::{
     },
 };
 use axum::{http::StatusCode, Json};
+use axum_client_ip::SecureClientIp;
 use headers::HeaderMap;
 use rbatis::rbdc::db::ExecResult;
 
@@ -37,6 +44,7 @@ use super::perm::get_children;
 /// 用户登录
 pub async fn login(
     headers: HeaderMap,
+    secure_ip: SecureClientIp,
     Json(mut payload): Json<LoginDTO>,
 ) -> Result<Res<LoginVO>, MyError> {
     param_validate(&payload)?;
@@ -45,14 +53,14 @@ pub async fn login(
     let res = get_string(uuid).await;
     // 删除验证码
     let _del_res = del_string(uuid).await;
-    payload.method = Some("web登录".into());
+    payload.method = Some("2".into());
     if let Ok(value) = res {
         if value != payload.captcha.clone().unwrap().to_lowercase() {
-            login_log(&headers, &payload, "登录失败", "验证码错误").await?;
+            login_log(&headers, secure_ip, &payload, "0", "验证码错误").await?;
             return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "验证码错误"));
         }
     } else {
-        login_log(&headers, &payload, "登录失败", "验证码已失效").await?;
+        login_log(&headers, secure_ip, &payload, "0", "验证码已失效").await?;
         return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "验证码已失效"));
     }
     let db = &get_ctx().db;
@@ -112,12 +120,12 @@ pub async fn login(
             get_children(&mut parents, &unique_perms);
             user_info.perms = Some(parents);
             let token = encode_jwt(&user_info).await;
-            login_log(&headers, &payload, "登录成功", "登录成功").await?;
+            login_log(&headers, secure_ip, &payload, "1", "登录成功").await?;
             tx.commit().await.unwrap();
             Ok(Res::from_success("登录成功", LoginVO { user_info, token }))
         }
         None => {
-            login_log(&headers, &payload, "登录失败", "账号或密码错误").await?;
+            login_log(&headers, secure_ip, &payload, "登录失败", "账号或密码错误").await?;
             Ok(Res::from_fail(
                 StatusCode::UNAUTHORIZED,
                 "登录失败，账号或密码错误",
@@ -127,7 +135,7 @@ pub async fn login(
 }
 
 /// 用户注册
-pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, MyError> {
+pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<usize>, MyError> {
     // 参数校验
     param_validate(&payload)?;
     // 验证码校验
@@ -180,7 +188,7 @@ pub async fn register(Json(mut payload): Json<RegisterDTO>) -> Result<Res<u64>, 
     let info_res = login::create_user_info(&mut tx, &payload).await;
     if let Ok(value) = info_res {
         tx.commit().await.unwrap();
-        Ok(Res::from_success("注册成功", value.rows_affected))
+        Ok(Res::from_success("注册成功", value.rows_affected as usize))
     } else {
         Ok(Res::from_fail(
             StatusCode::INTERNAL_SERVER_ERROR,
@@ -199,31 +207,51 @@ pub async fn captcha() -> Result<Res<Captcha>, MyError> {
 /// 登录日志
 pub async fn login_log(
     headers: &HeaderMap,
+    secure_ip: SecureClientIp,
     login_dto: &LoginDTO,
-    status: &str,
+    success_flag: &str,
     description: &str,
 ) -> Result<ExecResult, MyError> {
     let db = &get_ctx().db;
     let mut login_log = LoginLogDTO::default();
     let user_agent = headers
         .get("User-Agent")
-        .map(|v1| v1.to_str().map(|v2| v2).unwrap_or(""))
-        .unwrap_or("");
+        .map(|v1| v1.to_str().map(|v2| v2).unwrap_or("未知"))
+        .unwrap_or("未知");
     let ip = headers
         .get("X-Forwarded-For")
         .map(|v1| {
             v1.to_str()
                 .map(|v2| v2.split(',').next().unwrap().trim())
-                .unwrap_or("error")
+                .unwrap_or("unknown")
         })
         .unwrap_or_else(|| {
             headers
                 .get("X-Real-IP")
-                .map(|v1| v1.to_str().map(|v2| v2).unwrap_or("error"))
+                .map(|v1| v1.to_str().map(|v2| v2).unwrap_or("unknown"))
                 .unwrap_or("unknown")
         });
+    let ip = if ip == "unknown" {
+        if secure_ip.0.to_string().starts_with("::ffff:") {
+            secure_ip
+                .0
+                .to_string()
+                .split(":")
+                .collect::<Vec<_>>()
+                .last()
+                .unwrap_or(&"unknown")
+                .to_string()
+        } else {
+            secure_ip.0.to_string()
+        }
+    } else {
+        ip.to_string()
+    };
     // 获取ip归属地
-    let ip_addr = get_ip_addr(ip).await.map(|v| v).unwrap_or("unknown".into());
+    let location = get_location(&ip)
+        .await
+        .map(|v| v)
+        .unwrap_or("unknown".into());
     let identity = login_dto
         .identity
         .clone()
@@ -234,15 +262,15 @@ pub async fn login_log(
     login_log.identity = Some(identity);
     login_log.user_agent = Some(user_agent.into());
     login_log.ip = Some(ip.into());
-    login_log.ip_addr = Some(ip_addr);
-    login_log.status = Some(status.into());
+    login_log.location = Some(location);
+    login_log.success_flag = Some(success_flag.into());
     login_log.description = Some(description.into());
     login_log.method = login_dto.method.clone();
     Ok(login::create_login_log(db, &login_log).await?)
 }
 
 /// 重置密码
-pub async fn reset_pwd(Json(mut payload): Json<ResetPwdDTO>) -> Result<Res<u64>, MyError> {
+pub async fn reset_pwd(Json(mut payload): Json<ResetPwdDTO>) -> Result<Res<usize>, MyError> {
     // 验证码校验
     let uuid = &payload.uuid.clone().unwrap().to_lowercase();
     let res = get_string(uuid).await;
@@ -263,12 +291,13 @@ pub async fn reset_pwd(Json(mut payload): Json<ResetPwdDTO>) -> Result<Res<u64>,
     payload.new_password = Some(encrypt_sha256(payload.new_password.as_ref().unwrap()));
     let db = &get_ctx().db;
     let res = login::reset_pwd(db, &payload).await?;
-    Ok(Res::from_success("重置成功", res.rows_affected))
+    Ok(Res::from_success("重置成功", res.rows_affected as usize))
 }
 
 /// 微信小程序授权登录
 pub async fn login_wxapp(
     headers: HeaderMap,
+    secure_ip: SecureClientIp,
     Json(payload): Json<AuthDTO>,
 ) -> Result<Res<LoginVO>, MyError> {
     // 参数校验
@@ -282,10 +311,10 @@ pub async fn login_wxapp(
     .await?;
     // 构建登录日志所需数据
     let mut login_dto = LoginDTO::default();
-    login_dto.identity = Some("微信授权登录用户".into());
-    login_dto.method = Some("微信授权登录".into());
+    login_dto.identity = Some("微信预授权登录用户".into());
+    login_dto.method = Some("0".into());
     if res.as_object().is_none() {
-        login_log(&headers, &login_dto, "登录失败", "用户授权失败").await?;
+        login_log(&headers, secure_ip, &login_dto, "0", "用户授权失败").await?;
         return Ok(Res::from_fail(StatusCode::BAD_REQUEST, "用户授权失败"));
     }
     let openid = res
@@ -308,7 +337,7 @@ pub async fn login_wxapp(
         user_info.openid = Some(openid.into());
         user_info.session_key = Some(session_key.into());
         login_dto.identity = Some(openid.into());
-        login_log(&headers, &login_dto, "登录失败", "未进行过微信授权").await?;
+        login_log(&headers, secure_ip, &login_dto, "0", "未进行过微信授权").await?;
         return Ok(Res::from(
             StatusCode::NOT_FOUND,
             "您未进行过授权",
@@ -323,7 +352,7 @@ pub async fn login_wxapp(
         user_info.openid = Some(openid.into());
         login_dto.identity = Some(user_info.account.clone().unwrap());
         let token = encode_jwt(&user_info).await;
-        login_log(&headers, &login_dto, "登录成功", "登录成功").await?;
+        login_log(&headers, secure_ip, &login_dto, "1", "登录成功").await?;
         Ok(Res::from_success("登录成功", LoginVO { user_info, token }))
     }
 }
@@ -331,6 +360,7 @@ pub async fn login_wxapp(
 /// 微信小程序授权注册并登录
 pub async fn wxapp_register(
     headers: HeaderMap,
+    secure_ip: SecureClientIp,
     Json(payload): Json<AuthRegisterDTO>,
 ) -> Result<Res<LoginVO>, MyError> {
     // 参数校验
@@ -389,8 +419,8 @@ pub async fn wxapp_register(
             // 构建登录日志所需的数据
             let mut login_dto = LoginDTO::default();
             login_dto.identity = Some(user_info.openid.clone().unwrap());
-            login_dto.method = Some("微信授权登录".into());
-            login_log(&headers, &login_dto, "登录成功", "登录成功").await?;
+            login_dto.method = Some("0".into());
+            login_log(&headers, secure_ip, &login_dto, "登录成功", "登录成功").await?;
 
             let token = encode_jwt(&user_info).await;
             return Ok(Res::from_success("登录成功", LoginVO { user_info, token }));
@@ -429,9 +459,68 @@ pub async fn wxapp_register(
     // 构建登录日志所需的数据
     let mut login_dto = LoginDTO::default();
     login_dto.identity = Some(user_info.openid.clone().unwrap());
-    login_dto.method = Some("微信授权登录".into());
-    login_log(&headers, &login_dto, "登录成功", "登录成功").await?;
+    login_dto.method = Some("0".into());
+    login_log(&headers, secure_ip, &login_dto, "登录成功", "登录成功").await?;
 
     let token = encode_jwt(&user_info).await;
     Ok(Res::from_success("登录成功", LoginVO { user_info, token }))
+}
+
+/// 多条件分页查询登录日志
+pub async fn query_login_log_fq(
+    Json(mut payload): Json<QueryLoginLogDTO>,
+) -> Result<Res<PageRes<QueryLoginLogVO>>, MyError> {
+    let db = &get_ctx().db;
+    let tx = db.acquire_begin().await.unwrap();
+    // 异步回滚回调
+    let mut tx = tx.defer_async(|mut tx| async move {
+        if !tx.done {
+            tx.rollback().await.unwrap();
+            tracing::error!("An error occurred, rollback!");
+        }
+    });
+    let page_no = payload.page_no.map(|v| v).unwrap_or(1);
+    let page_size = payload.page_size.map(|v| v).unwrap_or(10);
+    let offset = PageRes::get_offset(page_no, page_size);
+    // 如果有用户标识，查出用户信息
+    if let Some(identity) = payload.identity.clone() {
+        if !identity.is_empty() {
+            let res = user::query_user_by_identity_fq(&mut tx, &identity).await?;
+            if let Some(user) = res {
+                payload.account = user.account;
+                payload.phone_number = user.phone_number;
+                payload.email = user.email;
+                payload.openid = user.openid;
+            } else {
+                return Ok(Res::from_vec_not_found(
+                    PageRes::default()
+                        .total(0)
+                        .total_page(0)
+                        .current_page(payload.page_no),
+                ));
+            }
+        }
+    }
+    let mut res = login::query_login_log_fq(&mut tx, &payload, &page_size, &offset).await?;
+    // 查出每个登录日志的账号信息
+    if !res.is_empty() {
+        for item in res.iter_mut() {
+            let account = user::query_user_by_identity_fq(
+                &mut tx,
+                item.identity.as_ref().unwrap_or(&"未知".to_string()),
+            )
+            .await?
+            .unwrap_or_default()
+            .account;
+            item.account = account;
+        }
+    }
+    let count = login::query_login_log_fq_count(&mut tx, &payload).await? as usize;
+    let page_res = PageRes::default()
+        .data(res)
+        .total(count)
+        .total_page(PageRes::get_total_page(count, page_size))
+        .current_page(payload.page_no);
+    tx.commit().await.unwrap();
+    Ok(Res::from_success("查询成功", page_res))
 }

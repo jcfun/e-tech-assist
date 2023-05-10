@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use super::role::QueryRoleVO;
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct QueryUserVO {
     pub id: Option<String>,
