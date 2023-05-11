@@ -271,6 +271,8 @@ pub async fn login_log(
 
 /// 重置密码
 pub async fn reset_pwd(Json(mut payload): Json<ResetPwdDTO>) -> Result<Res<usize>, MyError> {
+    // 参数校验
+    param_validate(&payload)?;
     // 验证码校验
     let uuid = &payload.uuid.clone().unwrap().to_lowercase();
     let res = get_string(uuid).await;
@@ -285,8 +287,6 @@ pub async fn reset_pwd(Json(mut payload): Json<ResetPwdDTO>) -> Result<Res<usize
     }
     // 填充公共属性
     fill_fields_system(&mut payload.base_dto);
-    // 参数校验
-    param_validate(&payload)?;
     // 密码sha256加密
     payload.new_password = Some(encrypt_sha256(payload.new_password.as_ref().unwrap()));
     let db = &get_ctx().db;

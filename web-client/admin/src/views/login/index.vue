@@ -63,19 +63,18 @@
   import useAppInfo from '@/hooks/useAppInfo';
   import { useRoute } from 'vue-router';
   const autoLogin = ref(true);
-  const loading = ref(false);
   const projectName = setting.projectName;
   const { version } = useAppInfo();
+  const loading = ref(false);
   const user = useUserStore();
   const route = useRoute();
   const identity = ref('admin');
   const password = ref('123456');
   const captchaValue = ref('');
   const captcha = ref({
-    uuid: 'http://file.urainstar.top/error.png',
-    img: '',
+    uuid: '',
+    img: 'http://file.urainstar.top/error.png',
   } as Captcha);
-
   // 获取验证码
   const getCaptcha = () => {
     login.captcha().then(res => {
@@ -95,19 +94,20 @@
         uuid: captcha.value.uuid,
       } as LoginDTO)
       .then(res => {
-        user.setUser(res.data).then(_res => {
-          router.replace({
-            path: route.query.redirect ? (route.query.redirect as string) : '/',
+        if (res.code == 200) {
+          user.setUser(res.data).then(_res => {
+            router.replace({
+              path: route.query.redirect ? (route.query.redirect as string) : '/',
+            });
+            Message.success(`登录成功，欢迎 ${identity.value}，即将跳转到首页`);
           });
-          Message.success(`登录成功，欢迎 ${identity.value}，即将跳转到首页`);
-        });
+        } else {
+          getCaptcha();
+        }
       })
-      .catch(err => {
-        console.log(err);
-        getCaptcha();
-        Message.error(err);
+      .finally(() => {
+        loading.value = false;
       });
-    loading.value = false;
   };
 </script>
 

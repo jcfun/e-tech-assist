@@ -54,7 +54,10 @@ pub struct RegisterDTO {
     )]
     pub password: Option<String>,
 
-    #[validate(required(message = "电话号不可为空"))]
+    #[validate(
+        required(message = "电话号不可为空"),
+        length(equal = 11, message = "电话号格式错误")
+    )]
     pub phone_number: Option<String>,
 
     #[validate(

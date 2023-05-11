@@ -12,5 +12,10 @@
     // "types": ["@dcloudio/types", "@ttou/uview-typings/v3.d.ts", "@ttou/uview-typings/refs"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/**/*.ts"],
-  "forceConsistentCasingInFileNames": false // 是否强制代码中使用的模块文件名和文件系统中的文件名保持大小写一致
+  "forceConsistentCasingInFileNames": false, // 是否强制代码中使用的模块文件名和文件系统中的文件名保持大小写一致
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

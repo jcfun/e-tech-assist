@@ -289,6 +289,7 @@
   const pagination = usePagination(doRefresh);
   // 获取用户信息
   const getRoles = (data: QueryRoleDTO) => {
+    table.tableLoading.value = true;
     role.getRolesFq(data).then(res => {
       table.handleSuccess(res?.data?.data);
       pagination.setTotalSize(res?.data?.total ? res?.data?.total : 0);

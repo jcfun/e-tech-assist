@@ -1,7 +1,7 @@
 <template>
   <TableBody>
     <template #header>
-      <TableHeader ref="tableHeaderRef" :show-filter="false" title="用户搜索" @search="onSearch" @reset-search="onResetSearch">
+      <TableHeader ref="tableHeaderRef" :show-filter="false" title="日志搜索" @search="onSearch" @reset-search="onResetSearch">
         <template #search-content>
           <a-form layout="inline" :model="{}">
             <a-form-item v-for="item of searchItems" :key="item.key" :label="item.label">
@@ -210,6 +210,7 @@
   const pagination = usePagination(doRefresh);
   // 获取登录日志信息
   const getLoginLogsFq = (data: QueryLoginLogDTO) => {
+    table.tableLoading.value = true;
     login.getLoginLogsFq(data).then(res => {
       table.handleSuccess(res?.data?.data);
       pagination.setTotalSize(res?.data?.total ? res?.data?.total : 0);

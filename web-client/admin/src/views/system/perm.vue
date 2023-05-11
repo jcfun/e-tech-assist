@@ -490,6 +490,7 @@
   const pagination = usePagination(doRefresh);
   // 获取用户信息
   const getPerms = (data: QueryPermDTO) => {
+    table.tableLoading.value = true;
     perm.getPermsFq(data).then(res => {
       table.handleSuccess(res?.data?.data);
       pagination.setTotalSize(res?.data?.total ? res?.data?.total : 0);

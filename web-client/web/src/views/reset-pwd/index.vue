@@ -1,10 +1,10 @@
 <template>
-  <div class="login-box">
-    <div class="login-welcome">
+  <div class="reset-box">
+    <div class="reset-welcome">
       <a-image width="60" :src="logo" />
-      <h2 class="login-title">欢迎来到鄂助教</h2>
     </div>
-    <div class="login-panel">
+    <div class="reset-panel">
+      <h2 class="panel-title">重置密码</h2>
       <div class="panel-content">
         <div class="panel-input">
           <a-input v-model="identity" placeholder="账号/电话/邮箱" size="large" allow-clear :max-length="100">
@@ -12,44 +12,44 @@
               <icon-idcard />
             </template>
           </a-input>
-          <a-input-password v-model="password" placeholder="请输入密码" size="large" allow-clear :max-length="100">
+          <a-input-password v-model="newPassword" placeholder="请输入密码" size="large" allow-clear :max-length="100">
             <template #prefix>
               <IconLock />
             </template>
           </a-input-password>
+          <a-input v-model="phoneNumber" placeholder="请输入电话" size="large" allow-clear :max-length="100">
+            <template #prefix>
+              <IconMobile />
+            </template>
+          </a-input>
           <f-captcha v-model="captchaValue" :captchaImg="captcha.img" @click-img="getCaptcha" placeholder="请输入验证码"></f-captcha>
-          <div class="forget-pwd-tip">
-            <span class="forget-pws-btn" @click="onForget">忘记密码？</span>
-          </div>
         </div>
-        <a-button type="primary" long :loading="loading" @click="onLogin">登录</a-button>
+        <a-button type="primary" long :loading="loading" @click="onResetPwd">重置</a-button>
       </div>
     </div>
-    <div class="register-tip">还没有账号？<span class="register-btn" @click="onRegister">立即注册</span></div>
+    <div class="login-tip"><span @click="onLogin">返回登录</span></div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import login from '@/api/modules/login';
+  import type { Captcha, ResetPwdDTO } from '@/api/types/login';
   import logo from '@/assets/logo.png';
   import useRouter from '@/hooks/useRouter';
-  import FCaptcha from '@/components/Captcha.vue';
-  import login from '@/api/modules/login';
-  import type { Captcha, LoginDTO } from '@/api/types/login';
-  import { useUserStore } from '@/stores/modules/user';
   import { Message } from '@arco-design/web-vue';
-
+  import { ref } from 'vue';
+  import FCaptcha from '@/components/Captcha.vue';
+  const loading = ref(false);
   const router = useRouter();
+  const identity = ref('');
+  const newPassword = ref('');
+  const phoneNumber = ref('');
+  const captchaValue = ref('');
   // 验证码
   const captcha = ref({
     uuid: '',
     img: 'http://file.urainstar.top/error.png',
   } as Captcha);
-  const loading = ref(false);
-  const user = useUserStore();
-  const identity = ref('admin');
-  const password = ref('123456');
-  const captchaValue = ref('');
   // 获取验证码
   const getCaptcha = () => {
     login.captcha().then(res => {
@@ -57,30 +57,25 @@
     });
   };
   getCaptcha();
-  // 忘记密码
-  const onForget = () => {
-    router.push('/reset');
-  };
-  // 注册按钮
-  const onRegister = () => {
-    router.push('/register');
-  };
-  // 登录
+  // 返回登录按钮
   const onLogin = () => {
+    router.back();
+  };
+  // 找回密码
+  const onResetPwd = () => {
     loading.value = true;
     login
-      .login({
+      .resetPwd({
         identity: identity.value,
-        password: password.value,
+        newPassword: newPassword.value,
+        phoneNumber: phoneNumber.value,
         captcha: captchaValue.value,
         uuid: captcha.value.uuid,
-      } as LoginDTO)
+      } as ResetPwdDTO)
       .then(res => {
         if (res.code == 200) {
-          user.setUser(res.data).then(_res => {
-            router.push('/');
-            Message.info(`登录成功，欢迎 ${identity.value}`);
-          });
+          router.back();
+          Message.info(`重置成功`);
         } else {
           getCaptcha();
         }
@@ -92,28 +87,23 @@
 </script>
 
 <style scoped lang="scss">
-  .login-box {
+  .reset-box {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-bottom: 5%;
-    .login-welcome {
+    .reset-welcome {
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 40px;
     }
-    .login-title {
-      margin-left: 10px;
-      text-align: center;
-    }
-    .login-panel {
-      align-items: center;
-      padding: 30px 0;
+    .reset-panel {
       background-color: #fff;
       width: 450px;
+      padding: 30px 0;
       border-radius: 5px;
       box-shadow: 0 1px 2px rgb(171, 171, 171);
       border-top: 2px solid #003cff;
@@ -121,36 +111,27 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      .panel-title {
+        text-align: center;
+        margin-bottom: 20px;
+      }
       .panel-content {
         width: 80%;
         .panel-input {
           margin-bottom: 20px;
-          .forget-pwd-tip {
-            margin-top: 10px;
-            display: flex;
-            justify-content: flex-end;
-            font-size: 15px;
-            .forget-pws-btn {
-              color: #003cff;
-              cursor: pointer;
-            }
-          }
         }
       }
       .arco-input-wrapper {
         margin-bottom: 20px;
       }
     }
-    .register-tip {
+    .login-tip {
       margin-top: 50px;
       display: flex;
       justify-content: center;
       font-size: 15px;
-      color: #7f7f7f;
-      .register-btn {
-        color: #003cff;
-        cursor: pointer;
-      }
+      color: #003cff;
+      cursor: pointer;
     }
   }
 </style>

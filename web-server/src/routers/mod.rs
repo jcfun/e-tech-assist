@@ -21,7 +21,7 @@ mod quick_msg;
 pub fn get_sys_routers() -> Router {
     Router::new()
         // 快捷消息
-        .nest("/quickMsg", quick_msg::quick_msg_routes())
+        .nest("/quick-msg", quick_msg::quick_msg_routes())
         // 权限管理
         .nest("/perm", perm::perm_routes())
         // 角色管理
@@ -38,7 +38,7 @@ pub fn get_sys_routers() -> Router {
         .layer(
             ServiceBuilder::new()
                 .layer(HandleErrorLayer::new(handle_timeout_error))
-                .timeout(Duration::from_secs(600)),
+                .timeout(Duration::from_secs(60)),
         )
         // ip
         .layer(SecureClientIpSource::ConnectInfo.into_extension())

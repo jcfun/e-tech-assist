@@ -8,7 +8,7 @@ pub fn login_routes() -> Router {
         .route("/", post(login))
         .route("/register", post(register))
         .route("/captcha", get(captcha))
-        .route("/reset", patch(reset_pwd))
+        .route("/reset-pwd", patch(reset_pwd))
         .route("/wxapp", post(login_wxapp))
         .route("/wr", post(wxapp_register))
         .route("/log/fq", post(query_login_log_fq))

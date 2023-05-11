@@ -1,7 +1,7 @@
 <template>
   <TableBody>
     <template #header>
-      <TableHeader ref="tableHeaderRef" :show-filter="false" title="用户搜索" @search="onSearch" @reset-search="onResetSearch">
+      <TableHeader ref="tableHeaderRef" :show-filter="false" title="消息搜索" @search="onSearch" @reset-search="onResetSearch">
         <template #search-content>
           <a-form layout="inline" :model="{}">
             <a-form-item v-for="item of searchItems" :key="item.key" :label="item.label">
@@ -107,7 +107,7 @@
   import { getCurrentInstance, onMounted, ref } from 'vue';
   import type { QueryQuickMsgDTO } from '@/api/types/quickMsg';
   import type { FormItem } from '@/components/types';
-  import quickMsg from '@/api/requests/quickMsg';
+  import quickMsg from '@/api/requests/quick-msg';
 
   const table = useTable();
   const rowKey = useRowKey('id');
@@ -347,6 +347,7 @@
   const pagination = usePagination(doRefresh);
   // 获取用户信息
   const getQuickMsgs = (data: QueryQuickMsgDTO) => {
+    table.tableLoading.value = true;
     quickMsg.getQuickMsgsFq(data).then(res => {
       table.handleSuccess(res?.data?.data);
       pagination.setTotalSize(res?.data?.total ? res?.data?.total : 0);

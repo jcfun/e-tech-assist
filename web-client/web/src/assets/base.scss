@@ -73,6 +73,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 /*用户头像悬浮弹出框样式*/
 .user-popover {
   width: 180px;
@@ -84,17 +90,17 @@ body {
       margin-top: 5px;
       &:hover {
         background-color: #ededed;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in;
       }
     }
-    .exit {
+    .logout {
       &:hover {
         background-color: #ededed;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in;
       }
     }
     .profile,
-    .exit {
+    .logout {
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -103,4 +109,18 @@ body {
       border-radius: 5px;
     }
   }
+}
+
+/* NProgress加载条样式 */
+#nprogress .bar {
+  background: #006fff !important; //自定义颜色
+}
+/* 头部阴影效果 */
+#nprogress .peg {
+  box-shadow: 0 0 5px #006fff, 0 0 10px #006fff !important;
+}
+
+/* 禁用滚动条 */
+.disable-scroll {
+  overflow: hidden;
 }

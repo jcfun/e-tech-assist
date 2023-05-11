@@ -30,9 +30,9 @@ class Http {
       })
         .then(res => {
           console.log('response ==================> ', res);
-          if ((res.data as Res<any>).code != 200 && (res.data as Res<any>).code != 401) {
+          if ((res.data as Res<T>).code != 200 && (res.data as Res<T>).code != 401) {
             Message.error({
-              content: (res.data as Res<any>).msg,
+              content: (res.data as Res<T>).msg,
               duration: 2000,
             });
           }

@@ -1,4 +1,7 @@
+use std::borrow::Cow;
+
 use crate::common::errors::MyError;
+use tracing::warn;
 use validator::{Validate, ValidationError};
 
 /// 参数校验
@@ -8,7 +11,16 @@ where
 {
     match payload.validate() {
         Ok(_) => Ok(()),
-        Err(error) => Err(MyError::InvalidInput(error.to_string())),
+        Err(errors) => {
+            let mut error_msg = String::new();
+            for (field, errors) in errors.field_errors() {
+                let mut message = errors[0].message.as_ref().unwrap_or(&Cow::default()).to_string();
+                warn!("{}: {:?}", field, message);
+                message.push_str(" ");
+                error_msg.push_str(&message);
+            }
+            Err(MyError::InvalidInput(error_msg))
+        },
     }
 }
 

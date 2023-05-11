@@ -473,6 +473,7 @@
   const pagination = usePagination(doRefresh);
   // 获取用户信息
   const getUsers = (data: QueryUserDTO) => {
+    table.tableLoading.value = true;
     user.getUsersFq(data).then(res => {
       table.handleSuccess(res?.data?.data);
       pagination.setTotalSize(res?.data?.total ? res?.data?.total : 0);
