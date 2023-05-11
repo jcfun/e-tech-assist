@@ -35,8 +35,8 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { useUserStore } from '@/store/user';
-  import quickMsg from '@/api/modules/quickMsg';
-  import type { CreateQuickMsgDTO } from '@/api/types/quickMsg';
+  import quickMsg from '@/api/modules/quick-msg';
+  import type { CreateQuickMsgDTO } from '@/api/types/quick-msg';
   import { onLoad } from '@dcloudio/uni-app';
   import { isEmpty } from '@/utils';
   import type { Ref } from 'vue';
