@@ -16,6 +16,7 @@ pub async fn filter(req: Request<Body>, next: Next<Body>) -> Result<Response, Re
         Ok((body_bytes, body_string)) => (body_bytes, body_string),
         Err(res) => return Err(res),
     };
+    info!("请求头 ===========> {:?}", parts.headers);
     info!("请求体 ===========> {:?}", body_string);
     let req = Request::from_parts(parts, Body::from(body_bytes));
 
@@ -28,8 +29,8 @@ pub async fn filter(req: Request<Body>, next: Next<Body>) -> Result<Response, Re
     } else {
         // 如果为错误响应，则构造Res返回
         let mut body_string = get_body_string(resp.into_body()).await;
-        if body_string == "" {
-            body_string = "操作失败".to_string()
+        if body_string.is_empty() {
+            body_string = "服务器内部错误".to_string()
         }
         let resp = Res::<()>::from_fail(status, &body_string);
         Err(resp)

@@ -3,3 +3,4 @@ pub mod perm;
 pub mod quick_msg;
 pub mod role;
 pub mod user;
+pub mod upload;

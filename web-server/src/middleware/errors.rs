@@ -12,34 +12,25 @@ use std::any::Any;
 /// 请求超时
 pub async fn handle_timeout_error(err: BoxError) -> impl IntoResponse {
     if err.is::<tower::timeout::error::Elapsed>() {
-        (
-            StatusCode::REQUEST_TIMEOUT,
-            Res::<()>::from_fail(StatusCode::REQUEST_TIMEOUT, "请求超时"),
-        )
+        (StatusCode::REQUEST_TIMEOUT, "请求超时".to_string())
     } else {
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Res::<()>::from_fail(StatusCode::INTERNAL_SERVER_ERROR, err.to_string().as_str()),
-        )
+        (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
     }
 }
 
 /// 404
 pub async fn fallback() -> impl IntoResponse {
-    (
-        StatusCode::NOT_FOUND,
-        Res::<()>::from_fail(StatusCode::NOT_FOUND, "404"),
-    )
+    (StatusCode::NOT_FOUND, "请求地址不存在")
 }
 
 // panic
 pub fn handle_panic(err: Box<dyn Any + Send + 'static>) -> Response {
     let details = if let Some(s) = err.downcast_ref::<&str>() {
         s
-    } else if let Some(s) = err.downcast_ref::<&str>() {
+    } else if let Some(s) = err.downcast_ref::<String>() {
         s
     } else {
-        "致命错误"
+        "A fatal error has occurred"
     };
 
     let res = Res::<()>::from_panic_msg(details);

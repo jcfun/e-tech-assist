@@ -1,12 +1,15 @@
-use std::net::AddrParseError;
+use std::{fmt::Debug, net::AddrParseError};
 
 use axum::{
+    extract::multipart::MultipartError,
     http::StatusCode,
     response::{IntoResponse, Response},
 };
 use log::info;
 use maxminddb::MaxMindDBError;
 use serde::{Deserialize, Serialize};
+
+use crate::config::init::get_cfg;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum MyError {
@@ -20,6 +23,7 @@ pub enum MyError {
     MaxMindDBError(String),
     UnwrapError(String),
     EmailSendError(String),
+    MultipartError(String),
 }
 
 impl MyError {
@@ -34,8 +38,8 @@ impl MyError {
                 format!("服务器内部错误: {:?}", msg)
             }
             MyError::NotFound(msg) => {
-                info!("404: {:?}", msg);
-                format!("404: {:?}", msg)
+                info!("路径不存在: {:?}", msg);
+                format!("路径不存在: {:?}", msg)
             }
             MyError::InvalidInput(msg) => {
                 info!("非法输入: {:?}", msg);
@@ -65,6 +69,10 @@ impl MyError {
                 info!("邮件发送错误: {:?}", msg);
                 format!("邮件发送错误: {:?}", msg)
             }
+            MyError::MultipartError(msg) => {
+                info!("文件过大错误: {:?}", msg);
+                format!("文件过大错误: {:?}", msg)
+            }
         }
     }
 }
@@ -81,7 +89,7 @@ impl IntoResponse for MyError {
                 (StatusCode::INTERNAL_SERVER_ERROR, msg)
             }
             MyError::NotFound(msg) => {
-                info!("404: {:?}", msg);
+                info!("路径不存在: {:?}", msg);
                 (StatusCode::NOT_FOUND, msg)
             }
             MyError::InvalidInput(msg) => {
@@ -109,8 +117,18 @@ impl IntoResponse for MyError {
                 (StatusCode::INTERNAL_SERVER_ERROR, msg)
             }
             MyError::EmailSendError(msg) => {
-                info!("邮件发送: {:?}", msg);
+                info!("邮件发送错误: {:?}", msg);
                 (StatusCode::INTERNAL_SERVER_ERROR, msg)
+            }
+            MyError::MultipartError(msg) => {
+                info!("文件过大错误: {:?}", msg);
+                (
+                    StatusCode::BAD_REQUEST,
+                    format!(
+                        "文件过大, 最大只支持 {} MB",
+                        get_cfg().mime.image.size / 1024 / 1024
+                    ),
+                )
             }
         };
         (code, msg).into_response()
@@ -118,30 +136,49 @@ impl IntoResponse for MyError {
 }
 
 impl From<rbatis::rbdc::Error> for MyError {
-    fn from(value: rbatis::rbdc::Error) -> Self {
-        MyError::DBError(value.to_string())
+    fn from(error: rbatis::rbdc::Error) -> Self {
+        MyError::DBError(error.to_string())
     }
 }
 
 impl From<redis::RedisError> for MyError {
-    fn from(value: redis::RedisError) -> Self {
-        MyError::RedisError(value.to_string())
+    fn from(error: redis::RedisError) -> Self {
+        MyError::RedisError(error.to_string())
     }
 }
 
 impl From<MaxMindDBError> for MyError {
-    fn from(value: MaxMindDBError) -> Self {
-        MyError::RedisError(value.to_string())
+    fn from(error: MaxMindDBError) -> Self {
+        MyError::MaxMindDBError(error.to_string())
     }
 }
 
 impl From<AddrParseError> for MyError {
-    fn from(value: AddrParseError) -> Self {
-        MyError::RedisError(value.to_string())
+    fn from(error: AddrParseError) -> Self {
+        MyError::AddrParseError(error.to_string())
     }
 }
+
 impl From<Box<dyn std::error::Error>> for MyError {
-    fn from(value: Box<dyn std::error::Error>) -> Self {
-        MyError::RedisError(value.to_string())
+    fn from(error: Box<dyn std::error::Error>) -> Self {
+        MyError::AxumError(error.to_string())
     }
 }
+
+impl From<MultipartError> for MyError {
+    fn from(error: MultipartError) -> Self {
+        MyError::MultipartError(error.to_string())
+    }
+}
+
+impl From<std::io::Error> for MyError {
+    fn from(error: std::io::Error) -> Self {
+        MyError::AxumError(error.to_string())
+    }
+}
+
+// impl<T: std::fmt::Debug + std::fmt::Display> From<T> for MyError {
+//     fn from(error: T) -> Self {
+//         MyError::AxumError(error.to_string())
+//     }
+// }

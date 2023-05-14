@@ -4,8 +4,7 @@
     <div class="footer-box">
       <div class="footer-left">
         <div class="footer-title">
-          <h3>鄂助教</h3>
-          <span>享受文明健康的校园生活 ——</span>
+          <h3>鄂助教<span>享受文明健康的校园生活 ——</span></h3>
         </div>
         <div class="footer-link">
           <a>关于我们</a>
@@ -47,9 +46,7 @@
       justify-content: space-between;
       .footer-left {
         .footer-title {
-          display: flex;
-          align-items: center;
-          span {
+          h3 span {
             margin-left: 10px;
             font-size: 10px;
           }

@@ -27,6 +27,23 @@ const router = createRouter({
           component: () => import('@/views/reset-pwd/index.vue'),
           meta: { transitionEnter: 'animate__zoomIn', transitionLeave: 'animate__fadeOut' },
         },
+        {
+          path: '/create-center',
+          name: 'CreateCenter',
+          component: () => import('@/views/create-center/index.vue'),
+          children: [
+            {
+              path: '/create-center/article/overview',
+              name: 'Overview',
+              component: () => import('@/views/create-center/article/overview.vue'),
+            },
+            {
+              path: '/create-center/article/publish',
+              name: 'Publish',
+              component: () => import('@/views/create-center/article/publish.vue'),
+            },
+          ],
+        },
       ],
     },
   ],

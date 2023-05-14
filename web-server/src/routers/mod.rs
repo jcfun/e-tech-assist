@@ -11,15 +11,22 @@ use std::time::Duration;
 use tower::ServiceBuilder;
 use tower_http::{catch_panic::CatchPanicLayer, trace::TraceLayer};
 
+mod assets;
 mod login;
 mod perm;
+mod quick_msg;
 mod role;
 mod test;
+mod upload;
 mod user;
-mod quick_msg;
+mod article;
 
 pub fn get_sys_routers() -> Router {
     Router::new()
+        // 文章管理
+        .nest("/article", article::article_routes())
+        // 文件上传
+        .nest("/upload", upload::uploads_routes())
         // 快捷消息
         .nest("/quick-msg", quick_msg::quick_msg_routes())
         // 权限管理
@@ -30,6 +37,8 @@ pub fn get_sys_routers() -> Router {
         .nest("/user", user::user_routes())
         // token校验(上面都是需要校验的路由)
         .layer(middleware::from_extractor::<Claims>())
+        // 静态资源服务
+        .nest_service("/assets", assets::assets_routes())
         // 登录注册
         .nest("/login", login::login_routes())
         // test
@@ -42,14 +51,14 @@ pub fn get_sys_routers() -> Router {
         )
         // ip
         .layer(SecureClientIpSource::ConnectInfo.into_extension())
-        // http info
-        .layer(TraceLayer::new_for_http())
-        // filter
-        .layer(middleware::from_fn(filter))
         // panic捕获
         .layer(CatchPanicLayer::custom(handle_panic))
-        // 跨域
-        .layer(cors::cors())
+        // http info
+        .layer(TraceLayer::new_for_http())
         // 404
         .fallback(fallback)
+        // filter
+        .layer(middleware::from_fn(filter))
+        // 跨域
+        .layer(cors::cors())
 }

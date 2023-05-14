@@ -1,8 +1,8 @@
 <template>
   <div class="header">
     <div class="left-panel">
-      <div class="logo">
-        <a-image width="60" :src="logo" />
+      <div class="logo" @click="$router.push('/')">
+        <a-image width="60" :preview="false" :src="logo" />
       </div>
       <div class="sections">
         <span class="section" v-for="(item, index) in sections" :key="index">{{ item }}</span>
@@ -28,6 +28,7 @@
           </a-avatar>
           <template #content>
             <div class="profile">个人信息</div>
+            <div class="create-center" @click="onCreateCenter">创作中心</div>
             <div class="logout" @click="onLogout">退出登录</div>
           </template>
         </a-popover>
@@ -55,6 +56,9 @@
   };
   const onLogin = () => {
     router.push('/login');
+  };
+  const onCreateCenter = () => {
+    router.push('/create-center/article/publish');
   };
   const onLogout = () => {
     Modal.confirm({

@@ -426,7 +426,6 @@ pub async fn wxapp_register(
             return Ok(Res::from_success("登录成功", LoginVO { user_info, token }));
         }
     }
-
     // 如果不是系统用户
     // 开启事务
     let tx = db.acquire_begin().await.unwrap();
@@ -439,7 +438,6 @@ pub async fn wxapp_register(
     });
     // 添加用户详情信息
     let detail_id = create_user_detail_wxapp(&mut tx, &user_detail).await?;
-
     // 补充需要的用户信息
     register_dto.account = payload.phone_number;
     register_dto.detail_id = Some(detail_id);
@@ -450,7 +448,6 @@ pub async fn wxapp_register(
     if let Ok(_value) = info_res {
         tx.commit().await.unwrap();
     }
-
     // 通过用户openid获取用户数据
     let res = get_user_info_by_openid(&get_ctx().db, &payload.openid.unwrap()).await?;
     let mut user_info = res.unwrap();
@@ -461,7 +458,6 @@ pub async fn wxapp_register(
     login_dto.identity = Some(user_info.openid.clone().unwrap());
     login_dto.method = Some("0".into());
     login_log(&headers, secure_ip, &login_dto, "登录成功", "登录成功").await?;
-
     let token = encode_jwt(&user_info).await;
     Ok(Res::from_success("登录成功", LoginVO { user_info, token }))
 }

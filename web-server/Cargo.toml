@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 # 基础依赖
-axum = { version = "0.6.12", features = ["headers", "http2"] }
+axum = { version = "0.6.12", features = ["headers", "http2", "multipart"] }
 tower = { version = "0.4.13", features = ["full"] }
 tower-http = { version = "0.4.0", features = ["full"] }
 hyper = "0.14.25"
@@ -79,6 +79,7 @@ base64 = "0.13.1"
 
 # 异步
 futures = "0.3.27"
+futures-util = "0.3.28"
 
 # 参数校验
 validator = { version = "0.16.0", features = ["derive", "phone"] }

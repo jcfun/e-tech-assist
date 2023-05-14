@@ -16,6 +16,8 @@
     display: flex;
     flex-grow: 1;
     min-height: 600px;
+    min-width: 1200px;
+    width: 100%;
     position: relative;
   }
 </style>

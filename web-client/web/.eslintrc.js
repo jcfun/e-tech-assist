@@ -24,6 +24,11 @@ module.exports = {
     'vue/multi-word-component-names': 'off', // 取消组件大驼峰命名限制
     // 'max-len': ['error', { code: 120 }], // 每行最大字符数
     '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }], // 忽略以_开头的变量
+    // '@typescript-eslint/no-explicit-any': 'off', // 取消any类型限制
+    '@typescript-eslint/no-empty-function': 'off', // 取消空函数限制
+    // '@typescript-eslint/no-var-requires': 'off', // 取消require限制
+    // '@typescript-eslint/explicit-module-boundary-types': 'off', // 取消返回值类型限制
+    '@typescript-eslint/no-non-null-assertion': 'off', // 取消非空断言限制
   },
   globals: {
     uni: true,

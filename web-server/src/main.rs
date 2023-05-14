@@ -35,10 +35,10 @@ mod dbaccess;
 #[path = "./common/mod.rs"]
 mod common;
 
-#[path = "middleware/mod.rs"]
+#[path = "./middleware/mod.rs"]
 mod middleware;
 
-#[path = "utils/mod.rs"]
+#[path = "./utils/mod.rs"]
 mod utils;
 
 // #[tokio::main]
@@ -63,10 +63,11 @@ fn main() {
         // banner
         banner::print_banner();
         // 获取路由
-        let routers = Router::new().nest(
-            &format!("/{}/{}", &get_cfg().api.prefix, &get_cfg().api.version),
-            get_sys_routers(),
-        );
+        let routers = Router::new()
+            .nest(
+                &format!("/{}/{}", &get_cfg().api.prefix, &get_cfg().api.version),
+                get_sys_routers(),
+            );
         // 启动服务
         axum::Server::bind(&socket)
             .serve(routers.into_make_service_with_connect_info::<SocketAddr>())

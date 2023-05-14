@@ -12,8 +12,11 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "animate.css": "^4.1.1",
     "axios": "^1.4.0",
+    "cropperjs": "^1.5.13",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.33",
     "vue": "^3.2.47",

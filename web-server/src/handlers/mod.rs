@@ -4,3 +4,5 @@ pub mod quick_msg;
 pub mod role;
 pub mod test;
 pub mod user;
+pub mod upload;
+pub mod article;

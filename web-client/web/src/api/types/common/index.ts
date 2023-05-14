@@ -1,6 +1,7 @@
 export interface ComReqParams<T extends object> {
   url: string;
   method: Method;
+  headers?: Headers;
   data?: T;
 }
 

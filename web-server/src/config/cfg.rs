@@ -7,6 +7,7 @@ pub struct Config {
     pub captcha: Captcha,
     pub wxapp: Wxapp,
     pub email: Email,
+    pub mime: Mime,
 }
 use log::info;
 use serde::Deserialize;
@@ -89,6 +90,19 @@ pub struct Email {
     pub code: String,
     // smtp地址
     pub smtp_addr: String,
+}
+
+/// mime类型
+#[derive(Debug, Deserialize)]
+pub struct Mime {
+    pub image: MimeType,
+    pub application: MimeType,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct MimeType {
+    pub size: usize,
+    pub types: Vec<String>,
 }
 
 impl Config {
