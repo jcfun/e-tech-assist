@@ -22,17 +22,24 @@ pub struct Claims {
     pub id: Option<String>,
     pub account: Option<String>,
     pub nickname: Option<String>,
+    pub perm_codes: Option<Vec<String>>,
     pub iat: usize,
     pub exp: usize,
 }
 
 impl Claims {
-    pub fn new(id: Option<String>, account: Option<String>, nickname: Option<String>) -> Claims {
+    pub fn new(
+        id: Option<String>,
+        account: Option<String>,
+        nickname: Option<String>,
+        perm_codes: Option<Vec<String>>,
+    ) -> Claims {
         let epoch = get_epoch();
         Claims {
             id,
             account,
             nickname,
+            perm_codes,
             iat: epoch,
             exp: epoch + get_cfg().jwt.exp,
         }
@@ -56,6 +63,7 @@ pub async fn encode_jwt(login_info: &UserInfoVO) -> Token {
         login_info.id.clone(),
         login_info.account.clone(),
         login_info.nickname.clone(),
+        login_info.perm_codes.clone(),
     );
     let token = encode(
         &Header::default(),
@@ -76,7 +84,10 @@ pub async fn decode_jwt(token: String) -> Result<Claims, MyError> {
         &Validation::new(Algorithm::HS256),
     );
     token_info
-        .map(|token_data| Ok(token_data.claims))
+        .map(|token_data| {
+            info!("claims ================> {:?}", token_data.claims);
+            Ok(token_data.claims)
+        })
         .unwrap_or_else(|err| {
             info!("token error: {:?}", err);
             Err(MyError::AxumError("token error".into()))

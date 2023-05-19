@@ -148,7 +148,7 @@ pub async fn query_perms_fq(
         return Ok(Res::from_success("查询成功", page_res));
     } else {
         Ok(Res::from_vec_not_found(
-            PageRes::default().current_page(payload.page_no),
+            PageRes::default().current_page(page_no),
         ))
     }
 }

@@ -34,6 +34,7 @@ pub struct UserInfoVO {
     pub openid: Option<String>,
     pub session_key: Option<String>,
     pub perms: Option<Vec<QueryPermVO>>,
+    pub perm_codes: Option<Vec<String>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

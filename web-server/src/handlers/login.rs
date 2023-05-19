@@ -119,6 +119,12 @@ pub async fn login(
                 .collect();
             get_children(&mut parents, &unique_perms);
             user_info.perms = Some(parents);
+            user_info.perm_codes = Some(
+                unique_perms
+                    .iter()
+                    .map(|vo| vo.code.as_ref().unwrap().clone())
+                    .collect(),
+            );
             let token = encode_jwt(&user_info).await;
             login_log(&headers, secure_ip, &payload, "1", "登录成功").await?;
             tx.commit().await.unwrap();
@@ -492,7 +498,7 @@ pub async fn query_login_log_fq(
                     PageRes::default()
                         .total(0)
                         .total_page(0)
-                        .current_page(payload.page_no),
+                        .current_page(page_no),
                 ));
             }
         }
@@ -516,7 +522,7 @@ pub async fn query_login_log_fq(
         .data(res)
         .total(count)
         .total_page(PageRes::get_total_page(count, page_size))
-        .current_page(payload.page_no);
+        .current_page(page_no);
     tx.commit().await.unwrap();
     Ok(Res::from_success("查询成功", page_res))
 }

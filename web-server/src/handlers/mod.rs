@@ -1,8 +1,8 @@
+pub mod article;
 pub mod login;
 pub mod perm;
 pub mod quick_msg;
 pub mod role;
 pub mod test;
-pub mod user;
 pub mod upload;
-pub mod article;
+pub mod user;

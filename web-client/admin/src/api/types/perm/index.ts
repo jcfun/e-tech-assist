@@ -6,7 +6,7 @@ export interface PermVO {
   deleteFlag: string;
   description: string;
   disableFlag: string;
-  routeCode: string;
+  code: string;
   route: string;
   routeName: string;
   id: string;
@@ -30,7 +30,7 @@ export interface CreatePermDTO {
   apiPath: string;
   route: string;
   routeName: string;
-  routeCode: string;
+  code: string;
   resource: string;
   hiddenFlag: string;
   parentRoute: string;
@@ -46,7 +46,7 @@ export interface UpdatePermDTO {
   apiPath: string;
   route: string;
   routeName: string;
-  routeCode: string;
+  code: string;
   resource: string;
   hiddenFlag: string;
   parentRoute: string;

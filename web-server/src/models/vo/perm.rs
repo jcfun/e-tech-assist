@@ -19,7 +19,7 @@ pub struct QueryPermVO {
     pub api_path: Option<String>,
     pub route: Option<String>,
     pub route_name: Option<String>,
-    pub route_code: Option<String>,
+    pub code: Option<String>,
     pub description: Option<String>,
     pub resource: Option<String>,
     pub hidden_flag: Option<String>,

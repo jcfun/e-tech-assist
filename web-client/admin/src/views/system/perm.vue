@@ -97,7 +97,7 @@
           </template>
           <template v-if="item.type === 'input'">
             <a-input :placeholder="item.placeholder" v-model="item.value.value">
-              <template #prepend v-if="item.key === 'routeCode'">
+              <template #prepend v-if="item.key === 'code'">
                 {{ PERM_CODE_FLAG }}
               </template>
             </a-input>
@@ -185,8 +185,8 @@
     },
     {
       title: '路由编号',
-      key: 'routeCode',
-      dataIndex: 'routeCode',
+      key: 'code',
+      dataIndex: 'code',
     },
     {
       title: '前端路由',
@@ -325,7 +325,7 @@
     },
     {
       label: '权限编号',
-      key: 'routeCode',
+      key: 'code',
       value: ref(''),
       type: 'input',
       required: true,
@@ -590,8 +590,8 @@
             permDTO.value.parentId = item.value.value.split(':')[0];
             permDTO.value.parentRoute = item.value.value.split(':')[1] == '' ? null : item.value.value.split(':')[1];
           }
-        } else if (item.key == 'routeCode') {
-          permDTO.value.routeCode = item.value.value.startsWith(PERM_CODE_FLAG) ? item.value.value : PERM_CODE_FLAG + item.value.value;
+        } else if (item.key == 'code') {
+          permDTO.value.code = item.value.value.startsWith(PERM_CODE_FLAG) ? item.value.value : PERM_CODE_FLAG + item.value.value;
         } else if (item.value.value != '' && item.value.value != undefined && item.value.value != null) {
           permDTO.value[item.key] = item.value.value;
         }

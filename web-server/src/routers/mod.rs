@@ -11,7 +11,9 @@ use std::time::Duration;
 use tower::ServiceBuilder;
 use tower_http::{catch_panic::CatchPanicLayer, trace::TraceLayer};
 
+mod article;
 mod assets;
+mod common;
 mod login;
 mod perm;
 mod quick_msg;
@@ -19,7 +21,6 @@ mod role;
 mod test;
 mod upload;
 mod user;
-mod article;
 
 pub fn get_sys_routers() -> Router {
     Router::new()
@@ -37,6 +38,7 @@ pub fn get_sys_routers() -> Router {
         .nest("/user", user::user_routes())
         // token校验(上面都是需要校验的路由)
         .layer(middleware::from_extractor::<Claims>())
+        .nest("/articles", common::article_query_routes())
         // 静态资源服务
         .nest_service("/assets", assets::assets_routes())
         // 登录注册
@@ -53,12 +55,12 @@ pub fn get_sys_routers() -> Router {
         .layer(SecureClientIpSource::ConnectInfo.into_extension())
         // panic捕获
         .layer(CatchPanicLayer::custom(handle_panic))
-        // http info
-        .layer(TraceLayer::new_for_http())
         // 404
         .fallback(fallback)
         // filter
         .layer(middleware::from_fn(filter))
+        // http info
+        .layer(TraceLayer::new_for_http())
         // 跨域
         .layer(cors::cors())
 }

@@ -5,7 +5,7 @@
         <a-image width="60" :preview="false" :src="logo" />
       </div>
       <div class="sections">
-        <span class="section" v-for="(item, index) in sections" :key="index">{{ item }}</span>
+        <span class="section" @click="$router.push(item.path)" v-for="(item, index) in sections" :key="index">{{ item.title }}</span>
       </div>
     </div>
     <div class="right-panel">
@@ -28,7 +28,7 @@
           </a-avatar>
           <template #content>
             <div class="profile">个人信息</div>
-            <div class="create-center" @click="onCreateCenter">创作中心</div>
+            <div class="create-center" @click="$router.push('/create-center/overview')">创作中心</div>
             <div class="logout" @click="onLogout">退出登录</div>
           </template>
         </a-popover>
@@ -48,7 +48,24 @@
   import { useUserStore } from '@/stores/modules/user';
   import router from '@/router';
   import { Message, Modal } from '@arco-design/web-vue';
-  const sections = ref(['首页', '文章', '资讯', '聊天室']);
+  const sections = ref([
+    {
+      title: '首页',
+      path: '/',
+    },
+    {
+      title: '文章',
+      path: '/article',
+    },
+    {
+      title: '资讯',
+      path: '/news',
+    },
+    {
+      title: '聊天室',
+      path: '/chat',
+    },
+  ]);
   const searchLoading = ref(false);
   const userStore = useUserStore();
   const onSearch = () => {
@@ -56,9 +73,6 @@
   };
   const onLogin = () => {
     router.push('/login');
-  };
-  const onCreateCenter = () => {
-    router.push('/create-center/article/publish');
   };
   const onLogout = () => {
     Modal.confirm({
@@ -68,9 +82,9 @@
       cancelText: '再想想',
       onOk: () => {
         userStore.logout().then(() => {
-          Message.info('退出成功');
+          // window.location.reload();
           router.push('/');
-          window.location.reload();
+          Message.info('退出成功');
         });
       },
     });

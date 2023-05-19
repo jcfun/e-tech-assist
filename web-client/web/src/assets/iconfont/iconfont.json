@@ -1,0 +1,16 @@
+{
+  "id": "4070847",
+  "name": "e-tech-assist-web",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "20830746",
+      "name": "rocket",
+      "font_class": "rocket",
+      "unicode": "e716",
+      "unicode_decimal": 59158
+    }
+  ]
+}

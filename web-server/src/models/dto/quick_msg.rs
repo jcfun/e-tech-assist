@@ -66,7 +66,7 @@ pub struct UpdateReadFlagDTO {
     )]
     pub read_flag: Option<String>,
 
-    #[validate(custom(function = "id_vector", message = "id格式错误"))]
+    #[validate(custom(function = "id_vector"))]
     pub ids: Option<Vec<String>>,
 }
 

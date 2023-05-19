@@ -1,6 +1,6 @@
 use crate::handlers::quick_msg::*;
 use axum::{
-    routing::{get, post, put, patch},
+    routing::{get, patch, post, put},
     Router,
 };
 

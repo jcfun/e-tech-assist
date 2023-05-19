@@ -31,7 +31,7 @@ pub struct CreateRoleDTO {
     )]
     pub code: Option<String>,
 
-    #[validate(custom(function = "id_vector", message = "权限id格式错误"))]
+    #[validate(custom(function = "id_vector"))]
     pub perm_ids: Option<Vec<String>>,
 }
 

@@ -1,10 +1,12 @@
 pub mod captcha;
+pub mod db;
 pub mod email;
 pub mod epc;
 pub mod fields;
 pub mod ip;
 pub mod jwt;
 pub mod log;
+pub mod permission;
 pub mod qrcode;
 pub mod redis;
 pub mod time;

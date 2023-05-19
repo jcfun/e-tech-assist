@@ -145,7 +145,9 @@ pub async fn query_by_reply_id(
             tracing::error!("An error occurred, rollback!");
         }
     });
-    let reply_quick_msgs = quick_msg::query_by_reply_id(&mut tx, &id, "0").await?.unwrap();
+    let reply_quick_msgs = quick_msg::query_by_reply_id(&mut tx, &id, "0")
+        .await?
+        .unwrap();
     let total = reply_quick_msgs.len() as usize;
     tx.commit().await.unwrap();
     Ok(Res::from_success(
@@ -228,7 +230,8 @@ pub async fn query_quick_msgs_fq(
     let count = quick_msg::query_quick_msgs_fq_count(&mut tx, &payload).await?;
     if payload.msg_type.as_ref().unwrap() == "0" {
         for vo in vos.iter_mut() {
-            vo.children = quick_msg::query_by_reply_id(&mut tx, vo.id.as_ref().unwrap(), "").await?;
+            vo.children =
+                quick_msg::query_by_reply_id(&mut tx, vo.id.as_ref().unwrap(), "").await?;
         }
     }
     // 构建返回值

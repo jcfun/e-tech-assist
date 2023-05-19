@@ -167,7 +167,12 @@ pub async fn query_roles_fq(
                 .await
                 .unwrap_or(Some(vec![]));
         }
-        let page_res = PageRes::new(vos, count, PageRes::get_total_page(count, page_size), page_no);
+        let page_res = PageRes::new(
+            vos,
+            count,
+            PageRes::get_total_page(count, page_size),
+            page_no,
+        );
         tx.commit().await.unwrap();
         return Ok(Res::from_success("查询成功", page_res));
     } else {

@@ -20,7 +20,7 @@ pub async fn handle_timeout_error(err: BoxError) -> impl IntoResponse {
 
 /// 404
 pub async fn fallback() -> impl IntoResponse {
-    (StatusCode::NOT_FOUND, "请求地址不存在")
+    (StatusCode::NOT_FOUND, "请求路径不存在")
 }
 
 // panic

@@ -75,10 +75,10 @@
   import { isEmpty } from '@/utils/';
   import Cropper from 'cropperjs';
   import 'cropperjs/dist/cropper.css';
-  import type { CreateArticleDTO } from '@/api/types/article';
-  import article from '@/api/modules/article';
+  import type { CreateArticleDTO } from '@/api/types/create-center/article';
+  import article from '@/api/modules/create-center/article';
   const userStore = useUserStore();
-  const token = `${userStore?.user?.token.tokenType ?? 'Bearer'} ${userStore?.user?.token?.token}`;
+  const token = `${userStore?.user?.token?.tokenType ?? 'Bearer'} ${userStore?.user?.token?.token}`;
   const showModal = ref(false);
   const croppedImage = ref('');
   const cropperImage = ref('');
@@ -93,7 +93,7 @@
   editorConfig.MENU_CONF!['uploadImage'] = {
     server: `${http.baseUrl}/upload/image`, // 上传图片地址
     headers: {
-      Authorization: token,
+      Authorization: token ?? '',
     },
     // 自定义插入图片
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -109,7 +109,7 @@
   const valueHtml = ref('');
   const toolbarConfig = {};
   const handleChange = () => {
-    console.log(valueHtml.value);
+    // console.log(valueHtml.value);
   };
   // 组件销毁时，也及时销毁编辑器
   onBeforeUnmount(() => {
@@ -182,15 +182,14 @@
 <style scoped lang="scss">
   .editor-box {
     width: 100%;
-    min-width: 500px;
+    min-width: 1000px;
     padding: 30px 0;
-    padding-right: 10%;
     background-color: #f9f9f9;
     .editor-toolbar {
       font-size: 30px;
     }
     .editor-wrap {
-      min-width: 800px;
+      min-width: 1000px;
       overflow: hidden;
       background-color: #fff;
       box-shadow: 0 0 5px #c9c9c9;

@@ -49,7 +49,7 @@ pub struct CreatePermDTO {
         required(message = "前端权限编号不可为空"),
         length(min = 5, max = 20, message = "前端权限编号格式错误")
     )]
-    pub route_code: Option<String>,
+    pub code: Option<String>,
 
     #[validate(length(max = 100, message = "父路由路由格式错误"))]
     pub parent_route: Option<String>,
@@ -92,7 +92,7 @@ pub struct UpdatePermDTO {
     pub route_name: Option<String>,
 
     #[validate(length(min = 5, max = 20, message = "前端权限编号格式错误"))]
-    pub route_code: Option<String>,
+    pub code: Option<String>,
 
     #[validate(length(max = 100, message = "父路由路由格式错误"))]
     pub parent_route: Option<String>,

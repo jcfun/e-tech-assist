@@ -4,7 +4,7 @@
       <a-image width="60" :src="logo" />
     </div>
     <div class="register-panel">
-      <h2 class="panel-title">欢迎注册鄂助教</h2>
+      <h2 class="panel-title">欢迎加入鄂助教</h2>
       <div class="panel-content">
         <div class="panel-input">
           <a-input v-model="account" placeholder="请输入账号" size="large" allow-clear :max-length="100">

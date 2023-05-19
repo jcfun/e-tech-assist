@@ -196,7 +196,7 @@ pub async fn update_disable_flag(
             ` p.api_path,`
             ` p.route,`
             ` p.route_name,`
-            ` p.route_code,`
+            ` p.code,`
             ` p.resource,`
             ` hidden_flag,`
             ` parent_route,`

@@ -1,6 +1,5 @@
-use std::borrow::Cow;
-
 use crate::common::errors::MyError;
+use std::{borrow::Cow, collections::HashMap};
 use tracing::warn;
 use validator::{Validate, ValidationError};
 
@@ -14,20 +13,28 @@ where
         Err(errors) => {
             let mut error_msg = String::new();
             for (field, errors) in errors.field_errors() {
-                let mut message = errors[0].message.as_ref().unwrap_or(&Cow::default()).to_string();
+                let message = errors[0]
+                    .message
+                    .as_ref()
+                    .unwrap_or(&Cow::default())
+                    .to_string();
                 warn!("{}: {:?}", field, message);
-                message.push_str(" ");
-                error_msg.push_str(&message);
+                error_msg.push_str(&format!("{message} "));
             }
-            Err(MyError::InvalidInput(error_msg))
-        },
+            Err(MyError::InvalidInput(error_msg.trim_end().into()))
+        }
     }
 }
 
 pub fn id_vector(values: &Vec<String>) -> Result<(), ValidationError> {
     for s in values {
         if s.len() != 18 {
-            return Err(ValidationError::new("id格式错误"));
+            let error = ValidationError {
+                code: Cow::from("id_vector"),
+                message: Some(Cow::from("id格式错误")),
+                params: HashMap::new(),
+            };
+            return Err(error);
         }
     }
     Ok(())

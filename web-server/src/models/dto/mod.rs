@@ -1,7 +1,7 @@
+pub mod article;
 pub mod base;
 pub mod login;
 pub mod perm;
 pub mod quick_msg;
 pub mod role;
 pub mod user;
-pub mod article;

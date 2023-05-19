@@ -14,6 +14,7 @@
 <style scoped lang="scss">
   .content {
     display: flex;
+    justify-content: center;
     flex-grow: 1;
     min-height: 600px;
     min-width: 1200px;

@@ -29,7 +29,7 @@ pub struct CreateUserDTO {
     #[serde(skip_deserializing)]
     pub detail_id: Option<String>,
 
-    #[validate(custom(function = "id_vector", message = "角色id格式错误"))]
+    #[validate(custom(function = "id_vector"))]
     pub role_ids: Option<Vec<String>>,
 
     #[validate(length(max = 100, message = "用户描述格式错误"))]

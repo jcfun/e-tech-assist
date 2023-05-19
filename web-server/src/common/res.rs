@@ -58,8 +58,8 @@ where
         self
     }
 
-    pub fn current_page(mut self, current_page: Option<usize>) -> PageRes<T> {
-        self.current_page = current_page;
+    pub fn current_page(mut self, current_page: usize) -> PageRes<T> {
+        self.current_page = Some(current_page);
         self
     }
 }

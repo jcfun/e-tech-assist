@@ -5,10 +5,14 @@ use uuid::Uuid;
 use crate::{
     common::{errors::MyError, res::Res},
     config::init::get_cfg,
-    utils::jwt::Claims, models::vo::upload::UploadVO,
+    models::vo::upload::UploadVO,
+    utils::jwt::Claims,
 };
 
-pub async fn image_upload(claims: Claims, mut multipart: Multipart) -> Result<Res<UploadVO>, MyError> {
+pub async fn image_upload(
+    claims: Claims,
+    mut multipart: Multipart,
+) -> Result<Res<UploadVO>, MyError> {
     let image_types = &get_cfg().mime.image.types;
     let mut upload_vo = UploadVO::default();
     while let Some(field) = multipart.next_field().await? {
@@ -42,12 +46,17 @@ pub async fn image_upload(claims: Claims, mut multipart: Multipart) -> Result<Re
         //最终保存在服务器上的文件名
         let save_image_name = format!("{}/{}.{}", "assets/images", image_name, ext_name);
         //保存上传的文件
-        tokio::fs::write(&save_image_name, &data)
-            .await?;
+        tokio::fs::write(&save_image_name, &data).await?;
         info!("成功保存类型为({ext_name})的图片至({save_image_name}), 大小({file_size})个字节");
-        upload_vo.url = format!("http://localhost:3000/api/v1/{save_image_name}").into();
+        // let ip = &get_cfg().server.ip;
+        let port = &get_cfg().server.port;
+        let prefix = &get_cfg().api.prefix;
+        let version = &get_cfg().api.version;
+        upload_vo.url =
+            format!("http://localhost:{port}/{prefix}/{version}/{save_image_name}").into();
         upload_vo.alt = file_name.into();
-        upload_vo.href = format!("http://localhost:3000/api/v1/{save_image_name}").into();
+        upload_vo.href =
+            format!("http://localhost:{port}/{prefix}/{version}/{save_image_name}").into();
     }
     Ok(Res::from_success("上传成功", upload_vo))
 }

@@ -4,7 +4,7 @@
  * @LastEditors: jcfun jcfunstar@gmail.com
  * @LastEditTime: 2023-03-23 13:18:32
  * @FilePath: /e-tech-assist/web-client/webassembly/src/lib.rs
- * @Description: 
+ * @Description:
  */
 mod utils;
 

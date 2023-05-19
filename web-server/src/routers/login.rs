@@ -1,4 +1,6 @@
-use crate::handlers::login::{captcha, login, register, reset_pwd, login_wxapp, wxapp_register, query_login_log_fq};
+use crate::handlers::login::{
+    captcha, login, login_wxapp, query_login_log_fq, register, reset_pwd, wxapp_register,
+};
 use axum::{
     routing::{get, patch, post},
     Router,

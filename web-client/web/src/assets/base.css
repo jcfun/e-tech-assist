@@ -47,7 +47,6 @@
 *::after {
   box-sizing: border-box;
   margin: 0;
-  position: relative;
   font-weight: normal;
 }
 
@@ -86,17 +85,6 @@ body {
   margin-top: 5px;
 }
 
-.user-popover .arco-popover-content .profile:hover {
-  background-color: #ededed;
-  transition: all 0.3s ease-in;
-}
-
-.user-popover .arco-popover-content .logout:hover,
-.user-popover .arco-popover-content .create-center:hover {
-  background-color: #ededed;
-  transition: all 0.3s ease-in;
-}
-
 .user-popover .arco-popover-content .profile,
 .user-popover .arco-popover-content .logout,
 .user-popover .arco-popover-content .create-center {
@@ -106,6 +94,13 @@ body {
   height: 35px;
   padding: 0 5px;
   border-radius: 5px;
+}
+
+.user-popover .arco-popover-content .profile:hover,
+.user-popover .arco-popover-content .logout:hover,
+.user-popover .arco-popover-content .create-center:hover {
+  background-color: #ededed;
+  transition: all 0.3s ease-in;
 }
 
 /* NProgress加载条样式 */
@@ -118,7 +113,7 @@ body {
   box-shadow: 0 0 5px #006fff, 0 0 10px #006fff !important;
 }
 
-/* 禁用滚动条 */
+/* animate动画效果可能出现滚动条，因此在动画期间禁用滚动条 */
 .disable-scroll {
   overflow: hidden;
 }
@@ -136,4 +131,52 @@ body {
 /* 修改滚动条的形状 */
 ::-webkit-scrollbar-thumb {
   border-radius: 5px;
+}
+
+/* 文章模块轮播图箭头样式 */
+.a-carousel-arrow-article div {
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+}
+
+.a-carousel-arrow-article div:hover {
+  background-color: transparent;
+}
+
+.a-carousel-arrow-article div svg {
+  font-size: 50px;
+  color: #ffffffd0;
+}
+
+/* 回到顶部popover内容样式 */
+.scroll-to-top-popover-content .arco-popover-content {
+  margin-top: 0;
+}
+
+/* 文章总览操作popover */
+.article-operate-popover-content {
+  width: 120px;
+}
+
+.article-operate-popover-content .arco-popover-content {
+  margin-top: 0;
+}
+
+.article-operate-popover-content .arco-popover-content .edit-btn,
+.article-operate-popover-content .arco-popover-content .delete-btn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 0 5px;
+  border-radius: 5px;
+  font-size: 15px;
+}
+
+.article-operate-popover-content .arco-popover-content .edit-btn:hover,
+.article-operate-popover-content .arco-popover-content .delete-btn:hover {
+  background-color: #ededed;
+  transition: all 0.3s ease-in;
 }
