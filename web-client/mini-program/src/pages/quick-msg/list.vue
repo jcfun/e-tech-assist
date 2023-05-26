@@ -64,10 +64,17 @@
     quickMsg
       .getQuickMsgList(pageNo++, 15)
       .then(res => {
-        if (res.data?.data.length < 15) {
-          noMore = true;
+        if (res.code == 200) {
+          if (res.data?.data.length < 15) {
+            noMore = true;
+          }
+          indexList.value = [...indexList.value, ...res.data.data];
+        } else {
+          pageNo--;
         }
-        indexList.value = [...indexList.value, ...res.data.data];
+      })
+      .catch(() => {
+        pageNo--;
       })
       .finally(() => {
         loading.value = false;

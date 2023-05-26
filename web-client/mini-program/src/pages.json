@@ -56,6 +56,12 @@
       "style": {
         "navigationBarTitleText": "个人二维码"
       }
+    },
+    {
+      "path": "pages/index/detail",
+      "style": {
+        "navigationBarTitleText": "文章详情"
+      }
     }
   ],
   "tabBar": {

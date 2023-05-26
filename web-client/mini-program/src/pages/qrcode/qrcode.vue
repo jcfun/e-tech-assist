@@ -28,6 +28,23 @@
   let token = user.token;
   // 头像
   const imgSrc = ref(isEmpty(user?.userInfo?.avatarUrl) ? 'http://file.urainstar.top/logo.png' : user.userInfo.avatarUrl);
+  // 预加载图片
+  UQRCode.prototype.loadImage = function (src: string) {
+    // 需要返回Promise对象
+    return new Promise((resolve, reject) => {
+      uni.getImageInfo({
+        src,
+        success: res => {
+          // resolve返回img
+          resolve(res.path);
+        },
+        fail: err => {
+          // reject返回错误信息
+          reject(err);
+        },
+      });
+    });
+  };
   // 二维码内容
   const qrcodeValue = ref(user?.userInfo?.id);
   // 临时文件路径
@@ -35,23 +52,6 @@
   onReady(() => {
     // 获取uQRCode实例
     let qr = new UQRCode();
-    // 预加载图片
-    UQRCode.prototype.loadImage = function (src: string) {
-      // 需要返回Promise对象
-      return new Promise((resolve, reject) => {
-        uni.getImageInfo({
-          src,
-          success: res => {
-            // resolve返回img
-            resolve(res.path);
-          },
-          fail: err => {
-            // reject返回错误信息
-            reject(err);
-          },
-        });
-      });
-    };
     // 设置二维码内容
     qr.data = qrcodeValue.value;
     // 设置二维码大小，必须与canvas设置的宽高一致
@@ -73,21 +73,15 @@
     qr.drawCanvas();
     // 导出临时文件路径
     setTimeout(() => {
-      uni.canvasToTempFilePath(
-        {
-          canvasId: 'qrcode',
-          fileType: 'png',
-          width: 250,
-          height: 250,
-          success: res => {
-            tempFilePath.value = res.tempFilePath;
-          },
-          fail: err => {
-            console.log(err);
-          },
+      uni.canvasToTempFilePath({
+        canvasId: 'qrcode',
+        fileType: 'jpg',
+        width: 250,
+        height: 250,
+        success: res => {
+          tempFilePath.value = res.tempFilePath;
         },
-        //this, // 组件内使用必传当前实例
-      );
+      });
     }, 300);
   });
   // 保存图片

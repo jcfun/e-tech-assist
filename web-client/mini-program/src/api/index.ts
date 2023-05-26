@@ -3,7 +3,7 @@ import type { ComReqParams, Res } from './types/common';
 import { useUserStore } from '@/store/user';
 class Request {
   private baseUrl = 'http://172.18.32.1:33000/api/v1';
-  private baseUrl2 = 'http://10.4.6.12:33000/api/v1';
+  private baseUrl2 = 'http://10.4.6.5:33000/api/v1';
   private baseUrlWindows = 'http://192.168.31.201:3000/api/v1';
   private baseUrlLinux = 'http://10.7.7.2:33000/api/v1';
 
