@@ -1,11 +1,18 @@
 <template>
   <div class="header">
     <div class="left-panel">
-      <div class="logo" @click="$router.push('/')">
+      <div class="logo" @click="$router.push('/home')">
         <a-image width="60" :preview="false" :src="logo" />
       </div>
       <div class="sections">
-        <span class="section" @click="$router.push(item.path)" v-for="(item, index) in sections" :key="index">{{ item.title }}</span>
+        <span
+          class="section"
+          :class="{ 'sidebar-menu-selected': $route.path == item.path }"
+          @click="$router.push(item.path)"
+          v-for="(item, index) in sections"
+          :key="index"
+          >{{ item.title }}</span
+        >
       </div>
     </div>
     <div class="right-panel">
@@ -51,7 +58,7 @@
   const sections = ref([
     {
       title: '首页',
-      path: '/',
+      path: '/home',
     },
     {
       title: '文章',
@@ -59,7 +66,7 @@
     },
     {
       title: '资讯',
-      path: '/news',
+      path: '/information',
     },
     {
       title: '聊天室',
@@ -83,7 +90,7 @@
       onOk: () => {
         userStore.logout().then(() => {
           // window.location.reload();
-          router.push('/');
+          router.push('/home');
           Message.info('退出成功');
         });
       },
@@ -118,6 +125,9 @@
             color: #006fff;
             transition: all 0.3s ease-in;
           }
+        }
+        .sidebar-menu-selected {
+          color: #006fff;
         }
       }
     }

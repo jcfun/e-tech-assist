@@ -53,8 +53,10 @@
             <template v-else-if="item.key === 'actions'" #cell="{ record }">
               <a-space>
                 <a-button type="text" size="medium" @click="onUpdateItem(record)">编辑</a-button>
-                <a-button type="text" size="medium" @click="onUpdateDisableFlag(record)">{{ record.disableFlag == '0' ? '禁用' : '启用' }}</a-button>
-                <a-button type="text" size="medium" @click="onDeleteItem(record)">删除</a-button>
+                <a-button type="text" :status="record.disableFlag == '1' ? 'normal' : 'danger'" size="medium" @click="onUpdateDisableFlag(record)">{{
+                  record.disableFlag == '0' ? '禁用' : '启用'
+                }}</a-button>
+                <a-button type="text" size="medium" status="danger" @click="onDeleteItem(record)">删除</a-button>
               </a-space>
               <a-button type="text" size="medium" @click="onShowMenu(record)"> 角色权限 </a-button>
             </template>
@@ -66,7 +68,7 @@
       <TableFooter ref="tableFooterRef" :pagination="pagination" />
     </template>
   </TableBody>
-  <ModalDialog ref="modalDialogRef" :title="actionTitle" @confirm="onConfirm">
+  <ModalDialog ref="modalDialogRef" :title="actionTitle" @confirm="onConfirm" draggable>
     <template #content>
       <a-form :model="roleDTO">
         <a-form-item
@@ -349,7 +351,7 @@
       modalDialogRef.value?.toggle();
       role[actionType.value as keyof typeof role](roleDTO.value as any).then((res: any) => {
         if (res.code == 200) {
-          Message.success(res.msg);
+          Message.info(res.msg);
           formItems.forEach((it: any) => {
             if (it.reset) {
               it.reset();
@@ -358,8 +360,6 @@
             }
           });
           doRefresh();
-        } else {
-          Message.error(res.msg);
         }
       });
     }
@@ -399,10 +399,8 @@
     updateRolePermDTO.value.permIds = defaultCheckedKeys.value;
     role.updateRolePerm(updateRolePermDTO.value).then(res => {
       if (res.code == 200) {
-        Message.success(res.msg);
+        Message.info(res.msg);
         doRefresh();
-      } else {
-        Message.error(res.msg);
       }
     });
     menuModalDialogRef.value?.toggle();
@@ -417,10 +415,8 @@
       onOk: () => {
         role.deleteRole(item.id).then(res => {
           if (res.code == 200) {
-            Message.success(res.msg);
+            Message.info(res.msg);
             doRefresh();
-          } else {
-            Message.error(res.msg);
           }
         });
       },
@@ -432,7 +428,7 @@
     let disableFlag = item?.disableFlag == '0' ? '1' : '0';
     role.updateDisableFlag(id, disableFlag).then(res => {
       if (res.code == 200) {
-        Message.success(res.msg);
+        Message.info(res.msg);
         doRefresh();
       } else {
         Message.error(res.msg);

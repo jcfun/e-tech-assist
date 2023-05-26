@@ -1,6 +1,6 @@
 <style scoped lang="scss">
   .article-overview-box {
-    margin-top: 30px;
+    margin: 30px 0;
     background-color: #fff;
     width: 100%;
     min-width: 1000px;
@@ -85,7 +85,7 @@
             <icon-menu size="20" />
             <template #content>
               <div class="edit-btn" @click="methods.toEdit(item)">再次编辑</div>
-              <div class="delete-btn" @click="$router.push('/create-center/overview')">删除文章</div>
+              <div class="delete-btn" @click="methods.toDelete(item)">删除文章</div>
             </template>
           </a-popover>
         </div>
@@ -96,12 +96,14 @@
 </template>
 
 <script setup lang="ts">
-  import article from '@/api/modules/article';
+  import articles from '@/api/modules/article';
+  import article from '@/api/modules/create-center/article';
   import type { QueryArticleVO } from '@/api/types/article';
   import { onMounted, onUnmounted } from 'vue';
   import { reactive } from 'vue';
   import ScrollToTopButton from '@/components/ScrollToTopButton.vue';
   import { useArticleDetailStore } from '@/stores/modules/article';
+  import { Message, Modal } from '@arco-design/web-vue';
   const state = reactive({
     articleList: <Array<QueryArticleVO>>[],
     pageNo: 1,
@@ -122,7 +124,7 @@
       }
       state.loading = true;
       try {
-        const res = await article.queryArticlesFq({
+        const res = await articles.queryArticlesFq({
           byUserIdFlag: '1',
           pageNo: state.pageNo++,
           pageSize: 10,
@@ -162,6 +164,26 @@
     toEdit: (item: QueryArticleVO) => {
       store.articleDetailStore.setArticleDetail(item).then(() => {
         window.open(`/create-center/article/edit`, '_blank');
+      });
+    },
+    toDelete: async (item: QueryArticleVO) => {
+      Modal.confirm({
+        title: '提示',
+        content: '确认删除该文章？',
+        okText: '确认',
+        cancelText: '再想想',
+        onOk: async () => {
+          const res = await article.deleteArticle(item.id);
+          if (res.code == 200) {
+            Message.info('删除成功');
+            const res = await articles.queryArticlesFq({
+              byUserIdFlag: '1',
+              pageNo: 1,
+              pageSize: state.pageNo * 10,
+            });
+            state.articleList = res.data.data;
+          }
+        },
       });
     },
     init: async function () {

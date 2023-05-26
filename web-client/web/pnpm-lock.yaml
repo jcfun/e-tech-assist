@@ -22,6 +22,9 @@ dependencies:
   nprogress:
     specifier: ^0.2.0
     version: 0.2.0
+  party-js:
+    specifier: ^2.2.0
+    version: 2.2.0
   pinia:
     specifier: ^2.0.33
     version: 2.0.33(typescript@4.8.4)(vue@3.2.47)
@@ -34,6 +37,9 @@ dependencies:
   vue-router:
     specifier: ^4.1.6
     version: 4.1.6(vue@3.2.47)
+  vue3-carousel:
+    specifier: ^0.3.1
+    version: 0.3.1(vue@3.2.47)
   webassembly:
     specifier: file:../webassembly/pkg
     version: file:../webassembly/pkg
@@ -3181,6 +3187,10 @@ packages:
       json-parse-better-errors: 1.0.2
     dev: true
 
+  /party-js@2.2.0:
+    resolution: {integrity: sha512-50hGuALCpvDTrQLPQ1fgUgxKIWAH28ShVkmeK/3zhO0YJyCqkhrZhQEkWPxDYLvbFJ7YAXyROmFEu35gKpZLtQ==}
+    dev: false
+
   /path-exists@4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
     engines: {node: '>=8'}
@@ -3996,6 +4006,14 @@ packages:
       '@volar/vue-typescript': 1.2.0
       typescript: 4.8.4
     dev: true
+
+  /vue3-carousel@0.3.1(vue@3.2.47):
+    resolution: {integrity: sha512-86vUkNPBzL2PVuR9w6hUsI90ccFjLp+K8cSFpRTISf+SjUQY3fMHc5CFF5MUL62v1xYYm27zEBmQupO9VQx9Kw==}
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      vue: 3.2.47
+    dev: false
 
   /vue@3.2.47:
     resolution: {integrity: sha512-60188y/9Dc9WVrAZeUVSDxRQOZ+z+y5nO2ts9jWXSTkMvayiWxCWOWtBQoYjLeccfXkiiPZWAHcV+WTPhkqJHQ==}

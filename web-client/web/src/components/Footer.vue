@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <div class="footer-statement">©E-Tech-Assist. All Rights Reserved! · version: v0.0.0</div>
+    <div class="footer-statement">©E-Tech-Assist. All Rights Reserved! · version: v0.0.1</div>
   </div>
 </template>
 
@@ -48,12 +48,12 @@
       justify-content: center;
       .footer-wrap {
         width: 100%;
-        max-width: 1200px;
+        max-width: 1350px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         .footer-left {
-          max-width: 1200px;
+          max-width: 1350px;
           .footer-title {
             h3 span {
               margin-left: 10px;
@@ -101,6 +101,7 @@
       margin-top: 20px;
       margin-bottom: 10px;
       font-size: 12px;
+      font-weight: bold;
       text-align: center;
     }
   }

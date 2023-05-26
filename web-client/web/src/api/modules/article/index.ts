@@ -1,6 +1,6 @@
 import http from '@/api';
 import { Method, type Res, type PageRes } from '@/api/types/common';
-import type { QueryArticleVO, QueryArticleDTO, QueryUserArticleVO, QueryArticleInfoVO } from '@/api/types/article';
+import type { QueryArticleVO, QueryArticleDTO, QueryArticleInfoVO } from '@/api/types/article';
 
 class Article {
   // 多条件模糊查询文章
@@ -28,10 +28,10 @@ class Article {
     });
   };
 
-  // 根据用户id查询对应的文章数量和用户头像
-  public queryUserArticleCountAndAvatar = (userId: string): Promise<Res<QueryUserArticleVO>> => {
+  // 根据用户id查询对应的文章数量
+  public queryUserArticleCount = (userId: string): Promise<Res<number>> => {
     return http.request({
-      url: `/articles/info/${userId}`,
+      url: `/articles/count/${userId}`,
       method: Method.GET,
     });
   };
@@ -43,7 +43,15 @@ class Article {
       method: Method.GET,
     });
   };
+
+  // 更新文章浏览量
+  public updateArticleViewCount = (articleId: string): Promise<Res<number>> => {
+    return http.request({
+      url: `/articles/view/${articleId}`,
+      method: Method.PUT,
+    });
+  };
 }
 
-const article = new Article();
-export default article;
+const articles = new Article();
+export default articles;

@@ -55,8 +55,8 @@
           <div class="article-content-top-item" v-for="(item, index) in articleTopList" :key="index" @click="toDetail(item)">
             <img :src="item.cover" />
             <div class="mask">
-              <h3 v-html="item.title"></h3>
-              <p v-html="item.content"></p>
+              <h3>{{ item.title }}</h3>
+              <p v-html="item.content.replace(/<img.*?>/g, '')"></p>
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@
           <div class="article-content-list-item" v-for="(item, index) in articleList" :key="index">
             <div class="article">
               <div class="title" @click="toDetail(item)">{{ item.title }}</div>
-              <div class="content" v-html="item.content"></div>
+              <div class="content" v-html="item.content.replace(/<img.*?>/g, '')"></div>
               <div class="info">
                 <div>{{ item.creator }}</div>
                 <div>
@@ -83,7 +83,7 @@
       </div>
       <div class="article-side">
         <div class="article-side-function">
-          <div class="search">
+          <div class="search" @click="$router.push('/article/search')">
             <icon-search size="40" />
             <span>搜索文章</span>
           </div>
@@ -91,7 +91,7 @@
             <icon-pen-fill size="40" />
             <span>发布文章</span>
           </div>
-          <div class="file">
+          <div class="file" @click="$router.push('/create-center/article/overview')">
             <icon-file size="40" />
             <span>我的文章</span>
           </div>
@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-  import article from '@/api/modules/article';
+  import articles from '@/api/modules/article';
   import ScrollToTopButton from '@/components/ScrollToTopButton.vue';
   import type { QueryArticleVO } from '@/api/types/article';
   import { ref } from 'vue';
@@ -144,7 +144,7 @@
     }
     loading = true;
     try {
-      const res = await article.queryArticlesFq({
+      const res = await articles.queryArticlesFq({
         pageNo: pageNo++,
         pageSize: 10,
       });
@@ -177,14 +177,14 @@
   };
   // 获取置顶文章
   const getTopArticles = async () => {
-    const res = await article.queryTopArticles();
+    const res = await articles.queryTopArticles();
     if (res.code == 200) {
       articleTopList.value = res.data;
     }
   };
   // 获取热门文章
   const getHotArticles = async () => {
-    const res = await article.queryHotArticles();
+    const res = await articles.queryHotArticles();
     if (res.code == 200) {
       articleHotList.value = res.data;
       articleCarouselList.value = res.data.slice(0, 5);
@@ -209,7 +209,7 @@
 <style scoped lang="scss">
   .article-box {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1350px;
     display: flex;
     flex-direction: column;
     .article-box-header {

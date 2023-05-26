@@ -136,6 +136,9 @@ pub struct QueryArticleDTO {
     #[validate(length(equal = 1, message = "是否置顶格式错误"))]
     pub top_flag: Option<String>,
 
+    #[validate(length(equal = 1, message = "是否热门格式错误"))]
+    pub hot_flag: Option<String>,
+
     #[validate(range(min = 1, message = "页码最小为1"))]
     pub page_no: Option<usize>,
 
@@ -154,6 +157,7 @@ impl Default for QueryArticleDTO {
             status: Some(ArticleStatus::Published.get_code()),
             by_user_id_flag: None,
             top_flag: None,
+            hot_flag: None,
             page_no: Some(1),
             page_size: Some(10),
         }

@@ -4,11 +4,12 @@ use crate::{
         res::{PageRes, Res},
     },
     config::init::get_ctx,
-    dbaccess::perm,
+    dbaccess::{perm, role},
     models::{
         dto::{
             base::BaseDTO,
             perm::{CreatePermDTO, QueryPermDTO, UpdatePermDTO},
+            role::CreateRoleDTO,
         },
         vo::perm::QueryPermVO,
     },
@@ -37,6 +38,29 @@ pub async fn create_perm(
     });
     // 添加权限信息
     let count = perm::create_perm(&mut tx, &payload).await?.rows_affected;
+    let id = payload.base_dto.id.unwrap();
+    let parent_id = payload.parent_id.unwrap();
+    // 查询角色与权限关联表中是否有其父权限的关联信息
+    let res = perm::query_role_perms_by_perm_id(&mut tx, &parent_id).await?;
+    // 如果有则为新添加的权限添加其父权限关联角色的关联信息
+    for item in res.iter() {
+        if item.perm_id.as_ref().unwrap().eq(&parent_id) {
+            let mut dto = CreateRoleDTO::default();
+            fields::fill_fields(&mut dto.base_dto, &claims, true);
+            dto.base_dto.id = Some(item.role_id.clone().unwrap());
+            dto.perm_ids = Some(vec![id.clone()]);
+            let count = role::create_role_perm(&mut tx, &dto)
+                .await
+                .unwrap()
+                .rows_affected;
+            if count == 0 {
+                return Ok(Res::from_fail(
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "添加失败",
+                ));
+            }
+        }
+    }
     if count == 0 {
         return Ok(Res::from_fail(
             StatusCode::INTERNAL_SERVER_ERROR,

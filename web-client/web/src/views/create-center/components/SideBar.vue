@@ -97,9 +97,14 @@
             transition: all 0.3s ease-in;
           }
         }
+
+        .sidebar-menu-selected {
+          color: #006fff;
+        }
       }
     }
   }
+
   .sidebar-menu-selected {
     color: #006fff;
   }

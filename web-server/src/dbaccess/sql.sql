@@ -32,7 +32,7 @@
         ` (rp.delete_flag = '0'`
             ` AND p.delete_flag = '0'`
             ` AND rp.role_id = #{role_id})`
-        -- 如果有父权限，则查出所有子权限
+        -- 如果有父权限，则查出所有子权限，但是这里只能查到一级子权限
         ` OR (p.delete_flag = '0'`
             ` AND p.parent_id IN (`
             ` SELECT`

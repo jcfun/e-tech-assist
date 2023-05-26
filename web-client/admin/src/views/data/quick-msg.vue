@@ -88,7 +88,9 @@
             </template>
             <template v-else-if="item.key === 'actions'" #cell="{ record }">
               <a-space>
-                <a-button type="text" size="medium" @click="onUpdateDisableFlag(record)">{{ record.disableFlag == '0' ? '禁用' : '启用' }}</a-button>
+                <a-button type="text" :status="record.disableFlag == '1' ? 'normal' : 'danger'" size="medium" @click="onUpdateDisableFlag(record)">{{
+                  record.disableFlag == '0' ? '禁用' : '启用'
+                }}</a-button>
               </a-space>
             </template>
           </a-table-column>
@@ -345,7 +347,6 @@
     getQuickMsgs(queryQuickMsgDTO.value);
   };
   const pagination = usePagination(doRefresh);
-  // 获取用户信息
   const getQuickMsgs = (data: QueryQuickMsgDTO) => {
     table.tableLoading.value = true;
     quickMsg.getQuickMsgsFq(data).then(res => {
@@ -378,10 +379,8 @@
     let disableFlag = item?.disableFlag == '0' ? '1' : '0';
     quickMsg.updateDisableFlag(id, disableFlag).then(res => {
       if (res.code == 200) {
-        Message.success(res.msg);
+        Message.info(res.msg);
         doRefresh();
-      } else {
-        Message.error(res.msg);
       }
     });
   };

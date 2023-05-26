@@ -78,7 +78,7 @@
       .then(res => {
         if (res.code == 200) {
           user.setUser(res.data).then(_res => {
-            router.push('/');
+            router.push('/home');
             Message.info(`登录成功，欢迎 ${identity.value}`);
           });
         } else {

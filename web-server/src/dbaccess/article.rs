@@ -29,26 +29,33 @@ pub async fn create_article(
 
 /// 多条件查询分页查询
 #[py_sql(
-    r#"`select id, to_char(operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, operator, operator_id, to_char(create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, creator, creator_id, delete_flag, title, cover, content, view_count, like_count, comment_count, category_id, tag_ids, status, collect_count, forward_count, top_flag`
-    ` from t_article`
-    ` where delete_flag = '0'` 
+    r#"`select ta.id, to_char(ta.operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, ta.operator, ta.operator_id, to_char(ta.create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, ta.creator, ta.creator_id, ta.delete_flag, ta.title, ta.cover, ta.content, ta.view_count, ta.like_count, ta.comment_count, ta.category_id, ta.tag_ids, ta.status, ta.collect_count, ta.forward_count, ta.top_flag, tud.avatar_url as avatar`
+    ` from t_article as ta`
+    ` left join t_user as tu`
+    ` on ta.creator_id = tu.id`
+    ` left join t_user_detail as tud` 
+    ` on tu.detail_id = tud.id`
+    ` where ta.delete_flag = '0'`
+    ` and tu.delete_flag = '0'`
+    ` and tud.delete_flag = '0'`
     if dto.create_time_start != '':
-        ` and create_time >= #{dto.create_time_start}`
+        ` and ta.create_time >= #{dto.create_time_start}`
     if dto.create_time_end != '':
-        ` and create_time <= #{dto.create_time_end}`
+        ` and ta.create_time <= #{dto.create_time_end}`
     if dto.title != '':
-        ` and title like '%${dto.title}%'`
+        ` and ta.title like '%${dto.title}%'`
     if dto.category_id != '':
-        ` and category_id = #{dto.category_id}`
+        ` and ta.category_id = #{dto.category_id}`
     if dto.tag_id != '':
-        ` and tag_id = #{dto.tag_id}`
+        ` and ta.tag_id = #{dto.tag_id}`
     if dto.status != '':
-        ` and status = #{dto.status}`
-    if dto.by_user_id_flag != '':
-        ` and creator_id = #{dto.id}`
+        ` and ta.status = #{dto.status}`
+    if dto.id != '':
+        ` and ta.creator_id = #{dto.id}`
     if dto.top_flag != '':
-        ` and top_flag = #{dto.top_flag}`
-    ` order by create_time desc`
+        ` and ta.top_flag = #{dto.top_flag}`
+    if dto.hot_flag == '1':
+        ` order by ta.view_count desc, ta.collect_count desc, ta.like_count desc, ta.comment_count desc, ta.create_time desc`
     ` limit ${page_size}`
     ` offset ${offset}`
     "#
@@ -65,24 +72,30 @@ pub async fn query_articles_fq(
 /// 多条件查询分页查询数量
 #[py_sql(
     r#"`select count(*)`
-    ` from t_article`
-    ` where delete_flag = '0'` 
+    ` from t_article as ta`
+    ` left join t_user as tu`
+    ` on ta.creator_id = tu.id`
+    ` left join t_user_detail as tud` 
+    ` on tu.detail_id = tud.id`
+    ` where ta.delete_flag = '0'`
+    ` and tu.delete_flag = '0'`
+    ` and tud.delete_flag = '0'`
     if dto.create_time_start != '':
-        ` and create_time >= #{dto.create_time_start}`
+        ` and ta.create_time >= #{dto.create_time_start}`
     if dto.create_time_end != '':
-        ` and create_time <= #{dto.create_time_end}`
+        ` and ta.create_time <= #{dto.create_time_end}`
     if dto.title != '':
-        ` and title like '%${dto.title}%'`
+        ` and ta.title like '%${dto.title}%'`
     if dto.category_id != '':
-        ` and category_id = #{dto.category_id}`
+        ` and ta.category_id = #{dto.category_id}`
     if dto.tag_id != '':
-        ` and tag_id = #{dto.tag_id}`
+        ` and ta.tag_id = #{dto.tag_id}`
     if dto.status != '':
-        ` and status = #{dto.status}`
-    if dto.by_user_id_flag != '':
-        ` and creator_id = #{dto.id}`
+        ` and ta.status = #{dto.status}`
+    if dto.id != '':
+        ` and ta.creator_id = #{dto.id}`
     if dto.top_flag != '':
-        ` and top_flag = #{dto.top_flag}`
+        ` and ta.top_flag = #{dto.top_flag}`
     "#
 )]
 pub async fn query_articles_fq_count(
@@ -94,9 +107,16 @@ pub async fn query_articles_fq_count(
 
 /// 获取置顶文章
 #[py_sql(
-    r#"`select id, to_char(operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, operator, operator_id, to_char(create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, creator, creator_id, delete_flag, title, cover, content, view_count, like_count, comment_count, category_id, tag_ids, status, collect_count, forward_count, top_flag`
-    ` from t_article`
-    ` where delete_flag = '0' and top_flag = '1'`
+    r#"`select ta.id, to_char(ta.operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, ta.operator, ta.operator_id, to_char(ta.create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, ta.creator, ta.creator_id, ta.delete_flag, ta.title, ta.cover, ta.content, ta.view_count, ta.like_count, ta.comment_count, ta.category_id, ta.tag_ids, ta.status, ta.collect_count, ta.forward_count, ta.top_flag, tud.avatar_url as avatar`
+    ` from t_article as ta`
+    ` left join t_user as tu`
+    ` on ta.creator_id = tu.id`
+    ` left join t_user_detail as tud` 
+    ` on tu.detail_id = tud.id`
+    ` where ta.delete_flag = '0'`
+    ` and tu.delete_flag = '0'`
+    ` and tud.delete_flag = '0'`
+    ` and ta.top_flag = '1'`
     ` order by create_time desc`
     ` limit 4`
     ` offset 0`
@@ -110,9 +130,15 @@ pub async fn query_top_articles(
 
 /// 获取热门文章
 #[py_sql(
-    r#"`select id, to_char(operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, operator, operator_id, to_char(create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, creator, creator_id, delete_flag, title, cover, content, view_count, like_count, comment_count, category_id, tag_ids, status, collect_count, forward_count, top_flag`
-    ` from t_article`
-    ` where delete_flag = '0'`
+    r#"`select ta.id, to_char(ta.operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, ta.operator, ta.operator_id, to_char(ta.create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, ta.creator, ta.creator_id, ta.delete_flag, ta.title, ta.cover, ta.content, ta.view_count, ta.like_count, ta.comment_count, ta.category_id, ta.tag_ids, ta.status, ta.collect_count, ta.forward_count, ta.top_flag, tud.avatar_url as avatar`
+    ` from t_article as ta`
+    ` left join t_user as tu`
+    ` on ta.creator_id = tu.id`
+    ` left join t_user_detail as tud` 
+    ` on tu.detail_id = tud.id`
+    ` where ta.delete_flag = '0'`
+    ` and tu.delete_flag = '0'`
+    ` and tud.delete_flag = '0'`
     ` order by view_count desc, collect_count desc, like_count desc, comment_count desc, create_time desc`
     ` limit 20`
     ` offset 0`
@@ -140,7 +166,7 @@ pub async fn query_article_count_by_user_id(
 
 /// 根据用户id查询文章投稿数据
 #[py_sql(
-    r#"`select count(*) total_article_count, sum(view_count) total_view_count, sum(like_count) total_like_count, sum(comment_count) total_comment_count, sum(collect_count) total_collect_count, sum(forward_count) total_forward_count`
+    r#"`select count(*) total_article_count, COALESCE(sum(view_count), 0) AS total_view_count, COALESCE(sum(like_count), 0) AS total_like_count, COALESCE(sum(comment_count), 0) AS total_comment_count, COALESCE(sum(collect_count), 0) AS total_collect_count, COALESCE(sum(forward_count), 0) AS total_forward_count`
     ` from t_article`
     ` where delete_flag = '0' and creator_id = #{id}`
     "#
@@ -253,6 +279,29 @@ pub async fn update_article_top_flag(
     dto: &BaseDTO,
     top_flag: &str,
     permit_flag: &str,
+) -> Result<ExecResult, Error> {
+    impled!();
+}
+
+/// 更新文章阅读数
+#[py_sql(
+    r#"`update t_article`
+    ` set`
+    trim ',':
+        if dto.operate_time != '':
+            ` operate_time = #{dto.operate_time}`
+        if dto.operator != '':
+            `, operator = #{dto.operator}`
+        if dto.operator_id != '':
+            `, operator_id = #{dto.operator_id}`
+        `, view_count = view_count + 1`
+    ` where delete_flag = '0'` 
+    ` and id = #{dto.id}`
+    "#
+)]
+pub async fn update_article_view_count(
+    tx: &mut RBatisTxExecutorGuard,
+    dto: &BaseDTO,
 ) -> Result<ExecResult, Error> {
     impled!();
 }

@@ -46,6 +46,19 @@ impl Claims {
     }
 }
 
+impl Default for Claims {
+    fn default() -> Self {
+        Claims {
+            id: Some("system".into()),
+            account: Some("system".into()),
+            nickname: Some("system".into()),
+            perm_codes: None,
+            iat: 0,
+            exp: 0,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub struct Token {
     token: String,
@@ -128,7 +141,7 @@ where
             Some(token) => {
                 let token = token.to_str().unwrap();
                 let token = token.replace("Bearer ", "");
-                let token = decode_jwt(token.into()).await;
+                let token = decode_jwt(token).await;
                 token
                     .map(|claims| {
                         parts.extensions.insert(claims.clone());

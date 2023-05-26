@@ -1,0 +1,122 @@
+Date : 2023-05-20 01:02:16
+Directory : /home/jcfun/learning/Project/e-tech-assist/web-server
+Total : 81 files,  5997 codes, 251 comments, 612 blanks, all 6860 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Rust     |         80 |      5,897 |        251 |        586 |      6,734 |
+| TOML     |          1 |        100 |          0 |         26 |        126 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                   | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                      |         81 |      5,997 |        251 |        612 |      6,860 |
+| . (Files)                                                                              |          1 |        100 |          0 |         26 |        126 |
+| src                                                                                    |         80 |      5,897 |        251 |        586 |      6,734 |
+| src (Files)                                                                            |          1 |         65 |          0 |         12 |         77 |
+| src/common                                                                             |          4 |        374 |         30 |         41 |        445 |
+| src/config                                                                             |          4 |        126 |         31 |         24 |        181 |
+| src/dbaccess                                                                           |          7 |      1,401 |          0 |         74 |      1,475 |
+| src/handlers                                                                           |          9 |      1,697 |        106 |         64 |      1,867 |
+| src/middleware                                                                         |          5 |        116 |          0 |         18 |        134 |
+| src/models                                                                             |         24 |      1,122 |          0 |        248 |      1,370 |
+| src/models (Files)                                                                     |          1 |          4 |          0 |          1 |          5 |
+| src/models/dto                                                                         |          8 |        681 |          0 |        194 |        875 |
+| src/models/entity                                                                      |          4 |         51 |          0 |          9 |         60 |
+| src/models/enums                                                                       |          3 |        147 |          0 |         20 |        167 |
+| src/models/vo                                                                          |          8 |        239 |          0 |         24 |        263 |
+| src/routers                                                                            |         11 |        184 |          0 |         15 |        199 |
+| src/utils                                                                              |         15 |        812 |         84 |         90 |        986 |
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                               | language | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /home/jcfun/learning/Project/e-tech-assist/web-server/Cargo.toml                       | TOML     |        100 |          0 |         26 |        126 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/common/banner.rs             | Rust     |         12 |          0 |          2 |         14 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/common/errors.rs             | Rust     |        189 |          9 |         16 |        214 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/common/mod.rs                | Rust     |          3 |          0 |          1 |          4 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/common/res.rs                | Rust     |        170 |         21 |         22 |        213 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/config/cfg.rs                | Rust     |         88 |         29 |         12 |        129 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/config/ctx.rs                | Rust     |         21 |          0 |          5 |         26 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/config/init.rs               | Rust     |         14 |          2 |          6 |         22 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/config/mod.rs                | Rust     |          3 |          0 |          1 |          4 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/article.rs          | Rust     |        246 |          0 |         12 |        258 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/login.rs            | Rust     |        211 |          0 |         13 |        224 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/mod.rs              | Rust     |         18 |          0 |          4 |         22 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/perm.rs             | Rust     |        145 |          0 |          7 |        152 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/quick_msg.rs        | Rust     |        261 |          0 |          9 |        270 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/role.rs             | Rust     |        226 |          0 |         12 |        238 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/user.rs             | Rust     |        294 |          0 |         17 |        311 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/article.rs          | Rust     |        267 |         17 |         11 |        295 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/login.rs            | Rust     |        512 |          0 |         17 |        529 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/mod.rs              | Rust     |          8 |          0 |          1 |          9 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/perm.rs             | Rust     |        190 |         22 |          8 |        220 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/quick_msg.rs        | Rust     |        222 |         18 |          7 |        247 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/role.rs             | Rust     |        188 |         22 |          8 |        218 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/test.rs             | Rust     |         20 |          0 |          2 |         22 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/upload.rs           | Rust     |         60 |          0 |          3 |         63 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/user.rs             | Rust     |        230 |         27 |          7 |        264 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/main.rs                      | Rust     |         65 |          0 |         12 |         77 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/middleware/auth.rs           | Rust     |          0 |          0 |          2 |          2 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/middleware/cors.rs           | Rust     |          7 |          0 |          2 |          9 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/middleware/errors.rs         | Rust     |         39 |          0 |          7 |         46 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/middleware/filter.rs         | Rust     |         66 |          0 |          6 |         72 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/middleware/mod.rs            | Rust     |          4 |          0 |          1 |          5 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/article.rs        | Rust     |        131 |          0 |         31 |        162 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/base.rs           | Rust     |         30 |          0 |          9 |         39 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/login.rs          | Rust     |        168 |          0 |         41 |        209 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/mod.rs            | Rust     |          7 |          0 |          1 |          8 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/perm.rs           | Rust     |        100 |          0 |         35 |        135 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/quick_msg.rs      | Rust     |         83 |          0 |         27 |        110 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/role.rs           | Rust     |         66 |          0 |         20 |         86 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/user.rs           | Rust     |         96 |          0 |         30 |        126 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/entity/base.rs        | Rust     |         15 |          0 |          2 |         17 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/entity/mod.rs         | Rust     |          3 |          0 |          1 |          4 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/entity/user.rs        | Rust     |         13 |          0 |          3 |         16 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/entity/user_detail.rs | Rust     |         20 |          0 |          3 |         23 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/enums/article.rs      | Rust     |         99 |          0 |         14 |        113 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/enums/common.rs       | Rust     |         46 |          0 |          6 |         52 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/enums/mod.rs          | Rust     |          2 |          0 |          0 |          2 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/mod.rs                | Rust     |          4 |          0 |          1 |          5 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/article.rs         | Rust     |         43 |          0 |          3 |         46 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/login.rs           | Rust     |         62 |          0 |          6 |         68 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/mod.rs             | Rust     |          7 |          0 |          1 |          8 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/perm.rs            | Rust     |         37 |          0 |          4 |         41 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/quick_msg.rs       | Rust     |         30 |          0 |          2 |         32 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/role.rs            | Rust     |         20 |          0 |          3 |         23 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/upload.rs          | Rust     |          8 |          0 |          2 |         10 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/user.rs            | Rust     |         32 |          0 |          3 |         35 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/article.rs           | Rust     |         14 |          0 |          1 |         15 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/assets.rs            | Rust     |          7 |          0 |          1 |          8 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/common.rs            | Rust     |         12 |          0 |          1 |         13 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/login.rs             | Rust     |         17 |          0 |          1 |         18 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/mod.rs               | Rust     |         64 |          0 |          3 |         67 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/perm.rs              | Rust     |         14 |          0 |          1 |         15 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/quick_msg.rs         | Rust     |         14 |          0 |          2 |         16 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/role.rs              | Rust     |         15 |          0 |          1 |         16 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/test.rs              | Rust     |          5 |          0 |          1 |          6 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/upload.rs            | Rust     |          8 |          0 |          2 |         10 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/user.rs              | Rust     |         14 |          0 |          1 |         15 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/captcha.rs             | Rust     |         25 |          1 |          4 |         30 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/db.rs                  | Rust     |         12 |          0 |          2 |         14 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/email.rs               | Rust     |         36 |          3 |          6 |         45 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/epc.rs                 | Rust     |         14 |          3 |          4 |         21 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/fields.rs              | Rust     |         82 |         15 |          5 |        102 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/ip.rs                  | Rust     |         42 |          0 |          5 |         47 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/jwt.rs                 | Rust     |        126 |         20 |         14 |        160 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/log.rs                 | Rust     |         45 |          7 |          6 |         58 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/mod.rs                 | Rust     |         14 |          0 |          1 |         15 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/permission.rs          | Rust     |         13 |          0 |          2 |         15 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/qrcode.rs              | Rust     |          9 |          0 |          1 |         10 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/redis.rs               | Rust     |         48 |          8 |          8 |         64 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/time.rs                | Rust     |          6 |          1 |          2 |          9 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/validate.rs            | Rust     |         38 |          1 |          3 |         42 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/wxapp.rs               | Rust     |        302 |         25 |         27 |        354 |
+| Total                                                                                  |          |      5,997 |        251 |        612 |      6,860 |
++----------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

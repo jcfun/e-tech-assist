@@ -187,7 +187,7 @@
   .editor-box {
     width: 100%;
     min-width: 1000px;
-    max-width: 1200px;
+    max-width: 1350px;
     padding: 30px 0;
     background-color: #f9f9f9;
     .editor-toolbar {

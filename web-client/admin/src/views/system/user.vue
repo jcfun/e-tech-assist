@@ -72,8 +72,10 @@
             <template v-else-if="item.key === 'actions'" #cell="{ record }">
               <a-space>
                 <a-button type="text" size="medium" @click="onUpdateItem(record)">编辑</a-button>
-                <a-button type="text" size="medium" @click="onUpdateDisableFlag(record)">{{ record.disableFlag == '0' ? '禁用' : '启用' }}</a-button>
-                <a-button type="text" size="medium" @click="onDeleteItem(record)">删除</a-button>
+                <a-button type="text" size="medium" :status="record.disableFlag == '1' ? 'normal' : 'danger'" @click="onUpdateDisableFlag(record)">{{
+                  record.disableFlag == '0' ? '禁用' : '启用'
+                }}</a-button>
+                <a-button type="text" status="danger" size="medium" @click="onDeleteItem(record)">删除</a-button>
               </a-space>
             </template>
           </a-table-column>
@@ -84,7 +86,7 @@
       <TableFooter ref="tableFooterRef" :pagination="pagination" />
     </template>
   </TableBody>
-  <ModalDialog ref="modalDialogRef" :title="actionTitle" @confirm="onConfirm">
+  <ModalDialog ref="modalDialogRef" :title="actionTitle" @confirm="onConfirm" draggable>
     <template #content>
       <a-form :model="userDTO">
         <a-form-item
@@ -485,6 +487,7 @@
     searchItems.forEach((it: any) => {
       tempDTO[it.key] = it.value.value;
     });
+    console.log(tempDTO);
     queryUserDTO.value = {
       ...tempDTO,
       createTimeStart: tempDTO.createTime ? (tempDTO.createTime as string[])[0] : undefined,
@@ -560,7 +563,7 @@
       modalDialogRef.value?.toggle();
       user[actionType.value as keyof typeof user](userDTO.value as any).then((res: any) => {
         if (res.code == 200) {
-          Message.success(res.msg);
+          Message.info(res.msg);
           formItems.forEach((it: any) => {
             if (it.reset) {
               it.reset();
@@ -569,8 +572,6 @@
             }
           });
           doRefresh();
-        } else {
-          Message.error(res.msg);
         }
       });
     }
@@ -585,10 +586,8 @@
       onOk: () => {
         user.deleteUser(item.id).then(res => {
           if (res.code == 200) {
-            Message.success(res.msg);
+            Message.info(res.msg);
             doRefresh();
-          } else {
-            Message.error(res.msg);
           }
         });
       },
@@ -600,10 +599,8 @@
     let disableFlag = item?.disableFlag == '0' ? '1' : '0';
     user.updateUserStatus(id, disableFlag).then(res => {
       if (res.code == 200) {
-        Message.success(res.msg);
+        Message.info(res.msg);
         doRefresh();
-      } else {
-        Message.error(res.msg);
       }
     });
   };

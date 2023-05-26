@@ -17,7 +17,7 @@
     justify-content: center;
     flex-grow: 1;
     min-height: 600px;
-    min-width: 1200px;
+    min-width: 1350px;
     width: 100%;
     position: relative;
   }

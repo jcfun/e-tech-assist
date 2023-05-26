@@ -17,6 +17,12 @@ class Article {
       data,
     });
   };
+  public deleteArticle = (id: string): Promise<Res<number>> => {
+    return http.request({
+      url: `/article/${id}`,
+      method: Method.DELETE,
+    });
+  };
 }
 
 const article = new Article();

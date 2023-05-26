@@ -7,7 +7,7 @@
     .article-detail-wrap {
       display: flex;
       width: 100%;
-      max-width: 1500px;
+      max-width: 1350px;
       margin: 30px 0;
       .article-detail {
         width: 75%;
@@ -94,12 +94,12 @@
       <div class="article-detail">
         <div class="article-detail-title">{{ state.detail.title }}</div>
         <div class="article-detail-info">
-          <div class="avatar"><img :src="state.articleCountAndAvatar.avatar" /></div>
+          <div class="avatar"><img :src="state.detail.avatar" /></div>
           <div>{{ state.detail.creator }}</div>
-          <div>{{ `文章数：${state.articleCountAndAvatar.totalArticleCount}` }}</div>
           <div>
             {{ timeInterval(state.detail.createTime, dayjs()) }}
           </div>
+          <div>{{ `文章数：${state.articleCount}` }}</div>
           <div>{{ `阅读量：${state.detail.viewCount}` }}</div>
           <div>{{ `点赞数：${state.detail.likeCount}` }}</div>
           <div>{{ `评论数：${state.detail.commentCount}` }}</div>
@@ -123,12 +123,12 @@
 
 <script setup lang="ts">
   import { onMounted, reactive } from 'vue';
-  import type { QueryArticleVO, QueryUserArticleVO } from '@/api/types/article';
+  import type { QueryArticleVO } from '@/api/types/article';
   import { useArticleDetailStore } from '@/stores/modules/article';
   import { useUserStore } from '@/stores/modules/user';
   import dayjs from 'dayjs';
   import { timeInterval } from '@/utils';
-  import article from '@/api/modules/article';
+  import articles from '@/api/modules/article';
   import Prism from 'prismjs';
   import { onUpdated } from 'vue';
   import useRouter from '@/hooks/useRouter';
@@ -139,21 +139,21 @@
   });
   const state = reactive({
     detail: <QueryArticleVO>{},
-    articleCountAndAvatar: <QueryUserArticleVO>{},
+    articleCount: 0,
     hotArticles: <QueryArticleVO[]>[],
   });
   const router = useRouter();
   const methods = reactive({
-    // 获取用户文章数量和头像
-    getUserArticleCountAndAvatar: async () => {
-      const res = await article.queryUserArticleCountAndAvatar(state?.detail?.creatorId);
+    // 获取用户文章数量
+    getUserArticleCount: async () => {
+      const res = await articles.queryUserArticleCount(state?.detail?.creatorId);
       if (res.code == 200) {
-        state.articleCountAndAvatar = res.data;
+        state.articleCount = res.data;
       }
     },
     // 获取热门文章
     getHotArticles: async () => {
-      const res = await article.queryHotArticles();
+      const res = await articles.queryHotArticles();
       if (res.code == 200) {
         state.hotArticles = res.data;
       }
@@ -166,8 +166,12 @@
         // router.go(0);
       });
     },
+    // 更新文章阅读量
+    updateArticleViewCount: async () => {
+      await articles.updateArticleViewCount(state.detail.id);
+    },
     init: async function () {
-      Promise.allSettled([this.getUserArticleCountAndAvatar(), this.getHotArticles()]);
+      Promise.allSettled([this.getUserArticleCount(), this.getHotArticles(), this.updateArticleViewCount()]);
     },
   });
   onMounted(() => {

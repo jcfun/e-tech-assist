@@ -25,13 +25,7 @@ pub struct QueryArticleVO {
     pub collect_count: Option<usize>,
     pub forward_count: Option<usize>,
     pub top_flag: Option<String>,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize, Builder, Default)]
-#[serde(rename_all(serialize = "camelCase"))]
-pub struct QueryUserArticleVO {
-    total_article_count: Option<usize>,
-    avatar: Option<String>,
+    pub avatar: Option<String>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Builder, Default)]

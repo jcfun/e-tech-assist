@@ -3,7 +3,7 @@ use crate::models::{
         base::BaseDTO,
         perm::{CreatePermDTO, QueryPermDTO, UpdatePermDTO},
     },
-    vo::perm::QueryPermVO,
+    vo::{perm::QueryPermVO, role::Role2PermVO},
 };
 use rbatis::{
     executor::RBatisTxExecutorGuard,
@@ -147,5 +147,32 @@ pub async fn update_disable_flag(
 pub async fn query_perms(
     tx: &mut RBatisTxExecutorGuard,
 ) -> Result<Option<Vec<QueryPermVO>>, Error> {
+    impled!();
+}
+
+/// 根据父权限id查询子权限
+#[py_sql(
+    r#"`select id, to_char(operate_time, 'YYYY-MM-DD HH24:MI:SS') as operate_time, operator, operator_id, to_char(create_time, 'YYYY-MM-DD HH24:MI:SS') as create_time, creator, creator_id, delete_flag, name, parent_id, perm_type, disable_flag, api_path, route, route_name, code, resource, hidden_flag, parent_route, description`
+    ` from t_perm where delete_flag = '0'` 
+    ` and parent_id = #{parent_id}`"#
+)]
+pub async fn query_perms_by_parent_id(
+    tx: &mut RBatisTxExecutorGuard,
+    parent_id: &String,
+) -> Result<Option<Vec<QueryPermVO>>, Error> {
+    impled!();
+}
+
+/// 根据权限id查询所有角色权限关联信息
+#[py_sql(
+    r#"`select id, operate_time, operator, operator_id, create_time, creator, creator_id, delete_flag, role_id, perm_id`
+    ` from t_role_perm where delete_flag = '0'` 
+    ` and perm_id = #{perm_id}`
+    "#
+)]
+pub async fn query_role_perms_by_perm_id(
+    tx: &mut RBatisTxExecutorGuard,
+    perm_id: &str,
+) -> Result<Vec<Role2PermVO>, Error> {
     impled!();
 }
