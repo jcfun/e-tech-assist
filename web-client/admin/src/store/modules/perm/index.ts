@@ -36,7 +36,9 @@ const usePermStore = defineStore(Names.PERM, {
 
   actions: {
     async setPermRoutes() {
-      const accessRoutes = mapTwoLevelRouter([...asyncRoutes, ...generateRoutes(useUserStore().user)]);
+      const generatedPermRoutes = generateRoutes(useUserStore().user);
+      const accessRoutes = mapTwoLevelRouter([...asyncRoutes, ...generatedPermRoutes]);
+      // const accessRoutes = [...asyncRoutes, ...generatedPermRoutes];
       accessRoutes.forEach(route => {
         router.addRoute(route);
       });

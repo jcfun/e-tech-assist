@@ -110,3 +110,56 @@ impl ArticleTopFlag {
         }
     }
 }
+
+pub enum ArticleHotFlag {
+    True,
+    False,
+}
+
+#[allow(dead_code)]
+impl ArticleHotFlag {
+    pub fn get_code(&self) -> String {
+        match *self {
+            ArticleHotFlag::False => "0".into(),
+            ArticleHotFlag::True => "1".into(),
+        }
+    }
+
+    pub fn from_code(code: &str) -> Option<ArticleHotFlag> {
+        match code {
+            "0" => Some(ArticleHotFlag::False),
+            "1" => Some(ArticleHotFlag::True),
+            _ => None,
+        }
+    }
+
+    pub fn get_desc(&self) -> String {
+        match *self {
+            ArticleHotFlag::False => "不热门".into(),
+            ArticleHotFlag::True => "热门".into(),
+        }
+    }
+
+    pub fn from_desc(desc: &str) -> Option<ArticleHotFlag> {
+        match desc {
+            "不热门" => Some(ArticleHotFlag::False),
+            "热门" => Some(ArticleHotFlag::True),
+            _ => None,
+        }
+    }
+
+    pub fn get_sort(&self) -> usize {
+        match *self {
+            ArticleHotFlag::False => 0,
+            ArticleHotFlag::True => 1,
+        }
+    }
+
+    pub fn from_sort(sort: usize) -> Option<ArticleHotFlag> {
+        match sort {
+            0 => Some(ArticleHotFlag::False),
+            1 => Some(ArticleHotFlag::True),
+            _ => None,
+        }
+    }
+}

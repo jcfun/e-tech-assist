@@ -99,7 +99,7 @@
             router.replace({
               path: route.query.redirect ? (route.query.redirect as string) : '/',
             });
-            Message.success(`登录成功，欢迎 ${identity.value}，即将跳转到首页`);
+            Message.info(`登录成功，欢迎 ${identity.value}，即将跳转到首页`);
           });
         } else {
           getCaptcha();

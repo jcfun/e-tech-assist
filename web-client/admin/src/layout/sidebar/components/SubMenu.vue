@@ -7,7 +7,7 @@
       <component :is="menuInfo.icon || 'icon-menu'" style="font-size: 16px; vertical-align: middle" />
     </template>
     <template v-for="item in menuInfo.children" :key="item.key">
-      <template v-if="!item.children">
+      <template v-if="!item.children || item.children.length == 0">
         <a-menu-item :key="item.key">
           <template #icon>
             <component :is="item.icon || 'icon-menu'" />

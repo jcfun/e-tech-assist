@@ -77,6 +77,7 @@
   import 'cropperjs/dist/cropper.css';
   import type { CreateArticleDTO } from '@/api/types/create-center/article';
   import article from '@/api/modules/create-center/article';
+  import router from '@/router';
   const userStore = useUserStore();
   const token = `${userStore?.user?.token?.tokenType ?? 'Bearer'} ${userStore?.user?.token?.token}`;
   const showModal = ref(false);
@@ -163,7 +164,7 @@
     cover.value = res.data!.url ?? '';
   };
   // --------------------文章封面结束------------------------
-  const onFinish = async (status: string) => {
+  const onFinish = (status: string) => {
     const dto = {
       title: articleTitle.value,
       content: valueHtml.value,
@@ -172,10 +173,12 @@
       tagIds: '',
       status,
     } as CreateArticleDTO;
-    let res = await article.createArticle(dto);
-    if (res.code == 200) {
-      Message.info(res.msg);
-    }
+    article.createArticle(dto).then(res => {
+      if (res.code === 200) {
+        Message.info(res.msg);
+        router.push('/create-center/article/overview');
+      }
+    });
   };
 </script>
 

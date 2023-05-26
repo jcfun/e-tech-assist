@@ -34,7 +34,7 @@ impl<T> PageRes<T>
 where
     T: Clone + Serialize,
 {
-    pub fn new(data: Vec<T>, total: usize, total_page: usize, current_page: usize) -> PageRes<T> {
+    pub fn new(data: Vec<T>, total: usize, total_page: usize, current_page: usize) -> Self {
         PageRes {
             data: Some(data),
             total: Some(total),
@@ -43,22 +43,22 @@ where
         }
     }
 
-    pub fn data(mut self, data: Vec<T>) -> PageRes<T> {
+    pub fn data(mut self, data: Vec<T>) -> Self {
         self.data = Some(data);
         self
     }
 
-    pub fn total(mut self, total: usize) -> PageRes<T> {
+    pub fn total(mut self, total: usize) -> Self {
         self.total = Some(total);
         self
     }
 
-    pub fn total_page(mut self, total_page: usize) -> PageRes<T> {
+    pub fn total_page(mut self, total_page: usize) -> Self {
         self.total_page = Some(total_page);
         self
     }
 
-    pub fn current_page(mut self, current_page: usize) -> PageRes<T> {
+    pub fn current_page(mut self, current_page: usize) -> Self {
         self.current_page = Some(current_page);
         self
     }

@@ -15,29 +15,42 @@ export const generateRoutes = (loginVO: LoginVO) => {
     return [];
   }
   let routesArr = [] as Array<RouteRecordRaw>;
-  const routesTreeArr = getRouteTree(perms);
+  const flattenPerms = getFlattenPerms(perms);
+  const routesTreeArr = getRouteTree(perms, flattenPerms);
   routesArr = [...routesTreeArr, ...routesArr];
   return routesArr;
 };
 
 // 使用递归构建路由树
-const getRouteTree = (perms: Array<PermVO>) => {
-  const routers = [] as Array<RouteRecordRaw>;
+const getRouteTree = (perms: Array<PermVO>, staticPerms: Array<PermVO>) => {
+  const routes = [] as Array<RouteRecordRaw>;
   perms.forEach(perm => {
     const route: RouteRecordRaw = {
-      path: `${perm.parentRoute ?? ''}${perm.route}`,
+      path: `${getParentRoute(perm, staticPerms)}${perm.route}`,
       name: perm.routeName,
-      component: perm.permType == '0' ? () => import('@/layout/Layout.vue') : getComponent(perm),
+      component: perm.permType == '0' ? () => import('@/layout/Layout.vue') : getComponent(perm, staticPerms),
       meta: {
         title: perm.name,
         icon: perm.resource,
         hidden: perm.hiddenFlag == '1',
       },
-      children: getRouteTree(perm.children).length > 0 ? getRouteTree(perm.children) : undefined,
+      children: perm.children.length > 0 ? getRouteTree(perm.children, staticPerms) : undefined,
     };
-    routers.push(route);
+    routes.push(route);
   });
-  return routers;
+  return routes;
+};
+
+// 将权限树铺平
+export const getFlattenPerms = (perms: Array<PermVO>): Array<PermVO> => {
+  const permsArr = [] as Array<PermVO>;
+  perms.forEach(perm => {
+    permsArr.push(perm);
+    if (perm.children && perm.children.length > 0) {
+      permsArr.push(...getFlattenPerms(perm.children));
+    }
+  });
+  return permsArr;
 };
 
 export function loadComponents() {
@@ -46,8 +59,19 @@ export function loadComponents() {
 
 export const components = loadComponents();
 
-export function getComponent(perm: PermVO) {
-  return components[`/src/views${perm.parentRoute ?? ''}${perm.route}.vue`];
+export function getComponent(perm: PermVO, staticPerms: Array<PermVO>) {
+  const parentRoute = getParentRoute(perm, staticPerms);
+  return components[`/src/views${parentRoute ?? ''}${perm.route}.vue`];
+}
+
+// 递归获取父级路由
+export function getParentRoute(perm: PermVO, staticPerms: Array<PermVO>): string {
+  const parentPerm = staticPerms.filter(it => it.route == perm.parentRoute)[0];
+  if (parentPerm) {
+    return getParentRoute(parentPerm, staticPerms) + parentPerm.route;
+  } else {
+    return '';
+  }
 }
 
 export function transformSplitTabMenu(routes: Array<RouteRecordRaw>): Array<SplitTab> {

@@ -19,6 +19,7 @@ interface QueryArticleVO {
   collectCount: string;
   forwardCount: string;
   topFlag: string;
+  avatar: string;
 }
 
 interface QueryArticleDTO {
@@ -34,11 +35,6 @@ interface QueryArticleDTO {
   pageSize?: number;
 }
 
-interface QueryUserArticleVO {
-  totalArticleCount: number;
-  avatar: string;
-}
-
 interface QueryArticleInfoVO {
   type: string;
   totalArticleCount: number;
@@ -49,4 +45,4 @@ interface QueryArticleInfoVO {
   totalForwardCount: number;
 }
 
-export type { QueryArticleVO, QueryArticleDTO, QueryUserArticleVO, QueryArticleInfoVO };
+export type { QueryArticleVO, QueryArticleDTO, QueryArticleInfoVO };

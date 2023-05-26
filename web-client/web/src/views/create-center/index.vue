@@ -13,7 +13,7 @@
   .create-center-box {
     background-color: #f9f9f9;
     width: 100%;
-    min-width: 1500px;
+    min-width: 1350px;
     padding: 0 20%;
     display: flex;
     justify-content: center;

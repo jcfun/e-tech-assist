@@ -10,7 +10,10 @@ use crate::models::{
         base::BaseDTO,
         role::{CreateRoleDTO, QueryRoleDTO, UpdateRoleDTO},
     },
-    vo::{perm::QueryPermVO, role::QueryRoleVO},
+    vo::{
+        perm::QueryPermVO,
+        role::{QueryRoleVO},
+    },
 };
 use crate::utils::epc;
 

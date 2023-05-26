@@ -85,3 +85,13 @@ export function getNowDate() {
   }
   return [year + '-' + month + '-' + day, hour + sign2 + minutes + sign2 + seconds, week];
 }
+
+import dayjs from 'dayjs';
+type Time = string | Date | dayjs.Dayjs;
+export const timeInterval = (start: Time, end: Time): string => {
+  return dayjs(end).diff(dayjs(start), 'minute') < 60
+    ? `${dayjs(end).diff(dayjs(start), 'minute')}分钟前`
+    : dayjs(end).diff(dayjs(start), 'hour') < 24
+    ? `${dayjs(end).diff(dayjs(start), 'hour')}小时前`
+    : `${dayjs(end).diff(dayjs(start), 'day')}天前`;
+};

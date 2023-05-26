@@ -4,4 +4,5 @@ export const enum Names {
   APP_CONFIG = 'APP_CONFIG',
   CACHE = 'CACHE',
   VISITED_ROUTES = 'VISITED_ROUTES',
+  ARTICLE = 'ARTICLE',
 }

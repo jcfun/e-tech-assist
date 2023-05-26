@@ -147,7 +147,7 @@
       width: 0;
       height: 0;
       cursor: pointer;
-      background-color: rgb(144 147 153 / 30%);
+      background-color: rgba(var(--primary-5), 0.8);
       border-radius: inherit;
       transition: 0.3s background-color;
 

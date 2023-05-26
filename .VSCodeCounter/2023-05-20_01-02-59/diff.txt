@@ -1,0 +1,303 @@
+Date : 2023-05-20 01:02:59
+Directory : /home/jcfun/learning/Project/e-tech-assist/web-client
+Total : 184 files,  20502 codes, -228 comments, 1763 blanks, all 22037 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| YAML     |          5 |     14,203 |          7 |      1,977 |     16,187 |
+| vue      |         91 |     12,162 |          0 |        370 |     12,532 |
+| HTML     |          3 |         65 |          0 |          8 |         73 |
+| TOML     |          2 |        -66 |          7 |        -18 |        -77 |
+| Rust     |         83 |     -5,862 |       -242 |       -574 |     -6,678 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                     | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                        |        184 |     20,502 |       -228 |      1,763 |     22,037 |
+| ..                                                                                                                       |         81 |     -5,997 |       -251 |       -612 |     -6,860 |
+| ../web-server                                                                                                            |         81 |     -5,997 |       -251 |       -612 |     -6,860 |
+| ../web-server (Files)                                                                                                    |          1 |       -100 |          0 |        -26 |       -126 |
+| ../web-server/src                                                                                                        |         80 |     -5,897 |       -251 |       -586 |     -6,734 |
+| ../web-server/src (Files)                                                                                                |          1 |        -65 |          0 |        -12 |        -77 |
+| ../web-server/src/common                                                                                                 |          4 |       -374 |        -30 |        -41 |       -445 |
+| ../web-server/src/config                                                                                                 |          4 |       -126 |        -31 |        -24 |       -181 |
+| ../web-server/src/dbaccess                                                                                               |          7 |     -1,401 |          0 |        -74 |     -1,475 |
+| ../web-server/src/handlers                                                                                               |          9 |     -1,697 |       -106 |        -64 |     -1,867 |
+| ../web-server/src/middleware                                                                                             |          5 |       -116 |          0 |        -18 |       -134 |
+| ../web-server/src/models                                                                                                 |         24 |     -1,122 |          0 |       -248 |     -1,370 |
+| ../web-server/src/models (Files)                                                                                         |          1 |         -4 |          0 |         -1 |         -5 |
+| ../web-server/src/models/dto                                                                                             |          8 |       -681 |          0 |       -194 |       -875 |
+| ../web-server/src/models/entity                                                                                          |          4 |        -51 |          0 |         -9 |        -60 |
+| ../web-server/src/models/enums                                                                                           |          3 |       -147 |          0 |        -20 |       -167 |
+| ../web-server/src/models/vo                                                                                              |          8 |       -239 |          0 |        -24 |       -263 |
+| ../web-server/src/routers                                                                                                |         11 |       -184 |          0 |        -15 |       -199 |
+| ../web-server/src/utils                                                                                                  |         15 |       -812 |        -84 |        -90 |       -986 |
+| admin                                                                                                                    |         62 |     12,354 |          0 |        801 |     13,155 |
+| admin (Files)                                                                                                            |          2 |      3,769 |          0 |        552 |      4,321 |
+| admin/src                                                                                                                |         60 |      8,585 |          0 |        249 |      8,834 |
+| admin/src (Files)                                                                                                        |          1 |          3 |          0 |          1 |          4 |
+| admin/src/components                                                                                                     |         15 |      1,081 |          0 |         72 |      1,153 |
+| admin/src/components (Files)                                                                                             |         14 |        909 |          0 |         49 |        958 |
+| admin/src/components/Scrollbar                                                                                           |          1 |        172 |          0 |         23 |        195 |
+| admin/src/components/Scrollbar/src                                                                                       |          1 |        172 |          0 |         23 |        195 |
+| admin/src/layout                                                                                                         |         20 |      2,800 |          0 |         79 |      2,879 |
+| admin/src/layout (Files)                                                                                                 |          3 |        315 |          0 |         14 |        329 |
+| admin/src/layout/actions                                                                                                 |          1 |        118 |          0 |          3 |        121 |
+| admin/src/layout/avatar                                                                                                  |          1 |        119 |          0 |          4 |        123 |
+| admin/src/layout/breadcrumb                                                                                              |          1 |         99 |          0 |          2 |        101 |
+| admin/src/layout/footer                                                                                                  |          1 |         24 |          0 |          4 |         28 |
+| admin/src/layout/header                                                                                                  |          1 |         96 |          0 |          3 |         99 |
+| admin/src/layout/humburger                                                                                               |          1 |         45 |          0 |          3 |         48 |
+| admin/src/layout/loading                                                                                                 |          1 |         19 |          0 |          4 |         23 |
+| admin/src/layout/logo                                                                                                    |          1 |         81 |          0 |          2 |         83 |
+| admin/src/layout/navbar                                                                                                  |          1 |         47 |          0 |          3 |         50 |
+| admin/src/layout/setting                                                                                                 |          2 |        534 |          0 |         14 |        548 |
+| admin/src/layout/setting (Files)                                                                                         |          1 |        419 |          0 |         10 |        429 |
+| admin/src/layout/setting/components                                                                                      |          1 |        115 |          0 |          4 |        119 |
+| admin/src/layout/sidebar                                                                                                 |          5 |        939 |          0 |         18 |        957 |
+| admin/src/layout/sidebar (Files)                                                                                         |          3 |        737 |          0 |         11 |        748 |
+| admin/src/layout/sidebar/components                                                                                      |          2 |        202 |          0 |          7 |        209 |
+| admin/src/layout/tabbar                                                                                                  |          1 |        364 |          0 |          5 |        369 |
+| admin/src/views                                                                                                          |         24 |      4,701 |          0 |         97 |      4,798 |
+| admin/src/views/data                                                                                                     |          2 |        782 |          0 |         10 |        792 |
+| admin/src/views/index                                                                                                    |         15 |      1,699 |          0 |         52 |      1,751 |
+| admin/src/views/index (Files)                                                                                            |          1 |        173 |          0 |          5 |        178 |
+| admin/src/views/index/components                                                                                         |         13 |      1,260 |          0 |         44 |      1,304 |
+| admin/src/views/index/components (Files)                                                                                 |          6 |        486 |          0 |         23 |        509 |
+| admin/src/views/index/components/chart                                                                                   |          7 |        774 |          0 |         21 |        795 |
+| admin/src/views/index/personal                                                                                           |          1 |        266 |          0 |          3 |        269 |
+| admin/src/views/login                                                                                                    |          1 |        226 |          0 |          5 |        231 |
+| admin/src/views/monitor                                                                                                  |          1 |        241 |          0 |          5 |        246 |
+| admin/src/views/redirect                                                                                                 |          2 |         46 |          0 |          7 |         53 |
+| admin/src/views/system                                                                                                   |          3 |      1,707 |          0 |         18 |      1,725 |
+| mini-program                                                                                                             |         15 |      8,071 |          0 |        972 |      9,043 |
+| mini-program (Files)                                                                                                     |          2 |      6,846 |          0 |        908 |      7,754 |
+| mini-program/src                                                                                                         |         13 |      1,225 |          0 |         64 |      1,289 |
+| mini-program/src (Files)                                                                                                 |          1 |         18 |          0 |          1 |         19 |
+| mini-program/src/components                                                                                              |          2 |        150 |          0 |         12 |        162 |
+| mini-program/src/components/mine-func                                                                                    |          1 |         37 |          0 |          4 |         41 |
+| mini-program/src/components/mine-login                                                                                   |          1 |        113 |          0 |          8 |        121 |
+| mini-program/src/pages                                                                                                   |         10 |      1,057 |          0 |         51 |      1,108 |
+| mini-program/src/pages/account                                                                                           |          1 |         84 |          0 |          4 |         88 |
+| mini-program/src/pages/auth                                                                                              |          1 |        163 |          0 |         18 |        181 |
+| mini-program/src/pages/index                                                                                             |          1 |          5 |          0 |          3 |          8 |
+| mini-program/src/pages/mine                                                                                              |          1 |          9 |          0 |          3 |         12 |
+| mini-program/src/pages/more                                                                                              |          1 |         91 |          0 |          5 |         96 |
+| mini-program/src/pages/msg                                                                                               |          1 |         75 |          0 |          3 |         78 |
+| mini-program/src/pages/qrcode                                                                                            |          1 |        177 |          0 |          3 |        180 |
+| mini-program/src/pages/quick-msg                                                                                         |          3 |        453 |          0 |         12 |        465 |
+| web                                                                                                                      |         20 |      5,939 |          0 |        573 |      6,512 |
+| web (Files)                                                                                                              |          2 |      3,587 |          0 |        516 |      4,103 |
+| web/src                                                                                                                  |         18 |      2,352 |          0 |         57 |      2,409 |
+| web/src (Files)                                                                                                          |          1 |          3 |          0 |          1 |          4 |
+| web/src/components                                                                                                       |          6 |        402 |          0 |         18 |        420 |
+| web/src/views                                                                                                            |         11 |      1,947 |          0 |         38 |      1,985 |
+| web/src/views/article                                                                                                    |          2 |        575 |          0 |          8 |        583 |
+| web/src/views/create-center                                                                                              |          6 |        949 |          0 |         20 |        969 |
+| web/src/views/create-center (Files)                                                                                      |          1 |         19 |          0 |          3 |         22 |
+| web/src/views/create-center/article                                                                                      |          3 |        662 |          0 |         11 |        673 |
+| web/src/views/create-center/components                                                                                   |          1 |        104 |          0 |          3 |        107 |
+| web/src/views/create-center/overview                                                                                     |          1 |        164 |          0 |          3 |        167 |
+| web/src/views/login                                                                                                      |          1 |        153 |          0 |          4 |        157 |
+| web/src/views/register                                                                                                   |          1 |        135 |          0 |          3 |        138 |
+| web/src/views/reset-pwd                                                                                                  |          1 |        135 |          0 |          3 |        138 |
+| webassembly                                                                                                              |          6 |        135 |         23 |         29 |        187 |
+| webassembly (Files)                                                                                                      |          3 |        100 |         14 |         17 |        131 |
+| webassembly/src                                                                                                          |          2 |         27 |          8 |          7 |         42 |
+| webassembly/tests                                                                                                        |          1 |          8 |          1 |          5 |         14 |
++--------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                                 | language | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/index.html                                                   | HTML     |         28 |          0 |          3 |         31 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/pnpm-lock.yaml                                               | YAML     |      3,741 |          0 |        549 |      4,290 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/App.vue                                                  | vue      |          3 |          0 |          1 |          4 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/AddButton.vue                                 | vue      |         23 |          0 |          3 |         26 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/DeleteButton.vue                              | vue      |         23 |          0 |          3 |         26 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/IconSelector.vue                              | vue      |        134 |          0 |          2 |        136 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/MarkdownEditor.vue                            | vue      |          5 |          0 |          3 |          8 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/MessageContent.vue                            | vue      |         75 |          0 |          3 |         78 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/ModalDialog.vue                               | vue      |         65 |          0 |          3 |         68 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/PasswordStrong.vue                            | vue      |         86 |          0 |          8 |         94 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/RichTextEditor.vue                            | vue      |         54 |          0 |          7 |         61 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/Scrollbar/src/Scrollbar.vue                   | vue      |        172 |          0 |         23 |        195 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/SearchContent.vue                             | vue      |        100 |          0 |          3 |        103 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/SortableTable.vue                             | vue      |        126 |          0 |          3 |        129 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/TableBody.vue                                 | vue      |         14 |          0 |          2 |         16 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/TableConfig.vue                               | vue      |         46 |          0 |          3 |         49 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/TableFooter.vue                               | vue      |         86 |          0 |          3 |         89 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/components/TableHeader.vue                               | vue      |         72 |          0 |          3 |         75 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/Layout.vue                                        | vue      |        129 |          0 |          3 |        132 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/Main.vue                                          | vue      |         28 |          0 |          3 |         31 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/MainLayout.vue                                    | vue      |        158 |          0 |          8 |        166 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/actions/index.vue                                 | vue      |        118 |          0 |          3 |        121 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/avatar/index.vue                                  | vue      |        119 |          0 |          4 |        123 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/breadcrumb/index.vue                              | vue      |         99 |          0 |          2 |        101 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/footer/index.vue                                  | vue      |         24 |          0 |          4 |         28 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/header/index.vue                                  | vue      |         96 |          0 |          3 |         99 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/humburger/index.vue                               | vue      |         45 |          0 |          3 |         48 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/loading/index.vue                                 | vue      |         19 |          0 |          4 |         23 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/logo/index.vue                                    | vue      |         81 |          0 |          2 |         83 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/navbar/index.vue                                  | vue      |         47 |          0 |          3 |         50 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/setting/components/StyleExample.vue               | vue      |        115 |          0 |          4 |        119 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/setting/index.vue                                 | vue      |        419 |          0 |         10 |        429 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/sidebar/InnerSideBar.vue                          | vue      |        231 |          0 |          3 |        234 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/sidebar/SideBar.vue                               | vue      |        209 |          0 |          4 |        213 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/sidebar/TabSplitSideBar.vue                       | vue      |        297 |          0 |          4 |        301 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/sidebar/components/ScrollerMenu.vue               | vue      |        161 |          0 |          4 |        165 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/sidebar/components/SubMenu.vue                    | vue      |         41 |          0 |          3 |         44 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/layout/tabbar/index.vue                                  | vue      |        364 |          0 |          5 |        369 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/data/article.vue                                   | vue      |        391 |          0 |          5 |        396 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/data/quick-msg.vue                                 | vue      |        391 |          0 |          5 |        396 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/CenterTitle.vue                   | vue      |         64 |          0 |          2 |         66 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/DataItem.vue                      | vue      |         81 |          0 |          4 |         85 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/ProjectItem.vue                   | vue      |         95 |          0 |          4 |         99 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/ProjectList.vue                   | vue      |         66 |          0 |          4 |         70 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/SaleOrderList.vue                 | vue      |        121 |          0 |          5 |        126 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/TodoItem.vue                      | vue      |         59 |          0 |          4 |         63 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/chart/DepartmentChart.vue         | vue      |         99 |          0 |          3 |        102 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/chart/EnrollmentChannelsChart.vue | vue      |        114 |          0 |          3 |        117 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/chart/FullYearSalesChart.vue      | vue      |        120 |          0 |          3 |        123 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/chart/HotProductChart.vue         | vue      |        105 |          0 |          3 |        108 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/chart/OrderChart.vue              | vue      |        108 |          0 |          3 |        111 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/chart/SalesChart.vue              | vue      |        105 |          0 |          3 |        108 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/components/chart/WeekSalesChart.vue          | vue      |        123 |          0 |          3 |        126 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/index.vue                                    | vue      |        173 |          0 |          5 |        178 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/index/personal/index.vue                           | vue      |        266 |          0 |          3 |        269 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/login/index.vue                                    | vue      |        226 |          0 |          5 |        231 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/monitor/login-log.vue                              | vue      |        241 |          0 |          5 |        246 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/redirect/index.vue                                 | vue      |         17 |          0 |          3 |         20 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/redirect/preload-route.vue                         | vue      |         29 |          0 |          4 |         33 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/system/perm.vue                                    | vue      |        651 |          0 |          6 |        657 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/system/role.vue                                    | vue      |        444 |          0 |          6 |        450 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/admin/src/views/system/user.vue                                    | vue      |        612 |          0 |          6 |        618 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/index.html                                            | HTML     |         24 |          0 |          2 |         26 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/pnpm-lock.yaml                                        | YAML     |      6,822 |          0 |        906 |      7,728 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/App.vue                                           | vue      |         18 |          0 |          1 |         19 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/components/mine-func/mine-func.vue                | vue      |         37 |          0 |          4 |         41 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/components/mine-login/mine-login.vue              | vue      |        113 |          0 |          8 |        121 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/pages/account/account.vue                         | vue      |         84 |          0 |          4 |         88 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/pages/auth/auth.vue                               | vue      |        163 |          0 |         18 |        181 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/pages/index/index.vue                             | vue      |          5 |          0 |          3 |          8 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/pages/mine/mine.vue                               | vue      |          9 |          0 |          3 |         12 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/pages/more/more.vue                               | vue      |         91 |          0 |          5 |         96 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/pages/msg/msg.vue                                 | vue      |         75 |          0 |          3 |         78 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/pages/qrcode/qrcode.vue                           | vue      |        177 |          0 |          3 |        180 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/pages/quick-msg/detail.vue                        | vue      |        152 |          0 |          3 |        155 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/pages/quick-msg/list.vue                          | vue      |        127 |          0 |          4 |        131 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/mini-program/src/pages/quick-msg/send.vue                          | vue      |        174 |          0 |          5 |        179 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/index.html                                                     | HTML     |         13 |          0 |          3 |         16 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/pnpm-lock.yaml                                                 | YAML     |      3,574 |          0 |        513 |      4,087 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/App.vue                                                    | vue      |          3 |          0 |          1 |          4 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/components/Captcha.vue                                     | vue      |         59 |          0 |          3 |         62 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/components/Content.vue                                     | vue      |         23 |          0 |          2 |         25 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/components/Footer.vue                                      | vue      |        106 |          0 |          2 |        108 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/components/Header.vue                                      | vue      |        156 |          0 |          3 |        159 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/components/Layout.vue                                      | vue      |         11 |          0 |          3 |         14 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/components/ScrollToTopButton.vue                           | vue      |         47 |          0 |          5 |         52 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/views/article/detail.vue                                   | vue      |        179 |          0 |          4 |        183 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/views/article/index.vue                                    | vue      |        396 |          0 |          4 |        400 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/views/create-center/article/edit.vue                       | vue      |        245 |          0 |          4 |        249 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/views/create-center/article/overview.vue                   | vue      |        177 |          0 |          3 |        180 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/views/create-center/article/publish.vue                    | vue      |        240 |          0 |          4 |        244 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/views/create-center/components/SideBar.vue                 | vue      |        104 |          0 |          3 |        107 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/views/create-center/index.vue                              | vue      |         19 |          0 |          3 |         22 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/views/create-center/overview/index.vue                     | vue      |        164 |          0 |          3 |        167 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/views/login/index.vue                                      | vue      |        153 |          0 |          4 |        157 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/views/register/index.vue                                   | vue      |        135 |          0 |          3 |        138 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/web/src/views/reset-pwd/index.vue                                  | vue      |        135 |          0 |          3 |        138 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/webassembly/.appveyor.yml                                          | YAML     |          9 |          0 |          3 |         12 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/webassembly/.travis.yml                                            | YAML     |         57 |          7 |          6 |         70 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/webassembly/Cargo.toml                                             | TOML     |         34 |          7 |          8 |         49 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/webassembly/src/lib.rs                                             | Rust     |         23 |          2 |          6 |         31 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/webassembly/src/utils.rs                                           | Rust     |          4 |          6 |          1 |         11 |
+| /home/jcfun/learning/Project/e-tech-assist/web-client/webassembly/tests/web.rs                                           | Rust     |          8 |          1 |          5 |         14 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/Cargo.toml                                                         | TOML     |       -100 |          0 |        -26 |       -126 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/common/banner.rs                                               | Rust     |        -12 |          0 |         -2 |        -14 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/common/errors.rs                                               | Rust     |       -189 |         -9 |        -16 |       -214 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/common/mod.rs                                                  | Rust     |         -3 |          0 |         -1 |         -4 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/common/res.rs                                                  | Rust     |       -170 |        -21 |        -22 |       -213 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/config/cfg.rs                                                  | Rust     |        -88 |        -29 |        -12 |       -129 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/config/ctx.rs                                                  | Rust     |        -21 |          0 |         -5 |        -26 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/config/init.rs                                                 | Rust     |        -14 |         -2 |         -6 |        -22 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/config/mod.rs                                                  | Rust     |         -3 |          0 |         -1 |         -4 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/article.rs                                            | Rust     |       -246 |          0 |        -12 |       -258 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/login.rs                                              | Rust     |       -211 |          0 |        -13 |       -224 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/mod.rs                                                | Rust     |        -18 |          0 |         -4 |        -22 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/perm.rs                                               | Rust     |       -145 |          0 |         -7 |       -152 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/quick_msg.rs                                          | Rust     |       -261 |          0 |         -9 |       -270 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/role.rs                                               | Rust     |       -226 |          0 |        -12 |       -238 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/dbaccess/user.rs                                               | Rust     |       -294 |          0 |        -17 |       -311 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/article.rs                                            | Rust     |       -267 |        -17 |        -11 |       -295 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/login.rs                                              | Rust     |       -512 |          0 |        -17 |       -529 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/mod.rs                                                | Rust     |         -8 |          0 |         -1 |         -9 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/perm.rs                                               | Rust     |       -190 |        -22 |         -8 |       -220 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/quick_msg.rs                                          | Rust     |       -222 |        -18 |         -7 |       -247 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/role.rs                                               | Rust     |       -188 |        -22 |         -8 |       -218 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/test.rs                                               | Rust     |        -20 |          0 |         -2 |        -22 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/upload.rs                                             | Rust     |        -60 |          0 |         -3 |        -63 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/handlers/user.rs                                               | Rust     |       -230 |        -27 |         -7 |       -264 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/main.rs                                                        | Rust     |        -65 |          0 |        -12 |        -77 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/middleware/auth.rs                                             | Rust     |          0 |          0 |         -2 |         -2 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/middleware/cors.rs                                             | Rust     |         -7 |          0 |         -2 |         -9 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/middleware/errors.rs                                           | Rust     |        -39 |          0 |         -7 |        -46 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/middleware/filter.rs                                           | Rust     |        -66 |          0 |         -6 |        -72 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/middleware/mod.rs                                              | Rust     |         -4 |          0 |         -1 |         -5 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/article.rs                                          | Rust     |       -131 |          0 |        -31 |       -162 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/base.rs                                             | Rust     |        -30 |          0 |         -9 |        -39 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/login.rs                                            | Rust     |       -168 |          0 |        -41 |       -209 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/mod.rs                                              | Rust     |         -7 |          0 |         -1 |         -8 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/perm.rs                                             | Rust     |       -100 |          0 |        -35 |       -135 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/quick_msg.rs                                        | Rust     |        -83 |          0 |        -27 |       -110 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/role.rs                                             | Rust     |        -66 |          0 |        -20 |        -86 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/dto/user.rs                                             | Rust     |        -96 |          0 |        -30 |       -126 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/entity/base.rs                                          | Rust     |        -15 |          0 |         -2 |        -17 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/entity/mod.rs                                           | Rust     |         -3 |          0 |         -1 |         -4 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/entity/user.rs                                          | Rust     |        -13 |          0 |         -3 |        -16 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/entity/user_detail.rs                                   | Rust     |        -20 |          0 |         -3 |        -23 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/enums/article.rs                                        | Rust     |        -99 |          0 |        -14 |       -113 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/enums/common.rs                                         | Rust     |        -46 |          0 |         -6 |        -52 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/enums/mod.rs                                            | Rust     |         -2 |          0 |          0 |         -2 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/mod.rs                                                  | Rust     |         -4 |          0 |         -1 |         -5 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/article.rs                                           | Rust     |        -43 |          0 |         -3 |        -46 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/login.rs                                             | Rust     |        -62 |          0 |         -6 |        -68 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/mod.rs                                               | Rust     |         -7 |          0 |         -1 |         -8 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/perm.rs                                              | Rust     |        -37 |          0 |         -4 |        -41 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/quick_msg.rs                                         | Rust     |        -30 |          0 |         -2 |        -32 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/role.rs                                              | Rust     |        -20 |          0 |         -3 |        -23 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/upload.rs                                            | Rust     |         -8 |          0 |         -2 |        -10 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/models/vo/user.rs                                              | Rust     |        -32 |          0 |         -3 |        -35 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/article.rs                                             | Rust     |        -14 |          0 |         -1 |        -15 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/assets.rs                                              | Rust     |         -7 |          0 |         -1 |         -8 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/common.rs                                              | Rust     |        -12 |          0 |         -1 |        -13 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/login.rs                                               | Rust     |        -17 |          0 |         -1 |        -18 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/mod.rs                                                 | Rust     |        -64 |          0 |         -3 |        -67 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/perm.rs                                                | Rust     |        -14 |          0 |         -1 |        -15 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/quick_msg.rs                                           | Rust     |        -14 |          0 |         -2 |        -16 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/role.rs                                                | Rust     |        -15 |          0 |         -1 |        -16 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/test.rs                                                | Rust     |         -5 |          0 |         -1 |         -6 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/upload.rs                                              | Rust     |         -8 |          0 |         -2 |        -10 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/routers/user.rs                                                | Rust     |        -14 |          0 |         -1 |        -15 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/captcha.rs                                               | Rust     |        -25 |         -1 |         -4 |        -30 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/db.rs                                                    | Rust     |        -12 |          0 |         -2 |        -14 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/email.rs                                                 | Rust     |        -36 |         -3 |         -6 |        -45 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/epc.rs                                                   | Rust     |        -14 |         -3 |         -4 |        -21 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/fields.rs                                                | Rust     |        -82 |        -15 |         -5 |       -102 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/ip.rs                                                    | Rust     |        -42 |          0 |         -5 |        -47 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/jwt.rs                                                   | Rust     |       -126 |        -20 |        -14 |       -160 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/log.rs                                                   | Rust     |        -45 |         -7 |         -6 |        -58 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/mod.rs                                                   | Rust     |        -14 |          0 |         -1 |        -15 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/permission.rs                                            | Rust     |        -13 |          0 |         -2 |        -15 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/qrcode.rs                                                | Rust     |         -9 |          0 |         -1 |        -10 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/redis.rs                                                 | Rust     |        -48 |         -8 |         -8 |        -64 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/time.rs                                                  | Rust     |         -6 |         -1 |         -2 |         -9 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/validate.rs                                              | Rust     |        -38 |         -1 |         -3 |        -42 |
+| /home/jcfun/learning/Project/e-tech-assist/web-server/src/utils/wxapp.rs                                                 | Rust     |       -302 |        -25 |        -27 |       -354 |
+| Total                                                                                                                    |          |     20,502 |       -228 |      1,763 |     22,037 |
++--------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

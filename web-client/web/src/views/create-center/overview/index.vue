@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-  import article from '@/api/modules/article';
+  import articles from '@/api/modules/article';
   import { reactive } from 'vue';
   const state = reactive({
     columns: [
@@ -152,7 +152,7 @@
   });
   const methods = reactive({
     getArticleInfo: async () => {
-      const res = await article.queryArticleInfo();
+      const res = await articles.queryArticleInfo();
       if (res.code == 200) {
         res.data.type = '文章';
         state.data[0] = res.data;

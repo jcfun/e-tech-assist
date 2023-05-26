@@ -88,7 +88,7 @@
       if (isSupported) {
         await copy(`<${item} />`);
         if (copied) {
-          Message.success(`已选择并且复制成功 ${item} 图标`);
+          Message.info(`已选择并且复制成功 ${item} 图标`);
         }
       }
     }

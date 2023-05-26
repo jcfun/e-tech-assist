@@ -1,7 +1,22 @@
+<style lang="scss" scoped>
+  .eye-icon-wrap {
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    &:hover {
+      background-color: #f2f3f5;
+      color: #006fff;
+      transition: all 0.3s ease-in;
+    }
+  }
+</style>
+
 <template>
   <TableBody>
     <template #header>
-      <TableHeader ref="tableHeaderRef" :show-filter="false" title="消息搜索" @search="onSearch" @reset-search="onResetSearch">
+      <TableHeader ref="tableHeaderRef" :show-filter="false" title="文章搜索" @search="onSearch" @reset-search="onResetSearch">
         <template #search-content>
           <a-form layout="inline" :model="{}">
             <a-form-item v-for="item of searchItems" :key="item.key" :label="item.label">
@@ -12,15 +27,8 @@
                 <template v-if="item.type === 'input'">
                   <a-input v-model="item.value.value" :placeholder="item.placeholder" />
                 </template>
-                <template v-if="item.type === 'select' && item.key !== 'msgType'">
+                <template v-if="item.type === 'select'">
                   <a-select v-model="item.value.value" :placeholder="item.placeholder" allow-clear>
-                    <a-option v-for="optionItem of item.optionItems" :key="optionItem.value" :value="optionItem.value">
-                      {{ optionItem.label }}
-                    </a-option>
-                  </a-select>
-                </template>
-                <template v-if="item.type === 'select' && item.key === 'msgType'">
-                  <a-select v-model="item.value.value" :placeholder="item.placeholder">
                     <a-option v-for="optionItem of item.optionItems" :key="optionItem.value" :value="optionItem.value">
                       {{ optionItem.label }}
                     </a-option>
@@ -45,30 +53,13 @@
             :title="(item.title as string)"
             :data-index="(item.key as string)"
             :fixed="item.fixed"
-            :width="item.width"
+            :width="item.key == 'content' ? 70 : item.width"
           >
             <template v-if="item.key === 'index'" #cell="{ rowIndex }">
               {{ rowIndex + 1 }}
             </template>
-            <template v-else-if="item.key === 'successFlag'" #cell="{ record }">
-              <a-tag :color="record.successFlag === '0' ? 'red' : 'blue'">
-                {{ record.successFlag === '0' ? '失败' : '成功' }}
-              </a-tag>
-            </template>
-            <template v-else-if="item.key === 'sendMethod'" #cell="{ record }">
-              {{
-                record.sendMethod === '0' ? '邮箱、短信、公众号' : record.sendMethod === '1' ? '邮件' : record.sendMethod === '2' ? '短信' : '公众号'
-              }}
-            </template>
-            <template v-else-if="item.key === 'msgType'" #cell="{ record }">
-              {{ record.msgType === '0' ? '发送' : '回复' }}
-            </template>
-            <template v-else-if="item.key === 'disableFlag'" #cell="{ record }">
-              <a-tag color="blue" v-if="record.disableFlag === '0'">启用</a-tag>
-              <a-tag color="red" v-else>禁用</a-tag>
-            </template>
-            <template v-else-if="item.key === 'readFlag'" #cell="{ record }">
-              {{ record.readFlag === '0' ? '未读' : '已读' }}
+            <template v-else-if="item.key === 'cover'" #cell="{ record }">
+              <a-image width="60" :src="record.cover" />
             </template>
             <template v-else-if="item.key === 'title'" #cell="{ record }">
               <a-popover title="标题">
@@ -79,16 +70,28 @@
               </a-popover>
             </template>
             <template v-else-if="item.key === 'content'" #cell="{ record }">
-              <a-popover title="内容">
-                <span>{{ `${record.content.replace('\n', '').slice(0, 20)}${record.content.length > 20 ? '...' : ''}` }}</span>
-                <template #content>
-                  <p>{{ record.content }}</p>
-                </template>
-              </a-popover>
+              <div class="eye-icon-wrap" @click="toDetail(record)">
+                <icon-eye size="20" />
+              </div>
+            </template>
+            <template v-else-if="item.key === 'status'" #cell="{ record }">
+              <a-tag color="green" v-if="record.status === '0'">草稿</a-tag>
+              <a-tag color="red" v-else-if="record.status === '1'">审核中</a-tag>
+              <a-tag color="blue" v-else>已发布</a-tag>
+            </template>
+            <template v-else-if="item.key === 'topFlag'" #cell="{ record }">
+              <a-tag color="red" v-if="record.topFlag === '0'">否</a-tag>
+              <a-tag color="blue" v-else>是</a-tag>
             </template>
             <template v-else-if="item.key === 'actions'" #cell="{ record }">
               <a-space>
-                <a-button type="text" size="medium" @click="onUpdateDisableFlag(record)">{{ record.disableFlag == '0' ? '禁用' : '启用' }}</a-button>
+                <a-button type="text" :status="record.status == '2' ? 'danger' : 'normal'" size="medium" @click="onUpdateStatus(record)">{{
+                  record.status == '2' ? '重新审核' : '通过审核'
+                }}</a-button>
+                <a-button type="text" :status="record.topFlag == '0' ? 'normal' : 'danger'" size="medium" @click="onUpdateTop(record)">{{
+                  record.topFlag == '0' ? '置顶文章' : '取消置顶'
+                }}</a-button>
+                <a-button type="text" status="danger" size="medium" @click="onDelete(record)">删除</a-button>
               </a-space>
             </template>
           </a-table-column>
@@ -103,36 +106,32 @@
 
 <script setup lang="ts">
   import { usePagination, useRowKey, useTable, useTableColumn, useTableHeight } from '@/hooks/table';
-  import { Message } from '@arco-design/web-vue';
+  import { Message, Modal } from '@arco-design/web-vue';
   import { getCurrentInstance, onMounted, ref } from 'vue';
-  import type { QueryQuickMsgDTO } from '@/api/types/quickMsg';
   import type { FormItem } from '@/components/types';
-  import quickMsg from '@/api/requests/quick-msg';
+  import type { QueryArticleDTO, QueryArticleVO } from '@/api/types/article';
+  import article from '@/api/requests/article';
+  import { useArticleDetailStore } from '@/store/modules/article';
 
   const table = useTable();
   const rowKey = useRowKey('id');
   // 变量区开始-----------------------------------
-  const queryQuickMsgDTO = ref({
+  const queryArticleDTO = ref<QueryArticleDTO>({
     pageNo: 1,
     pageSize: 10,
-  } as QueryQuickMsgDTO);
+  });
   // 表格项
   const tableColumns = useTableColumn([
     table.indexColumn,
     {
-      title: '发送',
-      key: 'senderEmail',
-      dataIndex: 'senderEmail',
-    },
-    {
-      title: '接收',
-      key: 'recipientEmail',
-      dataIndex: 'recipientEmail',
-    },
-    {
       title: '标题',
       key: 'title',
       dataIndex: 'title',
+    },
+    {
+      title: '封面',
+      key: 'cover',
+      dataIndex: 'cover',
     },
     {
       title: '内容',
@@ -140,34 +139,9 @@
       dataIndex: 'content',
     },
     {
-      title: '发送状态',
-      key: 'successFlag',
-      dataIndex: 'successFlag',
-    },
-    {
-      title: '发送类型',
-      key: 'sendMethod',
-      dataIndex: 'sendMethod',
-    },
-    {
-      title: '描述',
-      key: 'description',
-      dataIndex: 'description',
-    },
-    {
-      title: '消息类型',
-      key: 'msgType',
-      dataIndex: 'msgType',
-    },
-    {
-      title: '消息状态',
-      key: 'disableFlag',
-      dataIndex: 'disableFlag',
-    },
-    {
-      title: '是否已读',
-      key: 'readFlag',
-      dataIndex: 'readFlag',
+      title: '作者',
+      key: 'creator',
+      dataIndex: 'creator',
     },
     {
       title: '创建时间',
@@ -175,9 +149,44 @@
       dataIndex: 'createTime',
     },
     {
-      title: '创建者',
-      key: 'creator',
-      dataIndex: 'creator',
+      title: '最后修改时间',
+      key: 'operateTime',
+      dataIndex: 'operateTime',
+    },
+    {
+      title: '状态',
+      key: 'status',
+      dataIndex: 'status',
+    },
+    {
+      title: '置顶',
+      key: 'topFlag',
+      dataIndex: 'topFlag',
+    },
+    {
+      title: '阅读量',
+      key: 'viewCount',
+      dataIndex: 'viewCount',
+    },
+    {
+      title: '点赞数',
+      key: 'likeCount',
+      dataIndex: 'likeCount',
+    },
+    {
+      title: '评论数',
+      key: 'commentCount',
+      dataIndex: 'commentCount',
+    },
+    {
+      title: '收藏数',
+      key: 'collectCount',
+      dataIndex: 'collectCount',
+    },
+    {
+      title: '转发数',
+      key: 'forwardCount',
+      dataIndex: 'forwardCount',
     },
     {
       title: '操作',
@@ -188,137 +197,53 @@
   // 搜索表单项
   const searchItems: Array<FormItem> = [
     {
-      key: 'sender',
-      label: '发送用户',
-      type: 'input',
-      placeholder: '请输入账号/手机号/邮箱',
-      value: ref(''),
-      reset: function () {
-        this.value.value = '';
-      },
-    },
-    {
-      key: 'recipient',
-      label: '接收用户',
-      type: 'input',
-      placeholder: '请输入账号/手机号/邮箱',
-      value: ref(''),
-      reset: function () {
-        this.value.value = '';
-      },
-    },
-    {
       key: 'title',
-      label: '消息标题',
+      label: '文章标题',
       type: 'input',
       placeholder: '请输入标题',
-      value: ref(''),
+      value: ref(),
       reset: function () {
-        this.value.value = '';
+        this.value.value = undefined;
       },
     },
     {
-      key: 'sendMethod',
-      label: '发送方式',
+      key: 'status',
+      label: '文章状态',
       value: ref(),
       type: 'select',
-      placeholder: '请选择发送方式',
+      placeholder: '请选择文章状态',
       optionItems: [
         {
-          label: '邮件、短信、公众号',
+          label: '草稿',
           value: '0',
         },
         {
-          label: '邮件',
+          label: '审核中',
           value: '1',
         },
         {
-          label: '短信',
+          label: '已发布',
           value: '2',
         },
-        {
-          label: '公众号',
-          value: '3',
-        },
       ],
       reset: function () {
         this.value.value = undefined;
       },
     },
     {
-      key: 'msgType',
-      label: '消息类型',
-      value: ref('0'),
-      type: 'select',
-      placeholder: '请选择消息类型',
-      optionItems: [
-        {
-          label: '发送',
-          value: '0',
-        },
-        {
-          label: '回复',
-          value: '1',
-        },
-      ],
-      reset: function () {
-        this.value.value = '0';
-      },
-    },
-    {
-      key: 'disableFlag',
-      label: '是否启用',
+      key: 'topFlag',
+      label: '是否置顶',
       value: ref(),
       type: 'select',
-      placeholder: '请选择是否启用',
+      placeholder: '请选择是否置顶',
       optionItems: [
         {
-          label: '启用',
+          label: '否',
           value: '0',
         },
         {
-          label: '禁用',
+          label: '是',
           value: '1',
-        },
-      ],
-      reset: function () {
-        this.value.value = undefined;
-      },
-    },
-    {
-      key: 'readFlag',
-      label: '是否已读',
-      value: ref(),
-      type: 'select',
-      placeholder: '请选择是否已读',
-      optionItems: [
-        {
-          label: '未读',
-          value: '0',
-        },
-        {
-          label: '已读',
-          value: '1',
-        },
-      ],
-      reset: function () {
-        this.value.value = undefined;
-      },
-    },
-    {
-      key: 'successFlag',
-      label: '是否成功',
-      value: ref(),
-      type: 'select',
-      placeholder: '请选择是否成功',
-      optionItems: [
-        {
-          label: '成功',
-          value: '1',
-        },
-        {
-          label: '失败',
-          value: '0',
         },
       ],
       reset: function () {
@@ -329,9 +254,9 @@
       key: 'createTime',
       label: '创建日期',
       type: 'range-picker',
-      value: ref<string[]>(),
+      value: ref<Array<string>>(),
       reset: function () {
-        this.value.value = [];
+        this.value.value = undefined;
       },
     },
   ];
@@ -340,15 +265,15 @@
   // 方法区开始-----------------------------------
   // 刷新按钮
   const doRefresh = () => {
-    queryQuickMsgDTO.value.pageNo = pagination.page;
-    queryQuickMsgDTO.value.pageSize = pagination.pageSize;
-    getQuickMsgs(queryQuickMsgDTO.value);
+    queryArticleDTO.value.pageNo = pagination.page;
+    queryArticleDTO.value.pageSize = pagination.pageSize;
+    getArticles(queryArticleDTO.value);
   };
   const pagination = usePagination(doRefresh);
-  // 获取用户信息
-  const getQuickMsgs = (data: QueryQuickMsgDTO) => {
+  // 获取文章信息
+  const getArticles = (data: QueryArticleDTO) => {
     table.tableLoading.value = true;
-    quickMsg.getQuickMsgsFq(data).then(res => {
+    article.getArticlesFq(data).then(res => {
       table.handleSuccess(res?.data?.data);
       pagination.setTotalSize(res?.data?.total ? res?.data?.total : 0);
     });
@@ -359,12 +284,14 @@
     searchItems.forEach((it: any) => {
       tempDTO[it.key] = it.value.value;
     });
-    queryQuickMsgDTO.value = {
-      ...tempDTO,
-      createTimeStart: tempDTO.createTime ? (tempDTO.createTime as string[])[0] : undefined,
-      createTimeEnd: tempDTO.createTime ? (tempDTO.createTime as string[])[1] : undefined,
-    } as QueryQuickMsgDTO;
-    getQuickMsgs(queryQuickMsgDTO.value);
+    const { createTime, ...filteredTempDTO } = tempDTO;
+    queryArticleDTO.value = {
+      ...queryArticleDTO.value,
+      ...filteredTempDTO,
+      createTimeStart: (createTime as Array<string>)?.[0] ?? undefined,
+      createTimeEnd: (createTime as Array<string>)?.[1] ?? undefined,
+    } as QueryArticleDTO;
+    getArticles(queryArticleDTO.value);
   };
   // 重置搜索框
   const onResetSearch = () => {
@@ -372,20 +299,52 @@
       it.reset ? it.reset() : (it.value.value = '');
     });
   };
-  // 启用禁用
-  const onUpdateDisableFlag = (item: any) => {
+  // 删除
+  const onDelete = (item: any) => {
+    Modal.confirm({
+      title: '提示',
+      content: '确定要删除此数据吗？',
+      cancelText: '取消',
+      okText: '删除',
+      onOk: () => {
+        article.deleteArticle(item.id).then(res => {
+          if (res.code == 200) {
+            Message.info(res.msg);
+            doRefresh();
+          }
+        });
+      },
+    });
+  };
+  // 修改文章状态
+  const onUpdateStatus = (item: any) => {
     let id = item.id;
-    let disableFlag = item?.disableFlag == '0' ? '1' : '0';
-    quickMsg.updateDisableFlag(id, disableFlag).then(res => {
+    let status = item?.status == '2' ? '1' : '2';
+    article.updateArticleStatus(id, status).then(res => {
       if (res.code == 200) {
-        Message.success(res.msg);
+        Message.info(res.msg);
         doRefresh();
-      } else {
-        Message.error(res.msg);
       }
     });
   };
-
+  // 修改文章是否置顶
+  const onUpdateTop = (item: any) => {
+    let id = item.id;
+    let status = item?.topFlag == '0' ? '1' : '0';
+    article.updateTopArticle(id, status).then(res => {
+      if (res.code == 200) {
+        Message.info(res.msg);
+        doRefresh();
+      }
+    });
+  };
+  const toDetail = (item: QueryArticleVO) => {
+    useArticleDetailStore()
+      .setArticleDetail(item)
+      .then(() => {
+        window.open('#/data/article/detail', '_blank');
+      });
+  };
   // 生命周期函数
   onMounted(async () => {
     table.tableHeight.value = await useTableHeight(getCurrentInstance());

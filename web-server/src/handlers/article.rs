@@ -4,19 +4,14 @@ use crate::{
         res::{PageRes, Res},
     },
     config::init::get_ctx,
-    dbaccess::{article, user},
+    dbaccess::article,
     models::{
         dto::{
             article::{CreateArticleDTO, QueryArticleDTO, UpdateArticleDTO},
             base::BaseDTO,
         },
-        enums::article::{ArticleTopFlag, ArticleStatus},
-        vo::{
-            article::{
-                QueryArticleInfoVO, QueryArticleVO, QueryUserArticleVO, QueryUserArticleVOBuilder,
-            },
-            user::QueryUserVO,
-        },
+        enums::article::{ArticleStatus, ArticleTopFlag},
+        vo::article::{QueryArticleInfoVO, QueryArticleVO},
     },
     utils::{
         db::get_tx,
@@ -79,17 +74,28 @@ pub async fn query_articles_fq(
             tracing::error!("An error occurred, rollback!");
         }
     });
-    if payload.by_user_id_flag.is_some()
-        && !payload.by_user_id_flag.as_ref().unwrap().is_empty()
-        && payload.by_user_id_flag.as_ref().unwrap().eq("1")
-    {
-        let claims = headers
-            .get("Authorization")
-            .ok_or(MyError::AxumError("未登录".into()))?;
-        let claims = jwt::decode_jwt(claims.to_str().unwrap().to_string().replace("Bearer ", ""))
+    let mut claims: Option<Claims> = None;
+    let token = headers.get("Authorization");
+    // 如果为登录用户，则获取用户信息；如果使用id查询，则获取当前用户id
+    if token.is_some() {
+        claims = jwt::decode_jwt(token.unwrap().to_str().unwrap().replace("Bearer ", ""))
             .await
-            .unwrap();
-        payload.base_dto.id = Some(claims.id.unwrap());
+            .map(Some)
+            .unwrap_or(None);
+        if claims.is_some()
+            && (payload.by_user_id_flag.is_some()
+                && !payload.by_user_id_flag.as_ref().unwrap().is_empty()
+                && payload.by_user_id_flag.as_ref().unwrap().eq("1"))
+        {
+            payload.base_dto.id = Some(claims.as_ref().unwrap().id.clone().unwrap());
+        }
+    }
+    // 如果不是管理员，则只能查询已发布的文章
+    if let Some(claims) = &claims {
+        let permit_flag = get_permit(claims, "PERM_ARTICLE");
+        if !permit_flag.eq("1") {
+            payload.status = Some("2".into());
+        }
     } else {
         payload.status = Some("2".into());
     }
@@ -139,10 +145,8 @@ pub async fn query_hot_articles() -> Result<Res<Vec<QueryArticleVO>>, MyError> {
     Ok(Res::from_success("查询成功", res))
 }
 
-/// 根据用户id查询对应的文章数量和用户头像
-pub async fn query_user_article_count_and_avatar(
-    Path(id): Path<String>,
-) -> anyhow::Result<Res<QueryUserArticleVO>, MyError> {
+/// 根据用户id查询对应的文章数量
+pub async fn query_user_article_count(Path(id): Path<String>) -> Result<Res<usize>, MyError> {
     let db = &get_ctx().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
@@ -153,22 +157,14 @@ pub async fn query_user_article_count_and_avatar(
         }
     });
     let count = article::query_article_count_by_user_id(&mut tx, &id).await?;
-    let user = user::query_user_by_identity(&mut tx, &id)
-        .await?
-        .unwrap_or(QueryUserVO::default());
-    let res = QueryUserArticleVOBuilder::default()
-        .avatar(user.avatar_url)
-        .total_article_count(Some(count))
-        .build()
-        .unwrap_or(QueryUserArticleVO::default());
     tx.commit().await.unwrap();
-    Ok(Res::from_success("查询成功", res))
+    Ok(Res::from_success("查询成功", count as usize))
 }
 
 /// 根据用户id查询文章投稿数据
 pub async fn query_article_info_by_user_id(
     claims: Claims,
-) -> anyhow::Result<Res<QueryArticleInfoVO>, MyError> {
+) -> Result<Res<QueryArticleInfoVO>, MyError> {
     let db = &get_ctx().db;
     let tx = db.acquire_begin().await.unwrap();
     // 异步回滚回调
@@ -227,7 +223,7 @@ pub async fn delete_article(claims: Claims, Path(id): Path<String>) -> Result<Re
     let mut dto = BaseDTO::default();
     fields::fill_fields(&mut dto, &claims, false);
     dto.id = Some(id);
-    let permit_flag = get_permit(&claims, "PERM_ARTICLE")?;
+    let permit_flag = get_permit(&claims, "PERM_ARTICLE");
     let count = article::delete_article(&mut tx, &permit_flag, &dto)
         .await?
         .rows_affected;
@@ -253,7 +249,7 @@ pub async fn update_article_status(
     let mut dto = BaseDTO::default();
     fields::fill_fields(&mut dto, &claims, false);
     dto.id = Some(id);
-    let permit_flag = get_permit(&claims, "PERM_ARTICLE")?;
+    let permit_flag = get_permit(&claims, "PERM_ARTICLE");
     let count = article::update_article_status(&mut tx, &dto, &status, &permit_flag)
         .await?
         .rows_affected;
@@ -279,8 +275,41 @@ pub async fn update_article_top_flag(
     let mut dto = BaseDTO::default();
     fields::fill_fields(&mut dto, &claims, false);
     dto.id = Some(id);
-    let permit_flag = get_permit(&claims, "PERM_ARTICLE")?;
+    let permit_flag = get_permit(&claims, "PERM_ARTICLE");
     let count = article::update_article_top_flag(&mut tx, &dto, &top_flag, &permit_flag)
+        .await?
+        .rows_affected;
+    if count == 0 {
+        return Ok(Res::from_fail(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "操作失败",
+        ));
+    }
+    tx.commit().await.unwrap();
+    Ok(Res::from_success("操作成功", count as usize))
+}
+
+/// 更新文章浏览量
+pub async fn update_article_view_count(
+    headers: HeaderMap,
+    Path(id): Path<String>,
+) -> Result<Res<usize>, MyError> {
+    let mut dto = BaseDTO {
+        id: Some(id),
+        ..Default::default()
+    };
+    validate::param_validate(&dto)?;
+    let mut claims = Claims::default();
+    let token = headers.get("Authorization");
+    // 如果为登录用户，则获取用户信息；如果使用id查询，则获取当前用户id
+    if token.is_some() {
+        claims = jwt::decode_jwt(token.unwrap().to_str().unwrap().replace("Bearer ", ""))
+            .await
+            .unwrap_or(Claims::default());
+    }
+    fields::fill_fields(&mut dto, &claims, false);
+    let mut tx = get_tx().await;
+    let count = article::update_article_view_count(&mut tx, &dto)
         .await?
         .rows_affected;
     if count == 0 {
